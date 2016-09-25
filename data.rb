@@ -9,6 +9,12 @@
 FIRST  = ->(first, second) { first  }
 SECOND = ->(first, second) { second }
 
+AND = ->(a, b) {
+  ->(first, second) {
+    a[b[first, second], second]
+  }
+}
+
 # Pair Functions
 
 PAIR = ->(left, right) {
@@ -104,36 +110,14 @@ MODULUS = ->(a, b) {
 
 # Comparisons
 
-AND = ->(a, b) {
-  ->(first, second) {
-    a[b[first, second], second]
-  }
-}
-
-IS_ZERO = ->(number) {
+IF_ZERO = ->(number) {
   number[->(_) { SECOND }, FIRST]
 }
 
 GREATER_OR_EQUAL = ->(a, b) {
-  IS_ZERO[SUBTRACT[b, a]]
+  IF_ZERO[SUBTRACT[b, a]]
 }
 
 EQUAL = ->(a, b) {
   AND[GREATER_OR_EQUAL[a, b], GREATER_OR_EQUAL[b, a]]
-}
-
-# Board Functions
-
-POSITION_TO_INDEX = ->(position) {
-  ADD[
-    LEFT[position],
-    MULTIPLY[RIGHT[position], EIGHT]
-  ]
-}
-
-INDEX_TO_POSITION = ->(index) {
-  PAIR[
-    MODULUS[index, EIGHT],
-    DIVIDE[index, EIGHT]
-  ]
 }

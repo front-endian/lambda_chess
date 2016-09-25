@@ -24,6 +24,7 @@ NTH = ->(list, index) { LEFT[index[RIGHT, list]] }
 
 ZERO  = ->(func, base) { base }
 ONE   = ->(func, base) { func[base] }
+EIGHT = ->(func, base) { func[func[func[func[func[func[func[func[base]]]]]]]] }
 
 # Math Functions
 
@@ -119,4 +120,20 @@ GREATER_OR_EQUAL = ->(a, b) {
 
 EQUAL = ->(a, b) {
   AND[GREATER_OR_EQUAL[a, b], GREATER_OR_EQUAL[b, a]]
+}
+
+# Board Functions
+
+POSITION_TO_INDEX = ->(position) {
+  ADD[
+    LEFT[position],
+    MULTIPLY[RIGHT[position], EIGHT]
+  ]
+}
+
+INDEX_TO_POSITION = ->(index) {
+  PAIR[
+    MODULUS[index, EIGHT],
+    DIVIDE[index, EIGHT]
+  ]
 }

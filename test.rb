@@ -145,3 +145,23 @@ group 'EQUAL' do
     EQUAL[4.to_peano, 1.to_peano][false, true]
   end
 end
+
+group 'POSITION_TO_INDEX' do
+  assert 'translates X/Y pair into an array index' do
+    POSITION_TO_INDEX[PAIR[2.to_peano, 4.to_peano]].to_i == 34
+  end
+
+  assert 'works with zero' do
+    POSITION_TO_INDEX[PAIR[6.to_peano, 0.to_peano]].to_i == 6
+  end
+end
+
+group 'INDEX_TO_POSITION' do
+  assert 'translates array index into an X/Y pair' do
+    30 == POSITION_TO_INDEX[INDEX_TO_POSITION[30.to_peano]].to_i
+  end
+
+  assert 'works with zero' do
+    0 == POSITION_TO_INDEX[INDEX_TO_POSITION[0.to_peano]].to_i
+  end
+end

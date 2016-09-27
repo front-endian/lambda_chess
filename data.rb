@@ -26,19 +26,13 @@ RIGHT = ->(pair) { pair[SECOND] }
 
 NTH = ->(list, index) { LEFT[index[RIGHT, list]] }
 
-# Numbers
-
-ZERO  = ->(func, base) { base }
-ONE   = ->(func, base) { func[base] }
-EIGHT = ->(func, base) { func[func[func[func[func[func[func[func[base]]]]]]]] }
-
 # Math Functions
 
 INCREMENT = ->(a) { ADD[ONE, a] }
 
 ADD = ->(a, b) {
-  ->(func, base) {
-    b[func, a[func, base]]
+  ->(func, zero) {
+    b[func, a[func, zero]]
   }
 }
 
@@ -57,16 +51,16 @@ DECREMENT = ->(a) {
 }
 
 SUBTRACT = ->(a, b) {
-  ->(func, base) {
-    b[DECREMENT, a][func, base]
+  ->(func, zero) {
+    b[DECREMENT, a][func, zero]
   }
 }
 
 MULTIPLY = ->(a, b) {
-  ->(func, base) {
+  ->(func, zero) {
     a[
       ->(value) { b[func, value] },
-      base
+      zero
     ]
   }
 }
@@ -75,7 +69,7 @@ DIVIDE = ->(a, b) {
   RIGHT[
     a[
       ->(memo) {
-        GREATER_OR_EQUAL[LEFT[memo], b][
+        IF_GREATER_OR_EQUAL[LEFT[memo], b][
           PAIR[
             SUBTRACT[LEFT[memo], b],
             INCREMENT[RIGHT[memo]]
@@ -92,7 +86,7 @@ MODULUS = ->(a, b) {
   RIGHT[
     a[
       ->(memo) {
-        GREATER_OR_EQUAL[LEFT[memo], b][
+        IF_GREATER_OR_EQUAL[LEFT[memo], b][
           PAIR[
             SUBTRACT[LEFT[memo], b],
             ZERO
@@ -108,16 +102,23 @@ MODULUS = ->(a, b) {
   ]
 }
 
+# Numbers
+
+ZERO       = ->(func, zero) { zero }
+ONE        = ->(func, zero) { func[zero] }
+EIGHT      = ->(func, zero) { func[func[func[func[func[func[func[func[zero]]]]]]]] }
+SIXTY_FOUR = MULTIPLY[EIGHT, EIGHT]
+
 # Comparisons
 
 IF_ZERO = ->(number) {
   number[->(_) { SECOND }, FIRST]
 }
 
-GREATER_OR_EQUAL = ->(a, b) {
+IF_GREATER_OR_EQUAL = ->(a, b) {
   IF_ZERO[SUBTRACT[b, a]]
 }
 
-EQUAL = ->(a, b) {
-  AND[GREATER_OR_EQUAL[a, b], GREATER_OR_EQUAL[b, a]]
+IF_EQUAL = ->(a, b) {
+  AND[IF_GREATER_OR_EQUAL[a, b], IF_GREATER_OR_EQUAL[b, a]]
 }

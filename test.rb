@@ -44,11 +44,11 @@ group 'Pair Functions' do
     example = PAIR[:A, PAIR[:B, PAIR[:C, :END]]]
 
     assert 'gets the first element when given 0' do
-      NTH[example, 0.to_peano] == :A
+      :A == NTH[example, 0.to_peano]
     end
 
     assert 'gets the third element when given 2' do
-      NTH[example, 2.to_peano] == :C
+      :C == NTH[example, 2.to_peano]
     end
   end
 end
@@ -126,31 +126,31 @@ group 'Comparison Functions' do
     end
   end
 
-  group 'GREATER_OR_EQUAL' do
+  group 'IF_GREATER_OR_EQUAL' do
     assert 'returns FIRST when greater' do
-      GREATER_OR_EQUAL[2.to_peano, 1.to_peano][true, false]
+      IF_GREATER_OR_EQUAL[2.to_peano, 1.to_peano][true, false]
     end
 
     assert 'returns FIRST when equal' do
-      GREATER_OR_EQUAL[5.to_peano, 5.to_peano][true, false]
+      IF_GREATER_OR_EQUAL[5.to_peano, 5.to_peano][true, false]
     end
 
     assert 'returns SECOND when less' do
-      GREATER_OR_EQUAL[4.to_peano, 9.to_peano][false, true]
+      IF_GREATER_OR_EQUAL[4.to_peano, 9.to_peano][false, true]
     end
   end
 
-  group 'EQUAL' do
+  group 'IF_EQUAL' do
     assert 'returns FIRST when equal' do
-      EQUAL[6.to_peano, 6.to_peano][true, false]
+      IF_EQUAL[6.to_peano, 6.to_peano][true, false]
     end
 
     assert 'returns SECOND when greater' do
-      EQUAL[7.to_peano, 2.to_peano][false, true]
+      IF_EQUAL[7.to_peano, 2.to_peano][false, true]
     end
 
     assert 'returns SECOND when less' do
-      EQUAL[4.to_peano, 1.to_peano][false, true]
+      IF_EQUAL[4.to_peano, 1.to_peano][false, true]
     end
   end
 end

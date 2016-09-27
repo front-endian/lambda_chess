@@ -12,6 +12,18 @@ class Proc
   def to_i
     self.call(proc { |x| x + 1 }, 0)
   end
+
+  def to_a length
+    result = []
+    part   = self
+
+    length.times do
+      result.push(LEFT[part])
+      part = RIGHT[part]
+    end
+
+    result
+  end
 end
 
 class Fixnum
@@ -19,6 +31,14 @@ class Fixnum
     proc do |func, result|
       self.times { result = func.call(result) }
       result
+    end
+  end
+end
+
+class Array
+  def to_linked_list
+    self.reverse.inject(ZERO) do |previous, element|
+      PAIR[element, previous]
     end
   end
 end
@@ -41,7 +61,7 @@ end
 
 group 'Pair Functions' do
   group 'NTH' do
-    example = PAIR[:A, PAIR[:B, PAIR[:C, :END]]]
+    example = [:A, :B, :C].to_linked_list
 
     assert 'gets the first element when given 0' do
       :A == NTH[example, 0.to_peano]

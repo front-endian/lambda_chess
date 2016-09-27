@@ -24,7 +24,29 @@ PAIR = ->(left, right) {
 LEFT  = ->(pair) { pair[FIRST]  }
 RIGHT = ->(pair) { pair[SECOND] }
 
+# Tuples
+
 NTH = ->(list, index) { LEFT[index[RIGHT, list]] }
+
+TUPLE_MAP = ->(tuple, size, func) {
+  LEFT[
+    size[
+      ->(memo) {
+        PAIR[
+          PAIR[
+            func[
+              NTH[tuple, RIGHT[memo]],
+              RIGHT[memo]
+            ],
+            LEFT[memo]
+          ],
+          DECREMENT[RIGHT[memo]]
+        ]
+      },
+      PAIR[ZERO, DECREMENT[size]]
+    ]
+  ]
+}
 
 # Math Functions
 
@@ -106,7 +128,18 @@ MODULUS = ->(a, b) {
 
 ZERO       = ->(func, zero) { zero }
 ONE        = ->(func, zero) { func[zero] }
+THREE      = ->(func, zero) { func[func[func[zero]]] }
+FOUR       = ->(func, zero) { func[func[func[func[zero]]]] }
+FIVE       = ->(func, zero) { func[func[func[func[func[zero]]]]] }
 EIGHT      = ->(func, zero) { func[func[func[func[func[func[func[func[zero]]]]]]]] }
+NINE       = ->(func, zero) { func[func[func[func[func[func[func[func[func[zero]]]]]]]]] }
+TEN        = ->(func, zero) { func[func[func[func[func[func[func[func[func[func[zero]]]]]]]]]] }
+ELEVEN     = ->(func, zero) { func[func[func[func[func[func[func[func[func[func[func[zero]]]]]]]]]]] }
+THIRTEEN   = ->(func, zero) { func[func[func[func[func[func[func[func[func[func[func[func[func[zero]]]]]]]]]]]]] }
+FOURTEEN   = ->(func, zero) { func[func[func[func[func[func[func[func[func[func[func[func[func[func[zero]]]]]]]]]]]]]] }
+FIFTEEN    = MULTIPLY[FIVE, THREE]
+NINETEEN   = ADD[FIFTEEN, FOUR]
+TWENTY     = MULTIPLY[FOUR, FIVE]
 SIXTY_FOUR = MULTIPLY[EIGHT, EIGHT]
 
 # Comparisons

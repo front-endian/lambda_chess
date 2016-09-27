@@ -19,3 +19,40 @@ INDEX_TO_POSITION = ->(index) {
     DIVIDE[index, EIGHT]
   ]
 }
+
+GET_POSITION = ->(board, position) {
+  NTH[board, POSITION_TO_INDEX[position]]
+}
+
+MOVE = ->(board, from, to) {
+  TUPLE_MAP[
+    board,
+    SIXTY_FOUR,
+    ->(old_piece, index) {
+      IF_EQUAL[
+        index,
+        POSITION_TO_INDEX[from]
+      ][
+        ZERO,
+        IF_EQUAL[
+          index,
+          POSITION_TO_INDEX[to]
+        ][
+          NTH[board, POSITION_TO_INDEX[from]],
+          old_piece
+        ]
+      ]
+    }
+  ]
+}
+
+INITIAL_BOARD =
+  PAIR[FIVE,    PAIR[THREE,    PAIR[FOUR,     PAIR[NINE,     PAIR[TEN,    PAIR[FOUR,    PAIR[THREE,     PAIR[FIVE,
+  PAIR[ONE,     PAIR[ONE,      PAIR[ONE,      PAIR[ONE,      PAIR[ONE,    PAIR[ONE,     PAIR[ONE,       PAIR[ONE,
+  PAIR[ZERO,    PAIR[ZERO,     PAIR[ZERO,     PAIR[ZERO,     PAIR[ZERO,   PAIR[ZERO,    PAIR[ZERO,      PAIR[ZERO,
+  PAIR[ZERO,    PAIR[ZERO,     PAIR[ZERO,     PAIR[ZERO,     PAIR[ZERO,   PAIR[ZERO,    PAIR[ZERO,      PAIR[ZERO,
+  PAIR[ZERO,    PAIR[ZERO,     PAIR[ZERO,     PAIR[ZERO,     PAIR[ZERO,   PAIR[ZERO,    PAIR[ZERO,      PAIR[ZERO,
+  PAIR[ZERO,    PAIR[ZERO,     PAIR[ZERO,     PAIR[ZERO,     PAIR[ZERO,   PAIR[ZERO,    PAIR[ZERO,      PAIR[ZERO,
+  PAIR[ELEVEN,  PAIR[ELEVEN,   PAIR[ELEVEN,   PAIR[ELEVEN,   PAIR[ELEVEN, PAIR[ELEVEN,  PAIR[ELEVEN,    PAIR[ELEVEN,
+  PAIR[FIFTEEN, PAIR[THIRTEEN, PAIR[FOURTEEN, PAIR[NINETEEN, PAIR[TWENTY, PAIR[FOURTEEN, PAIR[THIRTEEN, PAIR[FIFTEEN,
+  ZERO]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]

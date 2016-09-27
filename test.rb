@@ -195,4 +195,72 @@ group 'Board Functions' do
       0 == POSITION_TO_INDEX[INDEX_TO_POSITION[0.to_peano]].to_i
     end
   end
+
+  group 'GET_POSITION' do
+    assert 'gets data at the given position' do
+      board = [:A, :B, :C].to_linked_list
+
+      :B == GET_POSITION[board, PAIR[1.to_peano, 0.to_peano]]
+    end
+  end
+
+
+  index_array = [0,  1,  2,  3,  4,  5,  6,  7,
+                 8,  9,  10, 11, 12, 13, 14, 15,
+                 16, 17, 18, 19, 20, 21, 22, 23,
+                 24, 25, 26, 27, 28, 29, 30, 31,
+                 32, 33, 34, 35, 36, 37, 38, 39,
+                 40, 41, 42, 43, 44, 45, 46, 47,
+                 48, 49, 50, 51, 52, 53, 54, 55,
+                 56, 57, 58, 59, 60, 61, 62, 63]
+
+  group 'TUPLE_MAP' do
+    assert 'maps function across board and returns a new board' do
+      incremented = TUPLE_MAP[
+                      index_array.to_linked_list,
+                      64.to_peano,
+                      ->(x, _) { x + 1 }
+                    ].to_a(64)
+
+      incremented == index_array.map { |x| x + 1 }
+    end
+
+    assert 'second argument gives current position index' do
+      empty_board   = ([nil] * 64).to_linked_list
+      given_indexes = TUPLE_MAP[
+                        empty_board,
+                        64.to_peano,
+                        ->(_, i) { i.to_i }
+                      ].to_a(64)
+
+      given_indexes == index_array
+    end
+  end
+
+  group 'MOVE' do
+    from  = PAIR[2.to_peano, 2.to_peano]
+    to    = PAIR[3.to_peano, 7.to_peano]
+    moved = MOVE[index_array.to_linked_list, from, to]
+
+    assert 'moves the piece at the "from" position to the "to" position' do
+      GET_POSITION[moved, to].to_i == index_array[POSITION_TO_INDEX[from].to_i]
+    end
+
+    assert 'puts a zero in the "from" position' do
+      GET_POSITION[moved, from].to_i == 0
+    end
+  end
+
+  group 'INITIAL_BOARD' do
+    assert 'is initialized to the correct values' do
+      INITIAL_BOARD.to_a(64).map(&:to_i) == [5,  3,  4,  9,  10, 4,  3,  5,
+                                             1,  1,  1,  1,  1,  1,  1,  1,
+                                             0,  0,  0,  0,  0,  0,  0,  0,
+                                             0,  0,  0,  0,  0,  0,  0,  0,
+                                             0,  0,  0,  0,  0,  0,  0,  0,
+                                             0,  0,  0,  0,  0,  0,  0,  0,
+                                             11, 11, 11, 11, 11, 11, 11, 11,
+                                             15, 13, 14, 19, 20, 14, 13, 15]
+    end
+  end
 end

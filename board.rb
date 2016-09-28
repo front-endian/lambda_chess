@@ -25,19 +25,13 @@ GET_POSITION = ->(board, position) {
 }
 
 MOVE = ->(board, from, to) {
-  TUPLE_MAP[
+  LIST_MAP[
     board,
     SIXTY_FOUR,
     ->(old_piece, index) {
-      IF_EQUAL[
-        index,
-        POSITION_TO_INDEX[from]
-      ][
+      IS_EQUAL[index, POSITION_TO_INDEX[from]][
         ZERO,
-        IF_EQUAL[
-          index,
-          POSITION_TO_INDEX[to]
-        ][
+        IS_EQUAL[index, POSITION_TO_INDEX[to]][
           NTH[board, POSITION_TO_INDEX[from]],
           old_piece
         ]

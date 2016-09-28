@@ -24,11 +24,11 @@ PAIR = ->(left, right) {
 LEFT  = ->(pair) { pair[FIRST]  }
 RIGHT = ->(pair) { pair[SECOND] }
 
-# Tuples
+# Lists
 
 NTH = ->(list, index) { LEFT[index[RIGHT, list]] }
 
-TUPLE_MAP = ->(tuple, size, func) {
+LIST_MAP = ->(tuple, size, func) {
   LEFT[
     size[
       ->(memo) {
@@ -91,7 +91,7 @@ DIVIDE = ->(a, b) {
   RIGHT[
     a[
       ->(memo) {
-        IF_GREATER_OR_EQUAL[LEFT[memo], b][
+        IS_GREATER_OR_EQUAL[LEFT[memo], b][
           PAIR[
             SUBTRACT[LEFT[memo], b],
             INCREMENT[RIGHT[memo]]
@@ -108,7 +108,7 @@ MODULUS = ->(a, b) {
   RIGHT[
     a[
       ->(memo) {
-        IF_GREATER_OR_EQUAL[LEFT[memo], b][
+        IS_GREATER_OR_EQUAL[LEFT[memo], b][
           PAIR[
             SUBTRACT[LEFT[memo], b],
             ZERO
@@ -144,14 +144,14 @@ SIXTY_FOUR = MULTIPLY[EIGHT, EIGHT]
 
 # Comparisons
 
-IF_ZERO = ->(number) {
+IS_ZERO = ->(number) {
   number[->(_) { SECOND }, FIRST]
 }
 
-IF_GREATER_OR_EQUAL = ->(a, b) {
-  IF_ZERO[SUBTRACT[b, a]]
+IS_GREATER_OR_EQUAL = ->(a, b) {
+  IS_ZERO[SUBTRACT[b, a]]
 }
 
-IF_EQUAL = ->(a, b) {
-  AND[IF_GREATER_OR_EQUAL[a, b], IF_GREATER_OR_EQUAL[b, a]]
+IS_EQUAL = ->(a, b) {
+  AND[IS_GREATER_OR_EQUAL[a, b], IS_GREATER_OR_EQUAL[b, a]]
 }

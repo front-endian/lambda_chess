@@ -136,44 +136,53 @@ group 'Math Functions' do
 end
 
 group 'Comparison Functions' do
-  group 'IF_ZERO' do
+  group 'IS_ZERO' do
     assert 'returns FIRST when given zero' do
-      IF_ZERO[0.to_peano][true, false]
+      IS_ZERO[0.to_peano][true, false]
     end
 
     assert 'returns SECOND when given a non-zero number' do
-      IF_ZERO[9.to_peano][false, true]
+      IS_ZERO[9.to_peano][false, true]
     end
   end
 
-  group 'IF_GREATER_OR_EQUAL' do
+  group 'IS_GREATER_OR_EQUAL' do
     assert 'returns FIRST when greater' do
-      IF_GREATER_OR_EQUAL[2.to_peano, 1.to_peano][true, false]
+      IS_GREATER_OR_EQUAL[2.to_peano, 1.to_peano][true, false]
     end
 
     assert 'returns FIRST when equal' do
-      IF_GREATER_OR_EQUAL[5.to_peano, 5.to_peano][true, false]
+      IS_GREATER_OR_EQUAL[5.to_peano, 5.to_peano][true, false]
     end
 
     assert 'returns SECOND when less' do
-      IF_GREATER_OR_EQUAL[4.to_peano, 9.to_peano][false, true]
+      IS_GREATER_OR_EQUAL[4.to_peano, 9.to_peano][false, true]
     end
   end
 
-  group 'IF_EQUAL' do
+  group 'IS_EQUAL' do
     assert 'returns FIRST when equal' do
-      IF_EQUAL[6.to_peano, 6.to_peano][true, false]
+      IS_EQUAL[6.to_peano, 6.to_peano][true, false]
     end
 
     assert 'returns SECOND when greater' do
-      IF_EQUAL[7.to_peano, 2.to_peano][false, true]
+      IS_EQUAL[7.to_peano, 2.to_peano][false, true]
     end
 
     assert 'returns SECOND when less' do
-      IF_EQUAL[4.to_peano, 1.to_peano][false, true]
+      IS_EQUAL[4.to_peano, 1.to_peano][false, true]
     end
   end
 end
+
+index_array = [0,  1,  2,  3,  4,  5,  6,  7,
+               8,  9,  10, 11, 12, 13, 14, 15,
+               16, 17, 18, 19, 20, 21, 22, 23,
+               24, 25, 26, 27, 28, 29, 30, 31,
+               32, 33, 34, 35, 36, 37, 38, 39,
+               40, 41, 42, 43, 44, 45, 46, 47,
+               48, 49, 50, 51, 52, 53, 54, 55,
+               56, 57, 58, 59, 60, 61, 62, 63]
 
 group 'Board Functions' do
   group 'POSITION_TO_INDEX' do
@@ -204,19 +213,9 @@ group 'Board Functions' do
     end
   end
 
-
-  index_array = [0,  1,  2,  3,  4,  5,  6,  7,
-                 8,  9,  10, 11, 12, 13, 14, 15,
-                 16, 17, 18, 19, 20, 21, 22, 23,
-                 24, 25, 26, 27, 28, 29, 30, 31,
-                 32, 33, 34, 35, 36, 37, 38, 39,
-                 40, 41, 42, 43, 44, 45, 46, 47,
-                 48, 49, 50, 51, 52, 53, 54, 55,
-                 56, 57, 58, 59, 60, 61, 62, 63]
-
-  group 'TUPLE_MAP' do
+  group 'LIST_MAP' do
     assert 'maps function across board and returns a new board' do
-      incremented = TUPLE_MAP[
+      incremented = LIST_MAP[
                       index_array.to_linked_list,
                       64.to_peano,
                       ->(x, _) { x + 1 }
@@ -227,7 +226,7 @@ group 'Board Functions' do
 
     assert 'second argument gives current position index' do
       empty_board   = ([nil] * 64).to_linked_list
-      given_indexes = TUPLE_MAP[
+      given_indexes = LIST_MAP[
                         empty_board,
                         64.to_peano,
                         ->(_, i) { i.to_i }

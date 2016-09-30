@@ -57,6 +57,20 @@ group 'Choice Functions' do
       AND[SECOND, SECOND][false, true]
     end
   end
+
+  group 'OR' do
+    assert 'returns a FIRST when given two FIRSTs' do
+      OR[FIRST, FIRST][true, false]
+    end
+
+    assert 'returns a FIRST when given a FIRST and a SECOND' do
+      OR[FIRST, SECOND][true, false]
+    end
+
+    assert 'returns a SECOND when given two SECONDs' do
+      OR[SECOND, SECOND][false, true]
+    end
+  end
 end
 
 group 'Pair Functions' do

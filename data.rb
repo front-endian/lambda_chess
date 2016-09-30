@@ -15,6 +15,12 @@ AND = ->(a, b) {
   }
 }
 
+OR = ->(a, b) {
+  ->(first, second) {
+    a[first, b[first, second]]
+  }
+}
+
 # Pair Functions
 
 PAIR = ->(left, right) {

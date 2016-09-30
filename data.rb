@@ -141,6 +141,7 @@ ABSOLUTE_DIFFERENCE = ->(x, y) {
 
 ZERO       = ->(func, zero) { zero }
 ONE        = ->(func, zero) { func[zero] }
+TWO        = ->(func, zero) { func[func[zero]] }
 THREE      = ->(func, zero) { func[func[func[zero]]] }
 FOUR       = ->(func, zero) { func[func[func[func[zero]]]] }
 FIVE       = ->(func, zero) { func[func[func[func[func[zero]]]]] }

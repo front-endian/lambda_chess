@@ -6,6 +6,7 @@
 
 require './data'
 require './board'
+require './piece'
 require 'tet'
 
 class Proc
@@ -302,6 +303,116 @@ group 'Board Functions' do
                                              0,  0,  0,  0,  0,  0,  0,  0,
                                              11, 11, 11, 11, 11, 11, 11, 11,
                                              15, 13, 14, 19, 20, 14, 13, 15]
+    end
+  end
+end
+
+group 'Piece Functions' do
+  def test_movement should, func, delta_x, delta_y
+    func[
+      nil,
+      PAIR[5.to_peano, 5.to_peano],
+      PAIR[
+        (5 + delta_x).to_peano,
+        (5 + delta_y).to_peano
+      ]
+    ][
+      should,
+      !should
+    ]
+  end
+
+  def horizontal_movement delta, should, func
+    group "can#{' not' unless should}" do
+      assert 'left' do
+        test_movement should, func, -delta, 0
+      end
+
+      assert 'right' do
+        test_movement should, func, delta, 0
+      end
+
+      assert 'up' do
+        test_movement should, func, 0, delta
+      end
+
+      assert 'down' do
+        test_movement should, func, 0, -delta
+      end
+    end
+  end
+
+  def diagonal_movement delta, should, func
+    group "can#{' not' unless should}" do
+      assert 'up + left' do
+        test_movement should, func, -delta, delta
+      end
+
+      assert 'up + right' do
+        test_movement should, func, delta, delta
+      end
+
+      assert 'down + left' do
+        test_movement should, func, -delta, -delta
+      end
+
+      assert 'down + right' do
+        test_movement should, func, -delta, -delta
+      end
+    end
+  end
+
+  group 'ROOK' do
+    horizontal_movement 3, true,  ROOK
+    diagonal_movement   3, false, ROOK
+  end
+
+  group 'BISHOP' do
+    horizontal_movement 3, false, BISHOP
+    diagonal_movement   3, true,  BISHOP
+  end
+
+  group 'KING' do
+    horizontal_movement 1, true, KING
+    diagonal_movement   1, true, KING
+
+    assert 'cannot move arbitrarily' do
+      KING[
+        nil,
+        PAIR[5.to_peano, 5.to_peano],
+        PAIR[3.to_peano, 6.to_peano]
+      ][false, true]
+    end
+  end
+
+  group 'KNIGHT' do
+    assert 'can make knights moves' do
+      [
+        [ 2,  3], [ 3,  2],
+        [-2,  3], [-3,  2],
+        [ 2, -3], [ 3, -2],
+        [-2, -3], [-3, -2]
+      ].map do |pair|
+        pair.map { |x| (x + 5).to_peano }
+      end
+      .all? do |pair|
+        KNIGHT[
+          nil,
+          PAIR[5.to_peano, 5.to_peano],
+          PAIR[*pair]
+        ][
+          true,
+          false
+        ]
+      end
+    end
+
+    assert 'cannot move elsewhere' do
+      KNIGHT[
+        nil,
+        PAIR[5.to_peano, 5.to_peano],
+        PAIR[3.to_peano, 7.to_peano]
+      ][false, true]
     end
   end
 end

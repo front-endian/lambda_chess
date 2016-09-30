@@ -43,6 +43,15 @@ class Array
   end
 end
 
+index_array = [0,  1,  2,  3,  4,  5,  6,  7,
+               8,  9,  10, 11, 12, 13, 14, 15,
+               16, 17, 18, 19, 20, 21, 22, 23,
+               24, 25, 26, 27, 28, 29, 30, 31,
+               32, 33, 34, 35, 36, 37, 38, 39,
+               40, 41, 42, 43, 44, 45, 46, 47,
+               48, 49, 50, 51, 52, 53, 54, 55,
+               56, 57, 58, 59, 60, 61, 62, 63]
+
 group 'Choice Functions' do
   group 'AND' do
     assert 'returns a FIRST when given two FIRSTs' do
@@ -83,6 +92,29 @@ group 'Pair Functions' do
 
     assert 'gets the third element when given 2' do
       :C == NTH[example, 2.to_peano]
+    end
+  end
+
+  group 'LIST_MAP' do
+    assert 'maps function across board and returns a new board' do
+      incremented = LIST_MAP[
+                      index_array.to_linked_list,
+                      64.to_peano,
+                      ->(x, _) { x + 1 }
+                    ].to_a(64)
+
+      incremented == index_array.map { |x| x + 1 }
+    end
+
+    assert 'second argument gives current position index' do
+      empty_board   = ([nil] * 64).to_linked_list
+      given_indexes = LIST_MAP[
+                        empty_board,
+                        64.to_peano,
+                        ->(_, i) { i.to_i }
+                      ].to_a(64)
+
+      given_indexes == index_array
     end
   end
 end
@@ -189,15 +221,6 @@ group 'Comparison Functions' do
   end
 end
 
-index_array = [0,  1,  2,  3,  4,  5,  6,  7,
-               8,  9,  10, 11, 12, 13, 14, 15,
-               16, 17, 18, 19, 20, 21, 22, 23,
-               24, 25, 26, 27, 28, 29, 30, 31,
-               32, 33, 34, 35, 36, 37, 38, 39,
-               40, 41, 42, 43, 44, 45, 46, 47,
-               48, 49, 50, 51, 52, 53, 54, 55,
-               56, 57, 58, 59, 60, 61, 62, 63]
-
 group 'Board Functions' do
   group 'POSITION_TO_INDEX' do
     assert 'translates X/Y pair into an array index' do
@@ -224,29 +247,6 @@ group 'Board Functions' do
       board = [:A, :B, :C].to_linked_list
 
       :B == GET_POSITION[board, PAIR[1.to_peano, 0.to_peano]]
-    end
-  end
-
-  group 'LIST_MAP' do
-    assert 'maps function across board and returns a new board' do
-      incremented = LIST_MAP[
-                      index_array.to_linked_list,
-                      64.to_peano,
-                      ->(x, _) { x + 1 }
-                    ].to_a(64)
-
-      incremented == index_array.map { |x| x + 1 }
-    end
-
-    assert 'second argument gives current position index' do
-      empty_board   = ([nil] * 64).to_linked_list
-      given_indexes = LIST_MAP[
-                        empty_board,
-                        64.to_peano,
-                        ->(_, i) { i.to_i }
-                      ].to_a(64)
-
-      given_indexes == index_array
     end
   end
 

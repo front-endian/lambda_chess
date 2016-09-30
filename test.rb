@@ -216,7 +216,7 @@ group 'Comparison Functions' do
     end
 
     assert 'returns SECOND when less' do
-      IS_EQUAL[4.to_peano, 1.to_peano][false, true]
+      IS_EQUAL[1.to_peano, 4.to_peano][false, true]
     end
   end
 end

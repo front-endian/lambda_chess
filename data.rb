@@ -130,6 +130,13 @@ MODULUS = ->(a, b) {
   ]
 }
 
+ABSOLUTE_DIFFERENCE = ->(x, y) {
+  IS_GREATER_OR_EQUAL[x, y][
+    SUBTRACT[x, y],
+    SUBTRACT[y, x]
+  ]
+}
+
 # Numbers
 
 ZERO       = ->(func, zero) { zero }

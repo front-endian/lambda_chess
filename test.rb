@@ -179,6 +179,16 @@ group 'Math Functions' do
      4 == MODULUS[4.to_peano, 10.to_peano].to_i
     end
   end
+
+  group 'ABSOLUTE_DIFFERENCE' do
+    assert 'returns difference when second argument is smaller' do
+      7 == ABSOLUTE_DIFFERENCE[10.to_peano, 3.to_peano].to_i
+    end
+
+    assert 'returns absolute value of difference when second argument is larger' do
+      18 == ABSOLUTE_DIFFERENCE[2.to_peano, 20.to_peano].to_i
+    end
+  end
 end
 
 group 'Comparison Functions' do
@@ -239,6 +249,24 @@ group 'Board Functions' do
 
     assert 'works with zero' do
       0 == POSITION_TO_INDEX[INDEX_TO_POSITION[0.to_peano]].to_i
+    end
+  end
+
+  group 'DISTANCE' do
+    position_1 = PAIR[2.to_peano, 10.to_peano]
+    position_2 = PAIR[5.to_peano, 15.to_peano]
+    expected   = [3, 5]
+
+    assert 'returns distance of the X and Y coordinates' do
+      result = DISTANCE[position_1, position_2]
+
+      expected == [LEFT[result], RIGHT[result]].map(&:to_i)
+    end
+
+    assert 'argument order does not matter' do
+      result = DISTANCE[position_2, position_1]
+
+      expected == [LEFT[result], RIGHT[result]].map(&:to_i)
     end
   end
 

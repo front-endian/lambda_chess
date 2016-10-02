@@ -39,7 +39,7 @@ MOVE = ->(board, from, to) {
       IS_EQUAL[index, POSITION_TO_INDEX[from]][
         ZERO,
         IS_EQUAL[index, POSITION_TO_INDEX[to]][
-          NTH[board, POSITION_TO_INDEX[from]],
+          GET_POSITION[board, from],
           old_piece
         ]
       ]

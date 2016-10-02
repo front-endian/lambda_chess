@@ -31,6 +31,13 @@ GET_POSITION = ->(board, position) {
   NTH[board, POSITION_TO_INDEX[position]]
 }
 
+IS_OCCUPIED = ->(board, position) {
+  IS_GREATER_OR_EQUAL[
+    GET_POSITION[board, position],
+    ONE
+  ]
+}
+
 CHANGE_FUNC = ->(from, to, coordinate) {
   COMPARE[coordinate[from], coordinate[to]][
     INCREMENT,

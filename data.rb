@@ -147,6 +147,7 @@ TWO        = ->(func, zero) { func[func[zero]] }
 THREE      = ->(func, zero) { func[func[func[zero]]] }
 FOUR       = ->(func, zero) { func[func[func[func[zero]]]] }
 FIVE       = ->(func, zero) { func[func[func[func[func[zero]]]]] }
+SIX        = ->(func, zero) { func[func[func[func[func[func[zero]]]]]] }
 EIGHT      = ->(func, zero) { func[func[func[func[func[func[func[func[zero]]]]]]]] }
 NINE       = ->(func, zero) { func[func[func[func[func[func[func[func[func[zero]]]]]]]]] }
 TEN        = ->(func, zero) { func[func[func[func[func[func[func[func[func[func[zero]]]]]]]]]] }

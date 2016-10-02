@@ -19,6 +19,10 @@ STRAIGHT_LINE_PIECE = ->(rule) {
   }
 }
 
+IS_BLACK = ->(piece_number) {
+  IS_ZERO[SUBTRACT[piece_number, TEN]]
+}
+
 # Piece Functions
 
 NULL_PIECE = ->(_, _, _) { SECOND }

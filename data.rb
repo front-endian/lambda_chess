@@ -21,6 +21,12 @@ OR = ->(a, b) {
   }
 }
 
+NOT = ->(choice) {
+  ->(first, second) {
+    choice[second, first]
+  }
+}
+
 # Pair Functions
 
 PAIR = ->(left, right) {

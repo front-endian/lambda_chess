@@ -671,7 +671,8 @@ group 'Piece Functions' do
     end
   end
 
-  group 'PAWN' do
+  group 'PAWN_RULE' do
+    null_position  = PAIR[0.to_peano, 0.to_peano]
     starting_board = [0, 0, 0, 0, 0, 0, 0, 0,
                       0, 1, 0, 0, 0, 0, 0, 0,
                       0, 0, 0, 0, 0, 0, 0, 0,
@@ -685,49 +686,53 @@ group 'Piece Functions' do
 
     group 'can move forward by one' do
       assert 'white' do
-        PAWN[
-          starting_board,
-          PAIR[4.to_peano, 6.to_peano],
-          PAIR[4.to_peano, 5.to_peano]
-        ][
-          true,
-          false
-        ]
+        expect_valid(
+          PAWN_RULE[
+            starting_board,
+            PAIR[4.to_peano, 6.to_peano],
+            PAIR[4.to_peano, 5.to_peano],
+            null_position,
+            null_position
+          ]
+        )
       end
 
       assert 'black' do
-        PAWN[
-          starting_board,
-          PAIR[1.to_peano, 1.to_peano],
-          PAIR[1.to_peano, 2.to_peano]
-        ][
-          true,
-          false
-        ]
+        expect_valid(
+          PAWN_RULE[
+            starting_board,
+            PAIR[1.to_peano, 1.to_peano],
+            PAIR[1.to_peano, 2.to_peano],
+            null_position,
+            null_position
+          ]
+        )
       end
     end
 
     group 'can move forward by two on the first move' do
       assert 'white' do
-        PAWN[
-          starting_board,
-          PAIR[4.to_peano, 6.to_peano],
-          PAIR[4.to_peano, 4.to_peano]
-        ][
-          true,
-          false
-        ]
+        expect_valid(
+          PAWN_RULE[
+            starting_board,
+            PAIR[4.to_peano, 6.to_peano],
+            PAIR[4.to_peano, 4.to_peano],
+            null_position,
+            null_position
+          ]
+        )
       end
 
       assert 'black' do
-        PAWN[
-          starting_board,
-          PAIR[1.to_peano, 1.to_peano],
-          PAIR[1.to_peano, 3.to_peano]
-        ][
-          true,
-          false
-        ]
+        expect_valid(
+          PAWN_RULE[
+            starting_board,
+            PAIR[1.to_peano, 1.to_peano],
+            PAIR[1.to_peano, 3.to_peano],
+            null_position,
+            null_position
+          ]
+        )
       end
     end
 
@@ -744,73 +749,79 @@ group 'Piece Functions' do
                     .to_linked_list
 
       assert 'white' do
-        PAWN[
-          later_board,
-          PAIR[4.to_peano, 5.to_peano],
-          PAIR[4.to_peano, 3.to_peano]
-        ][
-          false,
-          true
-        ]
+        expect_invalid(
+          PAWN_RULE[
+            later_board,
+            PAIR[4.to_peano, 5.to_peano],
+            PAIR[4.to_peano, 3.to_peano],
+            null_position,
+            null_position
+          ]
+        )
       end
 
       assert 'black' do
-        PAWN[
-          later_board,
-          PAIR[1.to_peano, 2.to_peano],
-          PAIR[1.to_peano, 4.to_peano]
-        ][
-          false,
-          true
-        ]
+        expect_invalid(
+          PAWN_RULE[
+            later_board,
+            PAIR[1.to_peano, 2.to_peano],
+            PAIR[1.to_peano, 4.to_peano],
+            null_position,
+            null_position
+          ]
+        )
       end
     end
 
     group 'cannot move backwards' do
       assert 'white' do
-        PAWN[
-          starting_board,
-          PAIR[4.to_peano, 6.to_peano],
-          PAIR[4.to_peano, 7.to_peano]
-        ][
-          false,
-          true
-        ]
+        expect_invalid(
+          PAWN_RULE[
+            starting_board,
+            PAIR[4.to_peano, 6.to_peano],
+            PAIR[4.to_peano, 7.to_peano],
+            null_position,
+            null_position
+          ]
+        )
       end
 
       assert 'black' do
-        PAWN[
-          starting_board,
-          PAIR[1.to_peano, 1.to_peano],
-          PAIR[1.to_peano, 0.to_peano]
-        ][
-          false,
-          true
-        ]
+        expect_invalid(
+          PAWN_RULE[
+            starting_board,
+            PAIR[1.to_peano, 1.to_peano],
+            PAIR[1.to_peano, 0.to_peano],
+            null_position,
+            null_position
+          ]
+        )
       end
     end
 
-    group 'cannot move diagonally' do
+    group 'cannot move diagonally without capturing' do
       assert 'white' do
-        PAWN[
-          starting_board,
-          PAIR[4.to_peano, 6.to_peano],
-          PAIR[5.to_peano, 5.to_peano]
-        ][
-          false,
-          true
-        ]
+        expect_invalid(
+          PAWN_RULE[
+            starting_board,
+            PAIR[4.to_peano, 6.to_peano],
+            PAIR[5.to_peano, 5.to_peano],
+            null_position,
+            null_position
+          ]
+        )
       end
 
       assert 'black' do
-        PAWN[
-          starting_board,
-          PAIR[1.to_peano, 1.to_peano],
-          PAIR[0.to_peano, 2.to_peano]
-        ][
-          false,
-          true
-        ]
+        expect_invalid(
+          PAWN_RULE[
+            starting_board,
+            PAIR[1.to_peano, 1.to_peano],
+            PAIR[0.to_peano, 2.to_peano],
+            null_position,
+            null_position
+          ]
+        )
       end
     end
 
@@ -827,25 +838,27 @@ group 'Piece Functions' do
                       .to_linked_list
 
       assert 'white' do
-        PAWN[
-          capture_board,
-          PAIR[4.to_peano, 5.to_peano],
-          PAIR[5.to_peano, 4.to_peano]
-        ][
-          true,
-          false
-        ]
+        expect_valid(
+          PAWN_RULE[
+            capture_board,
+            PAIR[4.to_peano, 5.to_peano],
+            PAIR[5.to_peano, 4.to_peano],
+            null_position,
+            null_position
+          ]
+        )
       end
 
       assert 'black' do
-        PAWN[
-          capture_board,
-          PAIR[1.to_peano, 2.to_peano],
-          PAIR[0.to_peano, 3.to_peano]
-        ][
-          true,
-          false
-        ]
+        expect_valid(
+          PAWN_RULE[
+            capture_board,
+            PAIR[1.to_peano, 2.to_peano],
+            PAIR[0.to_peano, 3.to_peano],
+            null_position,
+            null_position
+          ]
+        )
       end
     end
 
@@ -862,25 +875,138 @@ group 'Piece Functions' do
                       .to_linked_list
 
       assert 'white' do
-        PAWN[
-          capture_board,
-          PAIR[4.to_peano, 5.to_peano],
-          PAIR[5.to_peano, 6.to_peano]
-        ][
-          false,
-          true
-        ]
+        expect_invalid(
+          PAWN_RULE[
+            capture_board,
+            PAIR[4.to_peano, 5.to_peano],
+            PAIR[5.to_peano, 6.to_peano],
+            null_position,
+            null_position
+          ]
+        )
       end
 
       assert 'black' do
-        PAWN[
-          capture_board,
-          PAIR[1.to_peano, 2.to_peano],
-          PAIR[0.to_peano, 1.to_peano]
-        ][
-          false,
-          true
-        ]
+        expect_invalid(
+          PAWN_RULE[
+            capture_board,
+            PAIR[1.to_peano, 2.to_peano],
+            PAIR[0.to_peano, 1.to_peano],
+            null_position,
+            null_position
+          ]
+        )
+      end
+    end
+
+    group 'can capture en passant' do
+      en_passant_board = [0, 0, 0, 0, 0, 0, 0, 0,
+                         0, 0, 0, 0, 0, 0, 0, 0,
+                         0, 0, 0, 0, 0, 0, 0, 0,
+                         0, 1, 11,0, 0, 0, 0, 0,
+                         0, 0, 0, 1, 11,0, 0, 0,
+                         0, 0, 0, 0, 0, 0, 0, 0,
+                         0, 0, 0, 0, 0, 0, 0, 0,
+                         0, 0, 0, 0, 0, 0, 0, 0]
+                        .map(&:to_peano)
+                        .to_linked_list
+
+      assert 'white' do
+        expect_en_passant(
+          PAWN_RULE[
+            en_passant_board,
+            PAIR[2.to_peano, 3.to_peano],
+            PAIR[1.to_peano, 2.to_peano],
+            PAIR[1.to_peano, 1.to_peano],
+            PAIR[1.to_peano, 3.to_peano]
+          ]
+        )
+      end
+
+      assert 'black' do
+        expect_en_passant(
+          PAWN_RULE[
+            en_passant_board,
+            PAIR[3.to_peano, 4.to_peano],
+            PAIR[4.to_peano, 5.to_peano],
+            PAIR[4.to_peano, 6.to_peano],
+            PAIR[4.to_peano, 4.to_peano]
+          ]
+        )
+      end
+
+      group 'only if last moved was a pawn' do
+        non_passant_board = [0, 0, 0, 0, 0, 0, 0, 0,
+                             0, 0, 0, 0, 0, 0, 0, 0,
+                             0, 0, 0, 0, 0, 0, 0, 0,
+                             0, 4, 11,0, 0, 0, 0, 0,
+                             0, 0, 0, 1, 14,0, 0, 0,
+                             0, 0, 0, 0, 0, 0, 0, 0,
+                             0, 0, 0, 0, 0, 0, 0, 0,
+                             0, 0, 0, 0, 0, 0, 0, 0]
+                            .map(&:to_peano)
+                            .to_linked_list
+
+        assert 'white' do
+          expect_invalid(
+            PAWN_RULE[
+              non_passant_board,
+              PAIR[2.to_peano, 3.to_peano],
+              PAIR[1.to_peano, 2.to_peano],
+              PAIR[1.to_peano, 1.to_peano],
+              PAIR[1.to_peano, 3.to_peano]
+            ]
+          )
+        end
+
+        assert 'black' do
+          expect_invalid(
+            PAWN_RULE[
+              non_passant_board,
+              PAIR[3.to_peano, 4.to_peano],
+              PAIR[4.to_peano, 5.to_peano],
+              PAIR[4.to_peano, 6.to_peano],
+              PAIR[4.to_peano, 4.to_peano]
+            ]
+          )
+        end
+      end
+
+      group 'only if the last moved pawn moved two' do
+        non_passant_board = [0, 0, 0, 0, 0, 0, 0, 0,
+                             0, 0, 0, 0, 0, 0, 0, 0,
+                             0, 0, 0, 0, 0, 0, 0, 0,
+                             0, 1, 11,0, 0, 0, 0, 0,
+                             0, 0, 0, 1, 11,0, 0, 0,
+                             0, 0, 0, 0, 0, 0, 0, 0,
+                             0, 0, 0, 0, 0, 0, 0, 0,
+                             0, 0, 0, 0, 0, 0, 0, 0]
+                            .map(&:to_peano)
+                            .to_linked_list
+
+        assert 'white' do
+          expect_invalid(
+            PAWN_RULE[
+              non_passant_board,
+              PAIR[2.to_peano, 3.to_peano],
+              PAIR[1.to_peano, 2.to_peano],
+              PAIR[1.to_peano, 2.to_peano],
+              PAIR[1.to_peano, 3.to_peano]
+            ]
+          )
+        end
+
+        assert 'black' do
+          expect_invalid(
+            PAWN_RULE[
+              non_passant_board,
+              PAIR[3.to_peano, 4.to_peano],
+              PAIR[4.to_peano, 5.to_peano],
+              PAIR[4.to_peano, 5.to_peano],
+              PAIR[4.to_peano, 4.to_peano]
+            ]
+          )
+        end
       end
     end
   end

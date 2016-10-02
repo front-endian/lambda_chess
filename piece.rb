@@ -104,39 +104,83 @@ KNIGHT_RULE = ->(_, from, to) {
   ]
 }
 
-PAWN = ->(board, from, to) {
+PAWN_RULE = ->(board, from, to, last_from, last_to) {
+  # If moving forward
   IS_BLACK[GET_POSITION[board, from]][
     IS_ZERO[SUBTRACT[RIGHT[from], RIGHT[to]]],
     IS_ZERO[SUBTRACT[RIGHT[to], RIGHT[from]]]
   ][
     FREE_PATH[board, from, to, IDENTITY][
+      # Moving forward one
       AND[
         IS_EQUAL[ZERO, LEFT[DISTANCE[from, to]]],
         IS_EQUAL[ONE, RIGHT[DISTANCE[from, to]]]
       ][
-        # MOVING FORWARD ONE
-        FIRST,
+        VALID,
+        # Moving forward two
         AND[
           IS_EQUAL[ZERO, LEFT[DISTANCE[from, to]]],
           IS_EQUAL[TWO, RIGHT[DISTANCE[from, to]]]
         ][
-          # MOVING FORWARD TWO
+          # Only on first move
           IS_EQUAL[
             RIGHT[from],
             IS_BLACK[GET_POSITION[board, from]][
               ONE,
               SIX
             ]
+          ][
+            VALID,
+            INVALID
           ],
-          SECOND
+          # Capturing en passant
+          AND[
+            AND[
+              # Is moving diagonally forward one
+              AND[
+                IS_EQUAL[ONE, LEFT[DISTANCE[from, to]]],
+                IS_EQUAL[ONE, RIGHT[DISTANCE[from, to]]]
+              ],
+              AND[
+                # Is moving to an empty stop
+                IS_EMPTY[board, to],
+                # The last moved piece is directly behind the new location
+                IS_EQUAL[
+                    POSITION_TO_INDEX[last_to],
+                    POSITION_TO_INDEX[PAIR[LEFT[to], RIGHT[from]]]
+                ]
+              ]
+            ],
+            AND[
+              # The last moved piece a pawn of the opposite color
+              IS_EQUAL[
+                GET_POSITION[board, last_to],
+                IS_BLACK[GET_POSITION[board, from]][
+                  ELEVEN,
+                  ONE
+                ]
+              ],
+              # The last moved piece moved forward two
+              IS_EQUAL[
+                RIGHT[DISTANCE[last_from, last_to]],
+                TWO
+              ]
+            ]
+          ][
+            EN_PASSANT,
+            INVALID
+          ]
         ]
       ],
-      # CAPTURING
+      # Normal capturing
       AND[
         IS_EQUAL[ONE, LEFT[DISTANCE[from, to]]],
         IS_EQUAL[ONE, RIGHT[DISTANCE[from, to]]]
+      ][
+        VALID,
+        INVALID
       ]
     ],
-    SECOND
+    INVALID
   ]
 }

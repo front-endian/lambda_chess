@@ -31,6 +31,14 @@ GET_POSITION = ->(board, position) {
   NTH[board, POSITION_TO_INDEX[position]]
 }
 
+CHANGE_FUNC = ->(from, to, coordinate) {
+  COMPARE[coordinate[from], coordinate[to]][
+    INCREMENT,
+    IDENTITY,
+    DECREMENT
+  ]
+}
+
 MOVE = ->(board, from, to) {
   LIST_MAP[
     board,

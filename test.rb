@@ -230,6 +230,20 @@ group 'Comparison Functions' do
       IS_EQUAL[1.to_peano, 4.to_peano][false, true]
     end
   end
+
+  group 'COMPARE' do
+    assert 'returns first option when first argument is less than the second' do
+      COMPARE[2.to_peano, 9.to_peano][true, false, false]
+    end
+
+    assert 'returns second option when first argument is equal to the second' do
+      COMPARE[4.to_peano, 4.to_peano][false, true, false]
+    end
+
+    assert 'returns third option when first argument is equal to the second' do
+      COMPARE[8.to_peano, 3.to_peano][false, false, true]
+    end
+  end
 end
 
 group 'Board Functions' do

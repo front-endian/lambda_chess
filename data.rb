@@ -56,6 +56,8 @@ LIST_MAP = ->(tuple, size, func) {
 
 # Math Functions
 
+IDENTITY = ->(x) { x }
+
 INCREMENT = ->(a) { ADD[ONE, a] }
 
 ADD = ->(a, b) {
@@ -168,4 +170,16 @@ IS_GREATER_OR_EQUAL = ->(a, b) {
 
 IS_EQUAL = ->(a, b) {
   AND[IS_GREATER_OR_EQUAL[a, b], IS_GREATER_OR_EQUAL[b, a]]
+}
+
+COMPARE = ->(a, b) {
+  ->(less, equal, greater) {
+    IS_GREATER_OR_EQUAL[a, b][
+      IS_EQUAL[a, b][
+        equal,
+        greater
+      ],
+      less
+    ]
+  }
 }

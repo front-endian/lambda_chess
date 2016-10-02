@@ -4,21 +4,26 @@
 # This software may be modified and distributed under the
 # terms of the three-clause BSD license. See LICENSE.txt
 
-# Piece Functions
+# Piece Helper Functions
 
-DISTANCE_RULE = ->(rule) {
+STRAIGHT_LINE_PIECE = ->(rule) {
   ->(board, from, to) {
-    rule[
-      board,
-      LEFT[DISTANCE[from, to]],
-      RIGHT[DISTANCE[from, to]]
+    FREE_PATH[board, from, to, DECREMENT][
+      rule[
+        board,
+        LEFT[DISTANCE[from, to]],
+        RIGHT[DISTANCE[from, to]]
+      ],
+      SECOND
     ]
   }
 }
 
+# Piece Functions
+
 NULL_PIECE = ->(_, _, _) { SECOND }
 
-ROOK = DISTANCE_RULE[
+ROOK = STRAIGHT_LINE_PIECE[
   ->(board, delta_x, delta_y) {
     OR[
       IS_ZERO[delta_x],
@@ -27,7 +32,7 @@ ROOK = DISTANCE_RULE[
   }
 ]
 
-BISHOP = DISTANCE_RULE[
+BISHOP = STRAIGHT_LINE_PIECE[
   ->(board, delta_x, delta_y) {
     IS_EQUAL[delta_x, delta_y]
   }
@@ -40,7 +45,7 @@ QUEEN = ->(from, to) {
   ]
 }
 
-KING = DISTANCE_RULE[
+KING = STRAIGHT_LINE_PIECE[
   ->(board, delta_x, delta_y) {
     AND[
       IS_GREATER_OR_EQUAL[ONE, delta_x],
@@ -49,17 +54,20 @@ KING = DISTANCE_RULE[
   }
 ]
 
-KNIGHT = DISTANCE_RULE[
-  ->(board, delta_x, delta_y) {
+KNIGHT = ->(_, from, to) {
+  ->(delta_x, delta_y) {
     OR[
       AND[
         IS_EQUAL[TWO, delta_x],
-        IS_EQUAL[THREE, delta_y]
+        IS_EQUAL[ONE, delta_y]
       ],
       AND[
-        IS_EQUAL[THREE, delta_x],
+        IS_EQUAL[ONE, delta_x],
         IS_EQUAL[TWO, delta_y]
       ]
     ]
-  }
-]
+  }[
+    LEFT[DISTANCE[from, to]],
+    RIGHT[DISTANCE[from, to]]
+  ]
+}

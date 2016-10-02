@@ -498,13 +498,35 @@ group 'Board Functions' do
 end
 
 group 'Piece Functions' do
-  def test_movement should, func, delta_x, delta_y
+  nothing_surrounding = [0, 0, 0, 0, 0, 0, 0, 0,
+                         0, 0, 0, 0, 0, 0, 0, 0,
+                         0, 0, 0, 0, 0, 0, 0, 0,
+                         0, 0, 0, 0, 0, 0, 0, 0,
+                         0, 0, 0, 0, 7, 0, 0, 0,
+                         0, 0, 0, 0, 0, 0, 0, 0,
+                         0, 0, 0, 0, 0, 0, 0, 0,
+                         0, 0, 0, 0, 0, 0, 0, 0]
+                        .map(&:to_peano)
+                        .to_linked_list
+
+  surrounded = [0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 7, 7, 7, 0, 0,
+                0, 0, 0, 7, 7, 7, 0, 0,
+                0, 0, 0, 7, 7, 7, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0]
+               .map(&:to_peano)
+               .to_linked_list
+
+  def test_movement board, should, func, delta_x, delta_y
     func[
-      nil,
-      PAIR[5.to_peano, 5.to_peano],
+      board,
+      PAIR[4.to_peano, 4.to_peano],
       PAIR[
-        (5 + delta_x).to_peano,
-        (5 + delta_y).to_peano
+        (4 + delta_x).to_peano,
+        (4 + delta_y).to_peano
       ]
     ][
       should,
@@ -512,96 +534,120 @@ group 'Piece Functions' do
     ]
   end
 
-  def horizontal_movement delta, should, func
+  def horizontal_movement board, delta, should, func
     group "can#{' not' unless should}" do
       assert 'left' do
-        test_movement should, func, -delta, 0
+        test_movement board, should, func, -delta, 0
       end
 
       assert 'right' do
-        test_movement should, func, delta, 0
+        test_movement board, should, func, delta, 0
       end
 
       assert 'up' do
-        test_movement should, func, 0, delta
+        test_movement board, should, func, 0, delta
       end
 
       assert 'down' do
-        test_movement should, func, 0, -delta
+        test_movement board, should, func, 0, -delta
       end
     end
   end
 
-  def diagonal_movement delta, should, func
+  def diagonal_movement board, delta, should, func
     group "can#{' not' unless should}" do
       assert 'up + left' do
-        test_movement should, func, -delta, delta
+        test_movement board, should, func, -delta, delta
       end
 
       assert 'up + right' do
-        test_movement should, func, delta, delta
+        test_movement board, should, func, delta, delta
       end
 
       assert 'down + left' do
-        test_movement should, func, -delta, -delta
+        test_movement board, should, func, -delta, -delta
       end
 
       assert 'down + right' do
-        test_movement should, func, -delta, -delta
+        test_movement board, should, func, -delta, -delta
       end
     end
   end
 
   group 'ROOK' do
-    horizontal_movement 3, true,  ROOK
-    diagonal_movement   3, false, ROOK
+    horizontal_movement nothing_surrounding, 3, true,  ROOK
+    diagonal_movement   nothing_surrounding, 3, false, ROOK
+
+    group 'if a piece is in the way' do
+      horizontal_movement surrounded, 3, false,  ROOK
+    end
   end
 
   group 'BISHOP' do
-    horizontal_movement 3, false, BISHOP
-    diagonal_movement   3, true,  BISHOP
+    horizontal_movement nothing_surrounding, 3, false, BISHOP
+    diagonal_movement   nothing_surrounding, 3, true,  BISHOP
+
+    group 'if a piece is in the way' do
+      diagonal_movement surrounded, 3, false,  BISHOP
+    end
   end
 
   group 'KING' do
-    horizontal_movement 1, true, KING
-    diagonal_movement   1, true, KING
+    horizontal_movement nothing_surrounding, 1, true, KING
+    diagonal_movement   nothing_surrounding, 1, true, KING
+
+    assert 'cannot move more than one' do
+      KING[
+        nothing_surrounding,
+        PAIR[4.to_peano, 4.to_peano],
+        PAIR[2.to_peano, 4.to_peano]
+      ][false, true]
+    end
 
     assert 'cannot move arbitrarily' do
       KING[
-        nil,
-        PAIR[5.to_peano, 5.to_peano],
+        nothing_surrounding,
+        PAIR[4.to_peano, 4.to_peano],
         PAIR[3.to_peano, 6.to_peano]
       ][false, true]
     end
   end
 
   group 'KNIGHT' do
-    assert 'can make knights moves' do
-      [
-        [ 2,  3], [ 3,  2],
-        [-2,  3], [-3,  2],
-        [ 2, -3], [ 3, -2],
-        [-2, -3], [-3, -2]
-      ].map do |pair|
-        pair.map { |x| (x + 5).to_peano }
+    def knights_moves board
+      assert 'can make knights moves' do
+        [
+          [ 2,  1], [ 1,  2],
+          [-2,  1], [-1,  2],
+          [ 2, -1], [ 1, -2],
+          [-2, -1], [-1, -2]
+        ].map do |pair|
+          pair.map { |x| (x + 4).to_peano }
+        end
+        .all? do |pair|
+          KNIGHT[
+            board,
+            PAIR[4.to_peano, 4.to_peano],
+            PAIR[*pair]
+          ][
+            true,
+            false
+          ]
+        end
       end
-      .all? do |pair|
-        KNIGHT[
-          nil,
-          PAIR[5.to_peano, 5.to_peano],
-          PAIR[*pair]
-        ][
-          true,
-          false
-        ]
-      end
+    end
+
+    knights_moves nothing_surrounding
+
+    group 'if a piece is in the way' do
+      knights_moves surrounded
     end
 
     assert 'cannot move elsewhere' do
       KNIGHT[
-        nil,
-        PAIR[5.to_peano, 5.to_peano],
-        PAIR[3.to_peano, 7.to_peano]
+        nothing_surrounding,
+        PAIR[4.to_peano, 4.to_peano],
+        PAIR[-4.to_peano, 7.to_peano]
       ][false, true]
     end
   end

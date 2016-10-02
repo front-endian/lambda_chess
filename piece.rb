@@ -6,15 +6,39 @@
 
 # Piece Helper Functions
 
-STRAIGHT_LINE_PIECE = ->(rule) {
+VALID      = ->(valid, invalid, en_passant) { valid }
+INVALID    = ->(valid, invalid, en_passant) { invalid }
+EN_PASSANT = ->(valid, invalid, en_passant) { en_passant }
+
+NULL_PIECE = ->(board, from, to, last_from, last_to) { board }
+
+NORMAL_PIECE = ->(rule) {
+  ->(board, from, to, last_from, last_to) {
+    AND[
+      LEFT[IS_ZERO[DISTANCE[from, to]]],
+      RIGHT[IS_ZERO[DISTANCE[from, to]]]
+    ][
+      board,
+      rule[board, from, to][
+        MOVE[board, from, to],
+        board
+      ]
+    ]
+  }
+}
+
+STRAIGHT_LINE_RULE = ->(rule) {
   ->(board, from, to) {
-    FREE_PATH[board, from, to, DECREMENT][
+    AND[
+      FREE_PATH[board, from, to, DECREMENT],
       rule[
         board,
         LEFT[DISTANCE[from, to]],
         RIGHT[DISTANCE[from, to]]
-      ],
-      SECOND
+      ]
+    ][
+      VALID,
+      INVALID
     ]
   }
 }
@@ -23,11 +47,9 @@ IS_BLACK = ->(piece_number) {
   IS_ZERO[SUBTRACT[piece_number, TEN]]
 }
 
-# Piece Functions
+# Piece Rules
 
-NULL_PIECE = ->(_, _, _) { SECOND }
-
-ROOK = STRAIGHT_LINE_PIECE[
+ROOK_RULE = STRAIGHT_LINE_RULE[
   ->(board, delta_x, delta_y) {
     OR[
       IS_ZERO[delta_x],
@@ -36,20 +58,23 @@ ROOK = STRAIGHT_LINE_PIECE[
   }
 ]
 
-BISHOP = STRAIGHT_LINE_PIECE[
+BISHOP_RULE = STRAIGHT_LINE_RULE[
   ->(board, delta_x, delta_y) {
     IS_EQUAL[delta_x, delta_y]
   }
 ]
 
-QUEEN = ->(from, to) {
+QUEEN_RULE = ->(from, to) {
   OR[
-    ROOK[from, to],
-    BISHOP[from, to]
+    ROOK_RULE[from, to],
+    BISHOP_RULE[from, to]
+  ][
+    VALID,
+    INVALID
   ]
 }
 
-KING = STRAIGHT_LINE_PIECE[
+KING_RULE = STRAIGHT_LINE_RULE[
   ->(board, delta_x, delta_y) {
     AND[
       IS_GREATER_OR_EQUAL[ONE, delta_x],
@@ -58,7 +83,7 @@ KING = STRAIGHT_LINE_PIECE[
   }
 ]
 
-KNIGHT = ->(_, from, to) {
+KNIGHT_RULE = ->(_, from, to) {
   ->(delta_x, delta_y) {
     OR[
       AND[
@@ -69,6 +94,9 @@ KNIGHT = ->(_, from, to) {
         IS_EQUAL[ONE, delta_x],
         IS_EQUAL[TWO, delta_y]
       ]
+    ][
+      VALID,
+      INVALID
     ]
   }[
     LEFT[DISTANCE[from, to]],

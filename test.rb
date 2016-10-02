@@ -520,100 +520,118 @@ group 'Piece Functions' do
                .map(&:to_peano)
                .to_linked_list
 
-  def test_movement board, should, func, delta_x, delta_y
-    func[
-      board,
-      PAIR[4.to_peano, 4.to_peano],
-      PAIR[
-        (4 + delta_x).to_peano,
-        (4 + delta_y).to_peano
-      ]
-    ][
-      should,
-      !should
-    ]
+  def test_movement board, is_valid, func, delta_x, delta_y
+    result = func[
+               board,
+               PAIR[4.to_peano, 4.to_peano],
+               PAIR[
+                 (4 + delta_x).to_peano,
+                 (4 + delta_y).to_peano
+               ]
+             ]
+    if is_valid
+      expect_valid result
+    else
+      expect_invalid result
+    end
   end
 
-  def horizontal_movement board, delta, should, func
-    group "can#{' not' unless should}" do
+  def horizontal_movement board, delta, is_valid, func
+    group "can#{' not' unless is_valid}" do
       assert 'left' do
-        test_movement board, should, func, -delta, 0
+        test_movement board, is_valid, func, -delta, 0
       end
 
       assert 'right' do
-        test_movement board, should, func, delta, 0
+        test_movement board, is_valid, func, delta, 0
       end
 
       assert 'up' do
-        test_movement board, should, func, 0, delta
+        test_movement board, is_valid, func, 0, delta
       end
 
       assert 'down' do
-        test_movement board, should, func, 0, -delta
+        test_movement board, is_valid, func, 0, -delta
       end
     end
   end
 
-  def diagonal_movement board, delta, should, func
-    group "can#{' not' unless should}" do
+  def diagonal_movement board, delta, is_valid, func
+    group "can#{' not' unless is_valid}" do
       assert 'up + left' do
-        test_movement board, should, func, -delta, delta
+        test_movement board, is_valid, func, -delta, delta
       end
 
       assert 'up + right' do
-        test_movement board, should, func, delta, delta
+        test_movement board, is_valid, func, delta, delta
       end
 
       assert 'down + left' do
-        test_movement board, should, func, -delta, -delta
+        test_movement board, is_valid, func, -delta, -delta
       end
 
       assert 'down + right' do
-        test_movement board, should, func, -delta, -delta
+        test_movement board, is_valid, func, -delta, -delta
       end
     end
   end
 
-  group 'ROOK' do
-    horizontal_movement nothing_surrounding, 3, true,  ROOK
-    diagonal_movement   nothing_surrounding, 3, false, ROOK
+  def expect_valid func
+    func[true, false, false]
+  end
+
+  def expect_invalid func
+    func[false, true, false]
+  end
+
+  def expect_en_passant func
+    func[false, false, true]
+  end
+
+  group 'ROOK_RULE' do
+    horizontal_movement nothing_surrounding, 3, true,  ROOK_RULE
+    diagonal_movement   nothing_surrounding, 3, false, ROOK_RULE
 
     group 'if a piece is in the way' do
-      horizontal_movement surrounded, 3, false,  ROOK
+      horizontal_movement surrounded, 3, false,  ROOK_RULE
     end
   end
 
-  group 'BISHOP' do
-    horizontal_movement nothing_surrounding, 3, false, BISHOP
-    diagonal_movement   nothing_surrounding, 3, true,  BISHOP
+  group 'BISHOP_RULE' do
+    horizontal_movement nothing_surrounding, 3, false, BISHOP_RULE
+    diagonal_movement   nothing_surrounding, 3, true,  BISHOP_RULE
 
     group 'if a piece is in the way' do
-      diagonal_movement surrounded, 3, false,  BISHOP
+      diagonal_movement surrounded, 3, false,  BISHOP_RULE
     end
   end
 
-  group 'KING' do
-    horizontal_movement nothing_surrounding, 1, true, KING
-    diagonal_movement   nothing_surrounding, 1, true, KING
+  group 'KING_RULE' do
+    horizontal_movement nothing_surrounding, 1, true, KING_RULE
+    diagonal_movement   nothing_surrounding, 1, true, KING_RULE
 
     assert 'cannot move more than one' do
-      KING[
-        nothing_surrounding,
-        PAIR[4.to_peano, 4.to_peano],
-        PAIR[2.to_peano, 4.to_peano]
-      ][false, true]
+      expect_invalid(
+        KING_RULE[
+          nothing_surrounding,
+          PAIR[4.to_peano, 4.to_peano],
+          PAIR[2.to_peano, 4.to_peano]
+        ]
+      )
     end
 
     assert 'cannot move arbitrarily' do
-      KING[
-        nothing_surrounding,
-        PAIR[4.to_peano, 4.to_peano],
-        PAIR[3.to_peano, 6.to_peano]
-      ][false, true]
+      expect_invalid(
+        KING_RULE[
+          nothing_surrounding,
+          PAIR[4.to_peano, 4.to_peano],
+          PAIR[3.to_peano, 6.to_peano]
+        ]
+      )
     end
   end
 
-  group 'KNIGHT' do
+  group 'KNIGHT_RULE' do
     def knights_moves board
       assert 'can make knights moves' do
         [
@@ -625,14 +643,13 @@ group 'Piece Functions' do
           pair.map { |x| (x + 4).to_peano }
         end
         .all? do |pair|
-          KNIGHT[
-            board,
-            PAIR[4.to_peano, 4.to_peano],
-            PAIR[*pair]
-          ][
-            true,
-            false
-          ]
+          expect_valid(
+            KNIGHT_RULE[
+              board,
+              PAIR[4.to_peano, 4.to_peano],
+              PAIR[*pair]
+            ]
+          )
         end
       end
     end
@@ -644,11 +661,13 @@ group 'Piece Functions' do
     end
 
     assert 'cannot move elsewhere' do
-      KNIGHT[
-        nothing_surrounding,
-        PAIR[4.to_peano, 4.to_peano],
-        PAIR[-4.to_peano, 7.to_peano]
-      ][false, true]
+      expect_invalid(
+        KNIGHT_RULE[
+          nothing_surrounding,
+          PAIR[4.to_peano, 4.to_peano],
+          PAIR[-4.to_peano, 7.to_peano]
+        ]
+      )
     end
   end
 

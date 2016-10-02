@@ -651,4 +651,218 @@ group 'Piece Functions' do
       ][false, true]
     end
   end
+
+  group 'PAWN' do
+    starting_board = [0, 0, 0, 0, 0, 0, 0, 0,
+                      0, 1, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 11,0, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, 0]
+                     .map(&:to_peano)
+                     .to_linked_list
+
+    group 'can move forward by one' do
+      assert 'white' do
+        PAWN[
+          starting_board,
+          PAIR[4.to_peano, 6.to_peano],
+          PAIR[4.to_peano, 5.to_peano]
+        ][
+          true,
+          false
+        ]
+      end
+
+      assert 'black' do
+        PAWN[
+          starting_board,
+          PAIR[1.to_peano, 1.to_peano],
+          PAIR[1.to_peano, 2.to_peano]
+        ][
+          true,
+          false
+        ]
+      end
+    end
+
+    group 'can move forward by two on the first move' do
+      assert 'white' do
+        PAWN[
+          starting_board,
+          PAIR[4.to_peano, 6.to_peano],
+          PAIR[4.to_peano, 4.to_peano]
+        ][
+          true,
+          false
+        ]
+      end
+
+      assert 'black' do
+        PAWN[
+          starting_board,
+          PAIR[1.to_peano, 1.to_peano],
+          PAIR[1.to_peano, 3.to_peano]
+        ][
+          true,
+          false
+        ]
+      end
+    end
+
+    group 'cannot move forward by two on subsequent moves' do
+      later_board = [0, 0, 0, 0, 0, 0, 0, 0,
+                     0, 0, 0, 0, 0, 0, 0, 0,
+                     0, 1, 0, 0, 0, 0, 0, 0,
+                     0, 0, 0, 0, 0, 0, 0, 0,
+                     0, 0, 0, 0, 0, 0, 0, 0,
+                     0, 0, 0, 0, 11,0, 0, 0,
+                     0, 0, 0, 0, 0, 0, 0, 0,
+                     0, 0, 0, 0, 0, 0, 0, 0]
+                    .map(&:to_peano)
+                    .to_linked_list
+
+      assert 'white' do
+        PAWN[
+          later_board,
+          PAIR[4.to_peano, 5.to_peano],
+          PAIR[4.to_peano, 3.to_peano]
+        ][
+          false,
+          true
+        ]
+      end
+
+      assert 'black' do
+        PAWN[
+          later_board,
+          PAIR[1.to_peano, 2.to_peano],
+          PAIR[1.to_peano, 4.to_peano]
+        ][
+          false,
+          true
+        ]
+      end
+    end
+
+    group 'cannot move backwards' do
+      assert 'white' do
+        PAWN[
+          starting_board,
+          PAIR[4.to_peano, 6.to_peano],
+          PAIR[4.to_peano, 7.to_peano]
+        ][
+          false,
+          true
+        ]
+      end
+
+      assert 'black' do
+        PAWN[
+          starting_board,
+          PAIR[1.to_peano, 1.to_peano],
+          PAIR[1.to_peano, 0.to_peano]
+        ][
+          false,
+          true
+        ]
+      end
+    end
+
+    group 'cannot move diagonally' do
+      assert 'white' do
+        PAWN[
+          starting_board,
+          PAIR[4.to_peano, 6.to_peano],
+          PAIR[5.to_peano, 5.to_peano]
+        ][
+          false,
+          true
+        ]
+      end
+
+      assert 'black' do
+        PAWN[
+          starting_board,
+          PAIR[1.to_peano, 1.to_peano],
+          PAIR[0.to_peano, 2.to_peano]
+        ][
+          false,
+          true
+        ]
+      end
+    end
+
+    group 'can capture forward diagonally' do
+      capture_board = [0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 1, 0, 0, 0, 0, 0, 0,
+                       7, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, 0, 7, 0, 0,
+                       0, 0, 0, 0, 11,0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0]
+                      .map(&:to_peano)
+                      .to_linked_list
+
+      assert 'white' do
+        PAWN[
+          capture_board,
+          PAIR[4.to_peano, 5.to_peano],
+          PAIR[5.to_peano, 4.to_peano]
+        ][
+          true,
+          false
+        ]
+      end
+
+      assert 'black' do
+        PAWN[
+          capture_board,
+          PAIR[1.to_peano, 2.to_peano],
+          PAIR[0.to_peano, 3.to_peano]
+        ][
+          true,
+          false
+        ]
+      end
+    end
+
+    group 'cannot capture backwards diagonally' do
+      capture_board = [0, 0, 0, 0, 0, 0, 0, 0,
+                       7, 0, 0, 0, 0, 0, 0, 0,
+                       0, 1, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, 11,0, 0, 0,
+                       0, 0, 0, 0, 0, 7, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0]
+                      .map(&:to_peano)
+                      .to_linked_list
+
+      assert 'white' do
+        PAWN[
+          capture_board,
+          PAIR[4.to_peano, 5.to_peano],
+          PAIR[5.to_peano, 6.to_peano]
+        ][
+          false,
+          true
+        ]
+      end
+
+      assert 'black' do
+        PAWN[
+          capture_board,
+          PAIR[1.to_peano, 2.to_peano],
+          PAIR[0.to_peano, 1.to_peano]
+        ][
+          false,
+          true
+        ]
+      end
+    end
+  end
 end

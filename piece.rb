@@ -75,3 +75,40 @@ KNIGHT = ->(_, from, to) {
     RIGHT[DISTANCE[from, to]]
   ]
 }
+
+PAWN = ->(board, from, to) {
+  IS_BLACK[GET_POSITION[board, from]][
+    IS_ZERO[SUBTRACT[RIGHT[from], RIGHT[to]]],
+    IS_ZERO[SUBTRACT[RIGHT[to], RIGHT[from]]]
+  ][
+    FREE_PATH[board, from, to, IDENTITY][
+      AND[
+        IS_EQUAL[ZERO, LEFT[DISTANCE[from, to]]],
+        IS_EQUAL[ONE, RIGHT[DISTANCE[from, to]]]
+      ][
+        # MOVING FORWARD ONE
+        FIRST,
+        AND[
+          IS_EQUAL[ZERO, LEFT[DISTANCE[from, to]]],
+          IS_EQUAL[TWO, RIGHT[DISTANCE[from, to]]]
+        ][
+          # MOVING FORWARD TWO
+          IS_EQUAL[
+            RIGHT[from],
+            IS_BLACK[GET_POSITION[board, from]][
+              ONE,
+              SIX
+            ]
+          ],
+          SECOND
+        ]
+      ],
+      # CAPTURING
+      AND[
+        IS_EQUAL[ONE, LEFT[DISTANCE[from, to]]],
+        IS_EQUAL[ONE, RIGHT[DISTANCE[from, to]]]
+      ]
+    ],
+    SECOND
+  ]
+}

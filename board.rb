@@ -31,11 +31,8 @@ GET_POSITION = ->(board, position) {
   NTH[board, POSITION_TO_INDEX[position]]
 }
 
-IS_OCCUPIED = ->(board, position) {
-  IS_GREATER_OR_EQUAL[
-    GET_POSITION[board, position],
-    ONE
-  ]
+IS_EMPTY = ->(board, position) {
+  IS_ZERO[GET_POSITION[board, position]]
 }
 
 CHANGE_FUNC = ->(from, to, coordinate) {
@@ -62,7 +59,7 @@ FREE_PATH = ->(board, from, to, alter_length) {
             new_postion,
             # If a filled position hasn't been found, check for a piece
             RIGHT[memo][
-              IS_ZERO[GET_POSITION[board, new_postion]],
+              IS_EMPTY[board, new_postion],
               SECOND
             ]
           ]

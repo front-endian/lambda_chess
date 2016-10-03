@@ -27,6 +27,18 @@ NOT = ->(choice) {
   }
 }
 
+FIVE_CONDITIONS_MET = ->(cond_1, cond_2, cond_3, cond_4, cond_5) {
+  ->(first, second) {
+    cond_1[cond_2[cond_3[cond_4[cond_5[
+      first,
+      second],
+      second],
+      second],
+      second],
+      second]
+  }
+}
+
 # Pair Functions
 
 PAIR = ->(left, right) {

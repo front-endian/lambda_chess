@@ -104,83 +104,90 @@ KNIGHT_RULE = ->(_, from, to) {
   ]
 }
 
+
 PAWN_RULE = ->(board, from, to, last_from, last_to) {
-  # If moving forward
-  IS_BLACK[GET_POSITION[board, from]][
-    IS_ZERO[SUBTRACT[RIGHT[from], RIGHT[to]]],
-    IS_ZERO[SUBTRACT[RIGHT[to], RIGHT[from]]]
-  ][
-    FREE_PATH[board, from, to, IDENTITY][
-      # Moving forward one
-      AND[
-        IS_EQUAL[ZERO, LEFT[DISTANCE[from, to]]],
-        IS_EQUAL[ONE, RIGHT[DISTANCE[from, to]]]
+  ->(check_movement_in_axis, is_this_black, from_y, to_y) {
+    ->(is_moving_forward_one, is_moving_sideways_one) {
+      # Check whether the piece is moving forwards or backwards
+      is_this_black[
+        IS_ZERO[SUBTRACT[from_y, to_y]],
+        IS_ZERO[SUBTRACT[to_y, from_y]]
       ][
-        VALID,
-        # Moving forward two
-        AND[
-          IS_EQUAL[ZERO, LEFT[DISTANCE[from, to]]],
-          IS_EQUAL[TWO, RIGHT[DISTANCE[from, to]]]
-        ][
-          # Only on first move
-          IS_EQUAL[
-            RIGHT[from],
-            IS_BLACK[GET_POSITION[board, from]][
-              ONE,
-              SIX
-            ]
-          ][
-            VALID,
-            INVALID
-          ],
-          # Capturing en passant
-          AND[
-            AND[
-              # Is moving diagonally forward one
+        # If Moving forward
+        # Check if the path is free of obstructing pieces
+        FREE_PATH[board, from, to, IDENTITY][
+          # If the path is free
+          # Check if there is horizontal movement
+          IS_ZERO[LEFT[DISTANCE[from, to]]][
+            # If not moving horizontally
+            OR[
+              is_moving_forward_one,
+              # Check moving forward two from the initial row
               AND[
-                IS_EQUAL[ONE, LEFT[DISTANCE[from, to]]],
-                IS_EQUAL[ONE, RIGHT[DISTANCE[from, to]]]
-              ],
-              AND[
-                # Is moving to an empty stop
-                IS_EMPTY[board, to],
-                # The last moved piece is directly behind the new location
+                check_movement_in_axis[RIGHT, TWO],
                 IS_EQUAL[
-                    POSITION_TO_INDEX[last_to],
-                    POSITION_TO_INDEX[PAIR[LEFT[to], RIGHT[from]]]
+                  from_y,
+                  is_this_black[ONE, SIX]
                 ]
               ]
+            ][
+              VALID,
+              INVALID
             ],
-            AND[
-              # The last moved piece a pawn of the opposite color
+            # If moving horizontally
+            # Check if capturing en passant
+            FIVE_CONDITIONS_MET[
+              is_moving_sideways_one,
+              is_moving_forward_one,
+              # Check if the last moved piece is directly behind the new location
+              IS_EQUAL[
+                POSITION_TO_INDEX[last_to],
+                POSITION_TO_INDEX[PAIR[LEFT[to], from_y]]
+              ],
+              # Check if the last moved piece a pawn of the opposite color
               IS_EQUAL[
                 GET_POSITION[board, last_to],
-                IS_BLACK[GET_POSITION[board, from]][
-                  ELEVEN,
-                  ONE
-                ]
+                is_this_black[ELEVEN, ONE]
               ],
-              # The last moved piece moved forward two
+              # Check if the last moved piece moved forward two
               IS_EQUAL[
                 RIGHT[DISTANCE[last_from, last_to]],
                 TWO
               ]
+            ][
+              EN_PASSANT,
+              INVALID
             ]
+          ],
+          # There is a piece in the way
+          # Check if moving for a normal capture
+          AND[
+            is_moving_sideways_one,
+            is_moving_forward_one
           ][
-            EN_PASSANT,
+            VALID,
             INVALID
           ]
-        ]
-      ],
-      # Normal capturing
-      AND[
-        IS_EQUAL[ONE, LEFT[DISTANCE[from, to]]],
-        IS_EQUAL[ONE, RIGHT[DISTANCE[from, to]]]
-      ][
-        VALID,
+        ],
+        # Not moving forward
         INVALID
       ]
-    ],
-    INVALID
+    }[
+      # "is_moving_forward_one"
+      check_movement_in_axis[RIGHT, ONE],
+      # "is_moving_sideways_one"
+      check_movement_in_axis[LEFT, ONE]
+    ]
+  }[
+    # "check_movement_in_axis"
+    ->(direction, amount) {
+      IS_EQUAL[amount, direction[DISTANCE[from, to]]]
+    },
+    # "is_this_black"
+    IS_BLACK[GET_POSITION[board, from]],
+    # "from_y"
+    RIGHT[from],
+    # "to_y"
+    RIGHT[to]
   ]
 }

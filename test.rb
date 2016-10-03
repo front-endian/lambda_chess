@@ -613,6 +613,28 @@ group 'Piece Functions' do
     end
   end
 
+  group 'QUEEN_RULE' do
+    horizontal_movement nothing_surrounding, 3, true, QUEEN_RULE
+    diagonal_movement   nothing_surrounding, 3, true,  QUEEN_RULE
+
+    group 'if a piece is in the way' do
+      diagonal_movement surrounded, 3, false, QUEEN_RULE
+      horizontal_movement surrounded, 3, false, QUEEN_RULE
+    end
+
+    assert 'cannot move arbitrarily' do
+      expect_invalid(
+        QUEEN_RULE[
+          nothing_surrounding,
+          PAIR[4.to_peano, 4.to_peano],
+          PAIR[3.to_peano, 6.to_peano],
+          null_position,
+          null_position
+        ]
+      )
+    end
+  end
+
   group 'KING_RULE' do
     horizontal_movement nothing_surrounding, 1, true, KING_RULE
     diagonal_movement   nothing_surrounding, 1, true, KING_RULE

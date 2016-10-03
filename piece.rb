@@ -10,25 +10,10 @@ VALID      = ->(valid, invalid, en_passant) { valid }
 INVALID    = ->(valid, invalid, en_passant) { invalid }
 EN_PASSANT = ->(valid, invalid, en_passant) { en_passant }
 
-NULL_PIECE = ->(board, from, to, last_from, last_to) { board }
-
-NORMAL_PIECE = ->(rule) {
-  ->(board, from, to, last_from, last_to) {
-    AND[
-      LEFT[IS_ZERO[DISTANCE[from, to]]],
-      RIGHT[IS_ZERO[DISTANCE[from, to]]]
-    ][
-      board,
-      rule[board, from, to][
-        MOVE[board, from, to],
-        board
-      ]
-    ]
-  }
-}
+NULL_PIECE = ->(board, from, to, last_from, last_to) { INVALID }
 
 STRAIGHT_LINE_RULE = ->(rule) {
-  ->(board, from, to) {
+  ->(board, from, to, last_from, last_to) {
     AND[
       FREE_PATH[board, from, to, DECREMENT],
       rule[
@@ -64,7 +49,7 @@ BISHOP_RULE = STRAIGHT_LINE_RULE[
   }
 ]
 
-QUEEN_RULE = ->(from, to) {
+QUEEN_RULE = ->(board, from, to, last_from, last_to) {
   OR[
     ROOK_RULE[from, to],
     BISHOP_RULE[from, to]
@@ -83,7 +68,7 @@ KING_RULE = STRAIGHT_LINE_RULE[
   }
 ]
 
-KNIGHT_RULE = ->(_, from, to) {
+KNIGHT_RULE = ->(_, from, to, last_from, last_to) {
   ->(delta_x, delta_y) {
     OR[
       AND[

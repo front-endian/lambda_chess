@@ -520,6 +520,11 @@ group 'Piece Functions' do
                .map(&:to_peano)
                .to_linked_list
 
+
+  def null_position
+    PAIR[0.to_peano, 0.to_peano]
+  end
+
   def test_movement board, is_valid, func, delta_x, delta_y
     result = func[
                board,
@@ -527,7 +532,9 @@ group 'Piece Functions' do
                PAIR[
                  (4 + delta_x).to_peano,
                  (4 + delta_y).to_peano
-               ]
+               ],
+               null_position,
+               null_position
              ]
     if is_valid
       expect_valid result
@@ -615,7 +622,9 @@ group 'Piece Functions' do
         KING_RULE[
           nothing_surrounding,
           PAIR[4.to_peano, 4.to_peano],
-          PAIR[2.to_peano, 4.to_peano]
+          PAIR[2.to_peano, 4.to_peano],
+          null_position,
+          null_position
         ]
       )
     end
@@ -625,7 +634,9 @@ group 'Piece Functions' do
         KING_RULE[
           nothing_surrounding,
           PAIR[4.to_peano, 4.to_peano],
-          PAIR[3.to_peano, 6.to_peano]
+          PAIR[3.to_peano, 6.to_peano],
+          null_position,
+          null_position
         ]
       )
     end
@@ -647,7 +658,9 @@ group 'Piece Functions' do
             KNIGHT_RULE[
               board,
               PAIR[4.to_peano, 4.to_peano],
-              PAIR[*pair]
+              PAIR[*pair],
+              null_position,
+              null_position
             ]
           )
         end
@@ -665,14 +678,15 @@ group 'Piece Functions' do
         KNIGHT_RULE[
           nothing_surrounding,
           PAIR[4.to_peano, 4.to_peano],
-          PAIR[-4.to_peano, 7.to_peano]
+          PAIR[-4.to_peano, 7.to_peano],
+          null_position,
+          null_position
         ]
       )
     end
   end
 
   group 'PAWN_RULE' do
-    null_position  = PAIR[0.to_peano, 0.to_peano]
     starting_board = [0, 0, 0, 0, 0, 0, 0, 0,
                       0, 1, 0, 0, 0, 0, 0, 0,
                       0, 0, 0, 0, 0, 0, 0, 0,

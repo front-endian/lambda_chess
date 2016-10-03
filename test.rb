@@ -825,6 +825,69 @@ group 'Piece Functions' do
       end
     end
 
+    group 'cannot move sideways' do
+      assert 'white' do
+        expect_invalid(
+          PAWN_RULE[
+            starting_board,
+            PAIR[4.to_peano, 6.to_peano],
+            PAIR[5.to_peano, 6.to_peano],
+            null_position,
+            null_position
+          ]
+        )
+      end
+
+      assert 'black' do
+        expect_invalid(
+          PAWN_RULE[
+            starting_board,
+            PAIR[1.to_peano, 1.to_peano],
+            PAIR[0.to_peano, 1.to_peano],
+            null_position,
+            null_position
+          ]
+        )
+      end
+    end
+
+    group 'cannot capture sideways' do
+      sideways_capture_board = [0, 0, 0, 0, 0, 0, 0, 0,
+                                11,1, 0, 0, 0, 0, 0, 0,
+                                0, 0, 0, 0, 0, 0, 0, 0,
+                                0, 0, 0, 0, 0, 0, 0, 0,
+                                0, 0, 0, 0, 0, 0, 0, 0,
+                                0, 0, 0, 0, 0, 0, 0, 0,
+                                0, 0, 0, 0, 11,1, 0, 0,
+                                0, 0, 0, 0, 0, 0, 0, 0]
+                               .map(&:to_peano)
+                               .to_linked_list
+
+      assert 'white' do
+        expect_invalid(
+          PAWN_RULE[
+            sideways_capture_board,
+            PAIR[4.to_peano, 6.to_peano],
+            PAIR[5.to_peano, 6.to_peano],
+            null_position,
+            null_position
+          ]
+        )
+      end
+
+      assert 'black' do
+        expect_invalid(
+          PAWN_RULE[
+            sideways_capture_board,
+            PAIR[1.to_peano, 1.to_peano],
+            PAIR[0.to_peano, 1.to_peano],
+            null_position,
+            null_position
+          ]
+        )
+      end
+    end
+
     group 'can capture forward diagonally' do
       capture_board = [0, 0, 0, 0, 0, 0, 0, 0,
                        0, 0, 0, 0, 0, 0, 0, 0,

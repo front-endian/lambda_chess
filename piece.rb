@@ -95,7 +95,9 @@ KNIGHT_RULE = ->(_, from, to, last_from, last_to) {
       INVALID
     ]
   }[
+    # "delta_x"
     LEFT[DISTANCE[from, to]],
+    # "delta_y"
     RIGHT[DISTANCE[from, to]]
   ]
 }

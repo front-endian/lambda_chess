@@ -600,7 +600,7 @@ group 'Piece Functions' do
     diagonal_movement   nothing_surrounding, 3, false, ROOK_RULE
 
     group 'if a piece is in the way' do
-      horizontal_movement surrounded, 3, false,  ROOK_RULE
+      horizontal_movement surrounded, 3, false, ROOK_RULE
     end
   end
 
@@ -609,7 +609,7 @@ group 'Piece Functions' do
     diagonal_movement   nothing_surrounding, 3, true,  BISHOP_RULE
 
     group 'if a piece is in the way' do
-      diagonal_movement surrounded, 3, false,  BISHOP_RULE
+      diagonal_movement surrounded, 3, false, BISHOP_RULE
     end
   end
 

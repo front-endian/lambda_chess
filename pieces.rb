@@ -102,7 +102,6 @@ KNIGHT_RULE = ->(_, from, to, last_from, last_to) {
   ]
 }
 
-
 PAWN_RULE = ->(board, from, to, last_from, last_to) {
   ->(check_movement_in_axis, is_this_black, from_y, to_y) {
     ->(is_moving_forward_one, is_moving_sideways_one) {
@@ -167,7 +166,7 @@ PAWN_RULE = ->(board, from, to, last_from, last_to) {
             INVALID
           ]
         ],
-        # Not moving forward
+        # If not moving forward
         INVALID
       ]
     }[

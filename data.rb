@@ -166,16 +166,43 @@ THREE      = ->(func, zero) { func[func[func[zero]]] }
 FOUR       = ->(func, zero) { func[func[func[func[zero]]]] }
 FIVE       = ->(func, zero) { func[func[func[func[func[zero]]]]] }
 SIX        = ->(func, zero) { func[func[func[func[func[func[zero]]]]]] }
+SEVEN      = ->(func, zero) { func[func[func[func[func[func[func[zero]]]]]]] }
 EIGHT      = ->(func, zero) { func[func[func[func[func[func[func[func[zero]]]]]]]] }
 NINE       = ->(func, zero) { func[func[func[func[func[func[func[func[func[zero]]]]]]]]] }
 TEN        = ->(func, zero) { func[func[func[func[func[func[func[func[func[func[zero]]]]]]]]]] }
-ELEVEN     = ->(func, zero) { func[func[func[func[func[func[func[func[func[func[func[zero]]]]]]]]]]] }
-THIRTEEN   = ->(func, zero) { func[func[func[func[func[func[func[func[func[func[func[func[func[zero]]]]]]]]]]]]] }
-FOURTEEN   = ->(func, zero) { func[func[func[func[func[func[func[func[func[func[func[func[func[func[zero]]]]]]]]]]]]]] }
 FIFTEEN    = MULTIPLY[FIVE, THREE]
-NINETEEN   = ADD[FIFTEEN, FOUR]
 TWENTY     = MULTIPLY[FOUR, FIVE]
 SIXTY_FOUR = MULTIPLY[EIGHT, EIGHT]
+
+# Magic Numbers
+
+MOVED_OFFSET = TWENTY
+WHITE_OFFSET = TEN
+
+BOARD_SPACES = SIXTY_FOUR
+SIDE_LENGTH  = EIGHT
+
+BLACK_PAWN_ROW = ONE
+WHITE_PAWN_ROW = SIX
+BLACK_HOME_ROW = ZERO
+WHITE_HOME_ROW = SEVEN
+KING_COLUMN    = FOUR
+
+EMPTY_SPACE = ZERO
+
+BLACK_PAWN   = ONE
+BLACK_ROOK   = FIVE
+BLACK_KNIGHT = THREE
+BLACK_BISHOP = FOUR
+BLACK_QUEEN  = NINE
+BLACK_KING   = TEN
+
+WHITE_PAWN   = ADD[BLACK_PAWN,   WHITE_OFFSET]
+WHITE_ROOK   = ADD[BLACK_ROOK,   WHITE_OFFSET]
+WHITE_KNIGHT = ADD[BLACK_KNIGHT, WHITE_OFFSET]
+WHITE_BISHOP = ADD[BLACK_BISHOP, WHITE_OFFSET]
+WHITE_QUEEN  = ADD[BLACK_QUEEN,  WHITE_OFFSET]
+WHITE_KING   = ADD[BLACK_KING,   WHITE_OFFSET]
 
 # Comparisons
 

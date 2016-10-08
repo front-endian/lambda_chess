@@ -99,10 +99,10 @@ KNIGHT_RULE = ->(_, from, to, last_from, last_to) {
 }
 
 PAWN_RULE = ->(board, from, to, last_from, last_to) {
-  ->(check_movement_in_axis, is_this_black, from_y, to_y) {
+  ->(check_movement_in_axis, this_is_black, from_y, to_y) {
     ->(is_moving_forward_one, is_moving_sideways_one) {
       # Check whether the piece is moving forwards or backwards
-      is_this_black[
+      this_is_black[
         IS_ZERO[SUBTRACT[from_y, to_y]],
         IS_ZERO[SUBTRACT[to_y, from_y]]
       ][
@@ -120,7 +120,7 @@ PAWN_RULE = ->(board, from, to, last_from, last_to) {
                 check_movement_in_axis[RIGHT, TWO],
                 IS_EQUAL[
                   from_y,
-                  is_this_black[ONE, SIX]
+                  this_is_black[BLACK_PAWN_ROW, WHITE_PAWN_ROW]
                 ]
               ]
             ][
@@ -140,7 +140,7 @@ PAWN_RULE = ->(board, from, to, last_from, last_to) {
               # Check if the last moved piece a pawn of the opposite color
               IS_EQUAL[
                 GET_POSITION[board, last_to],
-                is_this_black[ELEVEN, ONE]
+                this_is_black[WHITE_PAWN, BLACK_PAWN]
               ],
               # Check if the last moved piece moved forward two
               IS_EQUAL[
@@ -176,7 +176,7 @@ PAWN_RULE = ->(board, from, to, last_from, last_to) {
     ->(direction, amount) {
       IS_EQUAL[amount, direction[DISTANCE[from, to]]]
     },
-    # "is_this_black"
+    # "this_is_black"
     IS_BLACK[GET_POSITION[board, from]],
     # "from_y"
     RIGHT[from],

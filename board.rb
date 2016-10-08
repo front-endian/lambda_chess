@@ -31,8 +31,36 @@ GET_POSITION = ->(board, position) {
   NTH[board, POSITION_TO_INDEX[position]]
 }
 
+SET_POSITION = ->(board, position, new_value) {
+  LIST_MAP[
+    board,
+    SIXTY_FOUR,
+    ->(old_piece, index) {
+      IS_EQUAL[index, POSITION_TO_INDEX[position]][
+        new_value,
+        old_piece
+      ]
+    }
+  ]
+}
+
 IS_EMPTY = ->(board, position) {
   IS_ZERO[GET_POSITION[board, position]]
+}
+
+IS_BLACK = ->(piece_number) {
+  IS_ZERO[SUBTRACT[piece_number, TEN]]
+}
+
+TO_MOVED_PIECE = ->(piece_number) {
+  IS_UNMOVED[piece_number][
+    ADD[piece_number, TWENTY],
+    piece_number
+  ]
+}
+
+IS_UNMOVED = ->(piece_number) {
+  IS_GREATER_OR_EQUAL[TWENTY, piece_number]
 }
 
 CHANGE_FUNC = ->(from, to, coordinate) {
@@ -84,7 +112,7 @@ MOVE = ->(board, from, to) {
       IS_EQUAL[index, POSITION_TO_INDEX[from]][
         ZERO,
         IS_EQUAL[index, POSITION_TO_INDEX[to]][
-          GET_POSITION[board, from],
+          TO_MOVED_PIECE[GET_POSITION[board, from]],
           old_piece
         ]
       ]

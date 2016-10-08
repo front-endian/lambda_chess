@@ -28,10 +28,6 @@ STRAIGHT_LINE_RULE = ->(rule) {
   }
 }
 
-IS_BLACK = ->(piece_number) {
-  IS_ZERO[SUBTRACT[piece_number, TEN]]
-}
-
 # Piece Rules
 
 ROOK_RULE = STRAIGHT_LINE_RULE[

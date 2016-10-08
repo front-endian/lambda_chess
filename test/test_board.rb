@@ -50,9 +50,10 @@ group 'Board Functions' do
 
   group 'GET_POSITION' do
     assert 'gets data at the given position' do
-      board = [:A, :B, :C].to_linked_list
+      board = [0, 1, 2,  3,  4,  5,  6,  7,
+               8, 9, 10, 11, 12, 13, 14, 15].to_linked_list
 
-      :B == GET_POSITION[board, PAIR[1.to_peano, 0.to_peano]]
+      10 == GET_POSITION[board, PAIR[2.to_peano, 1.to_peano]]
     end
   end
 
@@ -233,16 +234,20 @@ group 'Board Functions' do
   end
 
   group 'MOVE' do
+    example_board = index_array.map(&:to_peano).to_linked_list
+
     from  = PAIR[2.to_peano, 2.to_peano]
     to    = PAIR[3.to_peano, 7.to_peano]
-    moved = MOVE[index_array.to_linked_list, from, to]
+    moved = MOVE[example_board, from, to]
 
     assert 'moves the piece at the "from" position to the "to" position' do
-      GET_POSITION[moved, to].to_i == index_array[POSITION_TO_INDEX[from].to_i]
+      expected = TO_MOVED_PIECE[GET_POSITION[example_board, from]].to_i
+
+      expected == GET_POSITION[moved, to].to_i
     end
 
     assert 'puts a zero in the "from" position' do
-      GET_POSITION[moved, from].to_i == 0
+      0 == GET_POSITION[moved, from].to_i
     end
   end
 

@@ -49,18 +49,25 @@ IS_EMPTY = ->(board, position) {
 }
 
 IS_BLACK = ->(piece_number) {
-  IS_GREATER_OR_EQUAL[WHITE_OFFSET, piece_number]
+  IS_GREATER_OR_EQUAL[WHITE_OFFSET, TO_UNMOVED_PIECE[piece_number]]
 }
 
 TO_MOVED_PIECE = ->(piece_number) {
-  IS_UNMOVED[piece_number][
-    ADD[piece_number, MOVED_OFFSET],
+  IS_MOVED[piece_number][
+    piece_number,
+    ADD[piece_number, MOVED_OFFSET]
+  ]
+}
+
+TO_UNMOVED_PIECE = ->(piece_number) {
+  IS_MOVED[piece_number][
+    SUBTRACT[piece_number, MOVED_OFFSET],
     piece_number
   ]
 }
 
-IS_UNMOVED = ->(piece_number) {
-  IS_GREATER_OR_EQUAL[MOVED_OFFSET, piece_number]
+IS_MOVED = ->(piece_number) {
+  IS_GREATER_OR_EQUAL[piece_number, MOVED_OFFSET]
 }
 
 CHANGE_FUNC = ->(from, to, coordinate) {

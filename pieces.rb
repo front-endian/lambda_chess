@@ -140,7 +140,7 @@ PAWN_RULE = ->(board, from, to, last_from, last_to) {
               # Check if the last moved piece a pawn of the opposite color
               IS_EQUAL[
                 GET_POSITION[board, last_to],
-                this_is_black[WHITE_PAWN, BLACK_PAWN]
+                TO_MOVED_PIECE[this_is_black[WHITE_PAWN, BLACK_PAWN]]
               ],
               # Check if the last moved piece moved forward two
               IS_EQUAL[

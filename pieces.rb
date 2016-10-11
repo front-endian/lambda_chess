@@ -183,3 +183,28 @@ PAWN_RULE = ->(board, from, to, last_from, last_to) {
     RIGHT[to]
   ]
 }
+
+GET_RULE = ->(piece) {
+  ->(black_piece) {
+    IS_EQUAL[black_piece, BLACK_PAWN][
+      PAWN_RULE,
+    IS_EQUAL[black_piece, BLACK_ROOK][
+      ROOK_RULE,
+    IS_EQUAL[black_piece, BLACK_KNIGHT][
+      KNIGHT_RULE,
+    IS_EQUAL[black_piece, BLACK_BISHOP][
+      BISHOP_RULE,
+    IS_EQUAL[black_piece, BLACK_QUEEN][
+      QUEEN_RULE,
+    IS_EQUAL[black_piece, BLACK_KING][
+      KING_RULE,
+      NULL_PIECE
+    ]]]]]]
+  }[
+    # "black_piece"
+    IS_ZERO[SUBTRACT[piece, WHITE_OFFSET]][
+      piece,
+      SUBTRACT[piece, WHITE_OFFSET]
+    ]
+  ]
+}

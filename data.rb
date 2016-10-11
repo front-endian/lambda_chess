@@ -39,6 +39,15 @@ FIVE_CONDITIONS_MET = ->(cond_1, cond_2, cond_3, cond_4, cond_5) {
   }
 }
 
+IF = ->(condition) {
+  ->(first, second) {
+    condition[
+      -> { first[] },
+      -> { second[] }
+    ][]
+  }
+}
+
 # Pair Functions
 
 PAIR = ->(left, right) {
@@ -215,7 +224,10 @@ IS_GREATER_OR_EQUAL = ->(a, b) {
 }
 
 IS_EQUAL = ->(a, b) {
-  AND[IS_GREATER_OR_EQUAL[a, b], IS_GREATER_OR_EQUAL[b, a]]
+  IF[IS_GREATER_OR_EQUAL[a, b]][
+    -> { IS_GREATER_OR_EQUAL[b, a] },
+    -> { SECOND }
+  ]
 }
 
 COMPARE = ->(a, b) {

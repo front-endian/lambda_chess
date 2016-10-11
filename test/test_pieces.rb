@@ -185,6 +185,30 @@ group 'Piece Functions' do
         ]
       )
     end
+
+    assert 'cannot move into check' do
+      mbk = TO_MOVED_PIECE[BLACK_KING].to_i
+
+      near_check = [0, 0, 0,  0, 0,  0, 0, 0,
+                    0, 0, 0,  0, 0,  0, 0, 0,
+                    0, 0, 0,  0, 0,  0, 0, 0,
+                    0, 0, 0,  0, 0,  0, 0, 0,
+                    0, 0, 0,  0, mbk,0, 0, 0,
+                    0, 0, mwq,0, 0,  0, 0, 0,
+                    0, 0, 0,  0, 0,  0, 0, 0,
+                    0, 0, 0,  0, 0,  0, 0, 0]
+                   .map(&:to_peano)
+                   .to_linked_list
+      expect_invalid(
+        KING_RULE[
+          near_check,
+          PAIR[4.to_peano, 4.to_peano],
+          PAIR[3.to_peano, 4.to_peano],
+          null_position,
+          null_position
+        ]
+      )
+    end
   end
 
   group 'KNIGHT_RULE' do

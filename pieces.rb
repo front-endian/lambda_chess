@@ -65,14 +65,67 @@ QUEEN_RULE = ->(board, from, to, last_from, last_to) {
   ]
 }
 
-KING_RULE = STRAIGHT_LINE_RULE[
-  ->(board, delta_x, delta_y) {
-    AND[
-      IS_GREATER_OR_EQUAL[ONE, delta_x],
-      IS_GREATER_OR_EQUAL[ONE, delta_y]
+IS_NOT_IN_CHECK = ->(board, from, to) {
+  ->(after_move) {
+    LIST_REDUCE[
+      after_move,
+      BOARD_SPACES,
+      ->(memo, piece, index) {
+        AND[
+          memo,
+          # Wrap in an IF to prevent expensive check when unnecessary
+          IF[
+            OR[
+              IS_EQUAL[index, POSITION_TO_INDEX[to]],
+              IS_EQUAL[piece, EMPTY_SPACE]
+            ]
+          ][
+            -> { FIRST },
+            -> {
+              GET_RULE[piece][
+                after_move,
+                INDEX_TO_POSITION[index],
+                to,
+                from,
+                to
+              ][
+                FIRST,
+                SECOND,
+                SECOND
+              ]
+            }
+          ]
+        ]
+      },
+      FIRST
     ]
-  }
-]
+  }[
+    # "after_move"
+    MOVE[board, from, to]
+  ]
+}
+
+KING_RULE =->(board, from, to, last_from, last_to) {
+  # Wrap in an IF to prevent expensive check when unnecessary
+  IF[
+    AND[
+      IS_GREATER_OR_EQUAL[ONE, LEFT[DISTANCE[from, to]]],
+      IS_GREATER_OR_EQUAL[ONE, RIGHT[DISTANCE[from, to]]]
+    ]
+  ][
+    # Only moving one space in any direction
+    -> {
+      IS_NOT_IN_CHECK[board, from, to][
+        # Not moving into check
+        VALID,
+        # Not moving into check
+        INVALID
+      ]
+    },
+    # Moving more than one space in any direction
+    -> { INVALID }
+  ]
+}
 
 KNIGHT_RULE = ->(_, from, to, last_from, last_to) {
   ->(delta_x, delta_y) {

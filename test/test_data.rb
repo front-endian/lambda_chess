@@ -52,7 +52,7 @@ group 'Pair Functions' do
   end
 
   group 'LIST_MAP' do
-    assert 'maps function across board and returns a new board' do
+    assert 'maps function across list and returns a new list' do
       incremented = LIST_MAP[
                       index_array.to_linked_list,
                       64.to_peano,
@@ -71,6 +71,42 @@ group 'Pair Functions' do
                       ].to_a(64)
 
       given_indexes == index_array
+    end
+  end
+
+  group 'LIST_REDUCE' do
+    assert 'passes memo between iterations' do
+      reduction = LIST_REDUCE[
+                    index_array.to_linked_list,
+                    64.to_peano,
+                    ->(x, _, _) { x + 1 },
+                    0
+                  ]
+
+      reduction == index_array.size
+    end
+
+    assert 'third argument gives current index' do
+      empty_board = ([nil] * 64).to_linked_list
+      reduction   = LIST_REDUCE[
+                      empty_board,
+                      64.to_peano,
+                      ->(memo, _, i) { memo << i.to_i },
+                      []
+                    ]
+
+      reduction == index_array
+    end
+
+    assert 'second argument gives current value' do
+      reduction = LIST_REDUCE[
+                    index_array.map(&:succ).to_linked_list,
+                    64.to_peano,
+                    ->(memo, value, _) { memo << value },
+                    []
+                  ]
+
+      reduction == index_array.map(&:succ)
     end
   end
 end

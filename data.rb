@@ -61,22 +61,41 @@ RIGHT = ->(pair) { pair[SECOND] }
 
 NTH = ->(list, index) { LEFT[index[RIGHT, list]] }
 
-LIST_MAP = ->(tuple, size, func) {
+LIST_MAP = ->(list, size, func) {
+  LIST_REDUCE[
+    LIST_REDUCE[
+      list,
+      size,
+      ->(memo, element, index) {
+        PAIR[
+          func[element, index],
+          memo
+        ]
+      },
+      ZERO
+    ],
+    size,
+    ->(memo, element, _) {
+      PAIR[element, memo]
+    },
+    ZERO
+  ]
+}
+
+LIST_REDUCE = ->(list, size, func, initial) {
   LEFT[
     size[
       ->(memo) {
         PAIR[
-          PAIR[
-            func[
-              NTH[tuple, RIGHT[memo]],
-              RIGHT[memo]
-            ],
-            LEFT[memo]
+          func[
+            LEFT[memo],
+            NTH[list, RIGHT[memo]],
+            RIGHT[memo],
           ],
-          DECREMENT[RIGHT[memo]]
+          INCREMENT[RIGHT[memo]]
         ]
       },
-      PAIR[ZERO, DECREMENT[size]]
+      PAIR[initial, ZERO]
     ]
   ]
 }

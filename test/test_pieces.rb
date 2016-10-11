@@ -11,25 +11,35 @@ require './../pieces'
 require 'tet'
 
 group 'Piece Functions' do
-  nothing_surrounding = [0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 7, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0]
+  bp  = BLACK_PAWN.to_i
+  wp  = WHITE_PAWN.to_i
+  mbp = TO_MOVED_PIECE[BLACK_PAWN].to_i
+  mwp = TO_MOVED_PIECE[WHITE_PAWN].to_i
+
+  bq  = BLACK_QUEEN.to_i
+  wq  = WHITE_QUEEN.to_i
+  mbq = TO_MOVED_PIECE[BLACK_QUEEN].to_i
+  mwq = TO_MOVED_PIECE[WHITE_QUEEN].to_i
+
+  nothing_surrounding = [0, 0, 0, 0, 0,  0, 0, 0,
+                         0, 0, 0, 0, 0,  0, 0, 0,
+                         0, 0, 0, 0, 0,  0, 0, 0,
+                         0, 0, 0, 0, 0,  0, 0, 0,
+                         0, 0, 0, 0, mbq,0, 0, 0,
+                         0, 0, 0, 0, 0,  0, 0, 0,
+                         0, 0, 0, 0, 0,  0, 0, 0,
+                         0, 0, 0, 0, 0,  0, 0, 0]
                         .map(&:to_peano)
                         .to_linked_list
 
-  surrounded = [0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 7, 7, 7, 0, 0,
-                0, 0, 0, 7, 7, 7, 0, 0,
-                0, 0, 0, 7, 7, 7, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0]
+  surrounded = [0, 0, 0, 0,  0,  0,  0, 0,
+                0, 0, 0, 0,  0,  0,  0, 0,
+                0, 0, 0, 0,  0,  0,  0, 0,
+                0, 0, 0, mwq,mwq,mwq,0, 0,
+                0, 0, 0, mwq,mbq,mwq,0, 0,
+                0, 0, 0, mwq,mwq,mwq,0, 0,
+                0, 0, 0, 0,  0,  0,  0, 0,
+                0, 0, 0, 0,  0,  0,  0, 0]
                .map(&:to_peano)
                .to_linked_list
 
@@ -223,12 +233,12 @@ group 'Piece Functions' do
 
   group 'PAWN_RULE' do
     starting_board = [0, 0, 0, 0, 0, 0, 0, 0,
-                      0, 1, 0, 0, 0, 0, 0, 0,
+                      0, bp,0, 0, 0, 0, 0, 0,
                       0, 0, 0, 0, 0, 0, 0, 0,
                       0, 0, 0, 0, 0, 0, 0, 0,
                       0, 0, 0, 0, 0, 0, 0, 0,
                       0, 0, 0, 0, 0, 0, 0, 0,
-                      0, 0, 0, 0, 11,0, 0, 0,
+                      0, 0, 0, 0, wp,0, 0, 0,
                       0, 0, 0, 0, 0, 0, 0, 0]
                      .map(&:to_peano)
                      .to_linked_list
@@ -286,14 +296,14 @@ group 'Piece Functions' do
     end
 
     group 'cannot move forward by two on subsequent moves' do
-      later_board = [0, 0, 0, 0, 0, 0, 0, 0,
-                     0, 0, 0, 0, 0, 0, 0, 0,
-                     0, 1, 0, 0, 0, 0, 0, 0,
-                     0, 0, 0, 0, 0, 0, 0, 0,
-                     0, 0, 0, 0, 0, 0, 0, 0,
-                     0, 0, 0, 0, 11,0, 0, 0,
-                     0, 0, 0, 0, 0, 0, 0, 0,
-                     0, 0, 0, 0, 0, 0, 0, 0]
+      later_board = [0, 0,  0, 0, 0,  0, 0, 0,
+                     0, 0,  0, 0, 0,  0, 0, 0,
+                     0, mbp,0, 0, 0,  0, 0, 0,
+                     0, 0,  0, 0, 0,  0, 0, 0,
+                     0, 0,  0, 0, 0,  0, 0, 0,
+                     0, 0,  0, 0, mwp,0, 0, 0,
+                     0, 0,  0, 0, 0,  0, 0, 0,
+                     0, 0,  0, 0, 0,  0, 0, 0]
                     .map(&:to_peano)
                     .to_linked_list
 
@@ -402,12 +412,12 @@ group 'Piece Functions' do
 
     group 'cannot capture sideways' do
       sideways_capture_board = [0, 0, 0, 0, 0, 0, 0, 0,
-                                11,1, 0, 0, 0, 0, 0, 0,
+                                wp,bp,0, 0, 0, 0, 0, 0,
                                 0, 0, 0, 0, 0, 0, 0, 0,
                                 0, 0, 0, 0, 0, 0, 0, 0,
                                 0, 0, 0, 0, 0, 0, 0, 0,
                                 0, 0, 0, 0, 0, 0, 0, 0,
-                                0, 0, 0, 0, 11,1, 0, 0,
+                                0, 0, 0, 0, wp,bp,0, 0,
                                 0, 0, 0, 0, 0, 0, 0, 0]
                                .map(&:to_peano)
                                .to_linked_list
@@ -438,14 +448,14 @@ group 'Piece Functions' do
     end
 
     group 'can capture forward diagonally' do
-      capture_board = [0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 1, 0, 0, 0, 0, 0, 0,
-                       7, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 7, 0, 0,
-                       0, 0, 0, 0, 11,0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0]
+      capture_board = [0,  0,  0, 0, 0,  0,  0, 0,
+                       0,  0,  0, 0, 0,  0,  0, 0,
+                       0,  mbp,0, 0, 0,  0,  0, 0,
+                       mwp,0,  0, 0, 0,  0,  0, 0,
+                       0,  0,  0, 0, 0,  mbp,0, 0,
+                       0,  0,  0, 0, mwp,0,  0, 0,
+                       0,  0,  0, 0, 0,  0,  0, 0,
+                       0,  0,  0, 0, 0,  0,  0, 0]
                       .map(&:to_peano)
                       .to_linked_list
 
@@ -475,14 +485,14 @@ group 'Piece Functions' do
     end
 
     group 'cannot capture backwards diagonally' do
-      capture_board = [0, 0, 0, 0, 0, 0, 0, 0,
-                       7, 0, 0, 0, 0, 0, 0, 0,
-                       0, 1, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 11,0, 0, 0,
-                       0, 0, 0, 0, 0, 7, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0]
+      capture_board = [0,  0,  0, 0, 0,  0,  0, 0,
+                       mwp,0,  0, 0, 0,  0,  0, 0,
+                       0,  mbp,0, 0, 0,  0,  0, 0,
+                       0,  0,  0, 0, 0,  0,  0, 0,
+                       0,  0,  0, 0, 0,  0,  0, 0,
+                       0,  0,  0, 0, mwp,0,  0, 0,
+                       0,  0,  0, 0, 0,  mbp,0, 0,
+                       0,  0,  0, 0, 0,  0,  0, 0]
                       .map(&:to_peano)
                       .to_linked_list
 
@@ -511,18 +521,18 @@ group 'Piece Functions' do
       end
     end
 
-    group 'can capture en passant' do
-      en_passant_board = [0, 0, 0, 0, 0, 0, 0, 0,
-                          0, 0, 0, 0, 0, 0, 0, 0,
-                          0, 0, 0, 0, 0, 0, 0, 0,
-                          0, 21,11,0, 0, 0, 0, 0,
-                          0, 0, 0, 1, 31,0, 0, 0,
-                          0, 0, 0, 0, 0, 0, 0, 0,
-                          0, 0, 0, 0, 0, 0, 0, 0,
-                          0, 0, 0, 0, 0, 0, 0, 0]
-                         .map(&:to_peano)
-                         .to_linked_list
+    en_passant_board = [0, 0,  0, 0, 0,  0, 0, 0,
+                        0, 0,  0, 0, 0,  0, 0, 0,
+                        0, 0,  0, 0, 0,  0, 0, 0,
+                        0, mbp,wp,0, 0,  0, 0, 0,
+                        0, 0,  0, bp,mwp,0, 0, 0,
+                        0, 0,  0, 0, 0,  0, 0, 0,
+                        0, 0,  0, 0, 0,  0, 0, 0,
+                        0, 0,  0, 0, 0,  0, 0, 0]
+                       .map(&:to_peano)
+                       .to_linked_list
 
+    group 'can capture en passant' do
       assert 'white' do
         expect_en_passant(
           PAWN_RULE[
@@ -551,8 +561,8 @@ group 'Piece Functions' do
         non_passant_board = [0, 0, 0, 0, 0, 0, 0, 0,
                              0, 0, 0, 0, 0, 0, 0, 0,
                              0, 0, 0, 0, 0, 0, 0, 0,
-                             0, 4, 11,0, 0, 0, 0, 0,
-                             0, 0, 0, 1, 14,0, 0, 0,
+                             0, bq,wp,0, 0, 0, 0, 0,
+                             0, 0, 0, bp,wq,0, 0, 0,
                              0, 0, 0, 0, 0, 0, 0, 0,
                              0, 0, 0, 0, 0, 0, 0, 0,
                              0, 0, 0, 0, 0, 0, 0, 0]
@@ -585,21 +595,10 @@ group 'Piece Functions' do
       end
 
       group 'only if the last moved pawn moved two' do
-        non_passant_board = [0, 0, 0, 0, 0, 0, 0, 0,
-                             0, 0, 0, 0, 0, 0, 0, 0,
-                             0, 0, 0, 0, 0, 0, 0, 0,
-                             0, 1, 11,0, 0, 0, 0, 0,
-                             0, 0, 0, 1, 11,0, 0, 0,
-                             0, 0, 0, 0, 0, 0, 0, 0,
-                             0, 0, 0, 0, 0, 0, 0, 0,
-                             0, 0, 0, 0, 0, 0, 0, 0]
-                            .map(&:to_peano)
-                            .to_linked_list
-
         assert 'white' do
           expect_invalid(
             PAWN_RULE[
-              non_passant_board,
+              en_passant_board,
               PAIR[2.to_peano, 3.to_peano],
               PAIR[1.to_peano, 2.to_peano],
               PAIR[1.to_peano, 2.to_peano],
@@ -611,7 +610,7 @@ group 'Piece Functions' do
         assert 'black' do
           expect_invalid(
             PAWN_RULE[
-              non_passant_board,
+              en_passant_board,
               PAIR[3.to_peano, 4.to_peano],
               PAIR[4.to_peano, 5.to_peano],
               PAIR[4.to_peano, 5.to_peano],

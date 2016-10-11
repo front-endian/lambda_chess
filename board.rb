@@ -49,7 +49,10 @@ IS_EMPTY = ->(board, position) {
 }
 
 IS_BLACK = ->(piece_number) {
-  IS_GREATER_OR_EQUAL[WHITE_OFFSET, TO_UNMOVED_PIECE[piece_number]]
+  IS_GREATER_OR_EQUAL[
+    TO_MOVED_PIECE[WHITE_OFFSET],
+    TO_MOVED_PIECE[piece_number]
+  ]
 }
 
 TO_MOVED_PIECE = ->(piece_number) {

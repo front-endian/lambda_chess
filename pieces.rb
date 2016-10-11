@@ -45,16 +45,16 @@ BISHOP_RULE = STRAIGHT_LINE_RULE[
 ]
 
 QUEEN_RULE = ->(board, from, to, last_from, last_to) {
-  ->(check_rule) {
+  ->(follows_rule) {
     OR[
-      check_rule[ROOK_RULE],
-      check_rule[BISHOP_RULE]
+      follows_rule[ROOK_RULE],
+      follows_rule[BISHOP_RULE]
     ][
       VALID,
       INVALID
     ]
   }[
-    # "check_rule"
+    # "follows_rule"
     ->(rule) {
       rule[board, from, to, last_from, last_to][
         FIRST,

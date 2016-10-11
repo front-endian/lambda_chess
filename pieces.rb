@@ -17,7 +17,6 @@ STRAIGHT_LINE_RULE = ->(rule) {
     AND[
       FREE_PATH[board, from, to, DECREMENT],
       rule[
-        board,
         LEFT[DISTANCE[from, to]],
         RIGHT[DISTANCE[from, to]]
       ]
@@ -31,7 +30,7 @@ STRAIGHT_LINE_RULE = ->(rule) {
 # Piece Rules
 
 ROOK_RULE = STRAIGHT_LINE_RULE[
-  ->(board, delta_x, delta_y) {
+  ->(delta_x, delta_y) {
     OR[
       IS_ZERO[delta_x],
       IS_ZERO[delta_y]
@@ -40,7 +39,7 @@ ROOK_RULE = STRAIGHT_LINE_RULE[
 ]
 
 BISHOP_RULE = STRAIGHT_LINE_RULE[
-  ->(board, delta_x, delta_y) {
+  ->(delta_x, delta_y) {
     IS_EQUAL[delta_x, delta_y]
   }
 ]

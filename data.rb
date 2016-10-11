@@ -164,20 +164,17 @@ ONE        = ->(func, zero) { func[zero] }
 TWO        = ->(func, zero) { func[func[zero]] }
 THREE      = ->(func, zero) { func[func[func[zero]]] }
 FOUR       = ->(func, zero) { func[func[func[func[zero]]]] }
-FIVE       = ->(func, zero) { func[func[func[func[func[zero]]]]] }
-SIX        = ->(func, zero) { func[func[func[func[func[func[zero]]]]]] }
-SEVEN      = ->(func, zero) { func[func[func[func[func[func[func[zero]]]]]]] }
-EIGHT      = ->(func, zero) { func[func[func[func[func[func[func[func[zero]]]]]]]] }
-NINE       = ->(func, zero) { func[func[func[func[func[func[func[func[func[zero]]]]]]]]] }
-TEN        = ->(func, zero) { func[func[func[func[func[func[func[func[func[func[zero]]]]]]]]]] }
-FIFTEEN    = MULTIPLY[FIVE, THREE]
-TWENTY     = MULTIPLY[FOUR, FIVE]
-SIXTY_FOUR = MULTIPLY[EIGHT, EIGHT]
+FIVE       = ADD[TWO, THREE]
+SIX        = MULTIPLY[TWO, THREE]
+SEVEN      = ADD[THREE, FOUR]
+EIGHT      = MULTIPLY[TWO, FOUR]
+THIRTEEN   = ADD[MULTIPLY[THREE, FOUR], ONE]
+SIXTY_FOUR = MULTIPLY[MULTIPLY[FOUR, FOUR], FOUR]
 
 # Magic Numbers
 
-MOVED_OFFSET = TWENTY
-WHITE_OFFSET = TEN
+MOVED_OFFSET = THIRTEEN
+WHITE_OFFSET = SIX
 
 BOARD_SPACES = SIXTY_FOUR
 SIDE_LENGTH  = EIGHT
@@ -188,14 +185,17 @@ BLACK_HOME_ROW = ZERO
 WHITE_HOME_ROW = SEVEN
 KING_COLUMN    = FOUR
 
+BLACK = FIRST
+WHITE = SECOND
+
 EMPTY_SPACE = ZERO
 
 BLACK_PAWN   = ONE
-BLACK_ROOK   = FIVE
-BLACK_KNIGHT = THREE
-BLACK_BISHOP = FOUR
-BLACK_QUEEN  = NINE
-BLACK_KING   = TEN
+BLACK_KNIGHT = TWO
+BLACK_BISHOP = THREE
+BLACK_ROOK   = FOUR
+BLACK_QUEEN  = FIVE
+BLACK_KING   = SIX
 
 WHITE_PAWN   = ADD[BLACK_PAWN,   WHITE_OFFSET]
 WHITE_ROOK   = ADD[BLACK_ROOK,   WHITE_OFFSET]

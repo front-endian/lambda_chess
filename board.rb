@@ -44,15 +44,31 @@ SET_POSITION = ->(board, position, new_value) {
   ]
 }
 
-IS_EMPTY = ->(board, position) {
-  IS_EQUAL[GET_POSITION[board, position], EMPTY_SPACE]
+IS_EMPTY_AT = ->(board, position) {
+  COLOR_AT_SWITCH[board, position][SECOND, SECOND, FIRST]
 }
 
-IS_BLACK = ->(piece_number) {
-  IS_GREATER_OR_EQUAL[
-    TO_MOVED_PIECE[WHITE_OFFSET],
-    TO_MOVED_PIECE[piece_number]
-  ]
+IS_BLACK_AT = ->(board, position) {
+  COLOR_AT_SWITCH[board, position][FIRST, SECOND, SECOND]
+}
+
+IS_WHITE_AT = ->(board, position) {
+  COLOR_AT_SWITCH[board, position][SECOND, FIRST, SECOND]
+}
+
+COLOR_AT_SWITCH = ->(board, position) {
+  ->(black, white, empty) {
+    IS_GREATER_OR_EQUAL[
+      TO_MOVED_PIECE[WHITE_OFFSET],
+      TO_MOVED_PIECE[GET_POSITION[board, position]]
+    ][
+      IS_EQUAL[GET_POSITION[board, position], EMPTY_SPACE][
+        empty,
+        black,
+      ],
+      white
+    ]
+  }
 }
 
 TO_MOVED_PIECE = ->(piece_number) {
@@ -97,7 +113,7 @@ FREE_PATH = ->(board, from, to, alter_length) {
             new_postion,
             # If a filled position hasn't been found, check for a piece
             RIGHT[memo][
-              IS_EMPTY[board, new_postion],
+              IS_EMPTY_AT[board, new_postion],
               SECOND
             ]
           ]

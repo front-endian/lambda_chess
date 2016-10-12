@@ -15,17 +15,11 @@ NULL_PIECE = ->(board, from, to, last_from, last_to) { INVALID }
 BASIC_CHECKS = ->(rule) {
   ->(board, from, to, last_from, last_to) {
     IF[
-      OR[
-        AND[
-          IS_EQUAL[LEFT[from], LEFT[to]],
-          IS_EQUAL[RIGHT[from], RIGHT[to]]
-        ],
-        AND[
-          NOT[IS_EMPTY[board, to]],
-          IS_BLACK[GET_POSITION[board, from]][
-            IS_BLACK[GET_POSITION[board, to]],
-            NOT[IS_BLACK[GET_POSITION[board, to]]]
-          ]
+      AND[
+        NOT[IS_EMPTY_AT[board, to]],
+        IS_BLACK_AT[board, from][
+          IS_BLACK_AT[board, to],
+          IS_WHITE_AT[board, to]
         ]
       ]
     ][
@@ -261,7 +255,7 @@ PAWN_RULE = BASIC_CHECKS[
         IS_EQUAL[amount, direction[DISTANCE[from, to]]]
       },
       # "this_is_black"
-      IS_BLACK[GET_POSITION[board, from]],
+      IS_BLACK_AT[board, from],
       # "from_y"
       RIGHT[from],
       # "to_y"

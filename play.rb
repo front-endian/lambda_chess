@@ -6,25 +6,19 @@
 
 PERFORM_CASTLING = ->(old_board, from, to, last_from, last_to) {
   ->(is_moving_left) {
-    ->(rook_from, moving_piece, not_in_check) {
+    ->(rook_from, not_in_check) {
       IF[
         AND[
           AND[
             # Moving an unmoved king
             IS_EQUAL[
-              moving_piece,
-              IS_BLACK[moving_piece][
-                BLACK_KING,
-                WHITE_KING
-              ]
+              GET_POSITION[old_board, from],
+              IS_BLACK_AT[old_board, from][BLACK_KING, WHITE_KING]
             ],
             # Moving an unmoved rook
             IS_EQUAL[
               GET_POSITION[old_board, rook_from],
-              IS_BLACK[GET_POSITION[old_board, rook_from]][
-                BLACK_ROOK,
-                WHITE_ROOK
-              ]
+              IS_BLACK_AT[old_board, rook_from][BLACK_ROOK, WHITE_ROOK]
             ]
           ],
           # The path is free
@@ -53,8 +47,6 @@ PERFORM_CASTLING = ->(old_board, from, to, last_from, last_to) {
         is_moving_left[ZERO, SEVEN],
         RIGHT[from]
       ],
-      # "moving_piece"
-      GET_POSITION[old_board, from],
       # "not_in_check"
       FIRST
     ]

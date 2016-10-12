@@ -115,19 +115,74 @@ group 'Piece Functions' do
     end
   end
 
-  def expect_valid func
-    func[true, false, false]
+  def capturing_basics rule, delta_x, delta_y
+    group 'can not capture self' do
+      assert 'white' do
+        expect_invalid(
+          rule[
+            NOTHING_SURROUNDING,
+            FROM_POSITION,
+            FROM_POSITION,
+            NULL_POSITION,
+            NULL_POSITION
+          ]
+        )
+      end
+
+      assert 'black' do
+        expect_invalid(
+          rule[
+            NOTHING_SURROUNDING,
+            FROM_POSITION,
+            FROM_POSITION,
+            NULL_POSITION,
+            NULL_POSITION
+          ]
+        )
+      end
+    end
+
+    group 'can not capture own color' do
+      assert 'black' do
+        expect_invalid(
+          rule[
+            ALL_BLACK,
+            FROM_POSITION,
+            shift_position(FROM_POSITION, delta_y, delta_x),
+            NULL_POSITION,
+            NULL_POSITION
+          ]
+        )
+      end
+
+      assert 'white' do
+        expect_invalid(
+          rule[
+            ALL_WHITE,
+            FROM_POSITION,
+            shift_position(FROM_POSITION, delta_y, -delta_x),
+            NULL_POSITION,
+            NULL_POSITION
+          ]
+        )
+      end
+    end
   end
 
-  def expect_invalid func
-    func[false, true, false]
+  def expect_valid result
+    result[true, false, false]
   end
 
-  def expect_en_passant func
-    func[false, false, true]
+  def expect_invalid result
+    result[false, true, false]
+  end
+
+  def expect_en_passant result
+    result[false, false, true]
   end
 
   group 'ROOK_RULE' do
+    capturing_basics    ROOK_RULE, 0, 1
     horizontal_movement NOTHING_SURROUNDING, 3, true,  ROOK_RULE
     diagonal_movement   NOTHING_SURROUNDING, 3, false, ROOK_RULE
 
@@ -137,6 +192,7 @@ group 'Piece Functions' do
   end
 
   group 'BISHOP_RULE' do
+    capturing_basics    BISHOP_RULE, 1, 1
     horizontal_movement NOTHING_SURROUNDING, 3, false, BISHOP_RULE
     diagonal_movement   NOTHING_SURROUNDING, 3, true,  BISHOP_RULE
 
@@ -146,6 +202,7 @@ group 'Piece Functions' do
   end
 
   group 'QUEEN_RULE' do
+    capturing_basics    QUEEN_RULE, 1, 1
     horizontal_movement NOTHING_SURROUNDING, 3, true, QUEEN_RULE
     diagonal_movement   NOTHING_SURROUNDING, 3, true,  QUEEN_RULE
 
@@ -168,6 +225,7 @@ group 'Piece Functions' do
   end
 
   group 'KING_RULE' do
+    capturing_basics    KING_RULE, 1, 1
     horizontal_movement NOTHING_SURROUNDING, 1, true, KING_RULE
     diagonal_movement   NOTHING_SURROUNDING, 1, true, KING_RULE
 
@@ -244,6 +302,7 @@ group 'Piece Functions' do
       end
     end
 
+    capturing_basics KNIGHT_RULE, 1, 2
     knights_moves    NOTHING_SURROUNDING
 
     group 'if a piece is in the way' do
@@ -274,6 +333,8 @@ group 'Piece Functions' do
                       0, 0, 0, 0, 0, 0, 0, 0]
                      .map(&:to_peano)
                      .to_linked_list
+
+    capturing_basics PAWN_RULE, 1, 1
 
     group 'can move forward by one' do
       assert 'white' do

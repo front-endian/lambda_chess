@@ -324,12 +324,12 @@ group 'Piece Functions' do
 
   group 'PAWN_RULE' do
     starting_board = [0, 0, 0, 0, 0, 0, 0, 0,
-                      0, BP,0, 0, 0, 0, 0, 0,
+                      BP,BP,BP,BP,BP,BP,BP,BP,
                       0, 0, 0, 0, 0, 0, 0, 0,
                       0, 0, 0, 0, 0, 0, 0, 0,
                       0, 0, 0, 0, 0, 0, 0, 0,
                       0, 0, 0, 0, 0, 0, 0, 0,
-                      0, 0, 0, 0, WP,0, 0, 0,
+                      WP,WP,WP,WP,WP,WP,WP,WP,
                       0, 0, 0, 0, 0, 0, 0, 0]
                      .map(&:to_peano)
                      .to_linked_list
@@ -379,7 +379,7 @@ group 'Piece Functions' do
         expect_valid(
           PAWN_RULE[
             starting_board,
-            position(1, 2),
+            position(1, 1),
             position(1, 3),
             NULL_POSITION,
             NULL_POSITION

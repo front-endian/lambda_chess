@@ -98,35 +98,55 @@ CHANGE_FUNC = ->(from, to, coordinate) {
 }
 
 FREE_PATH = ->(board, from, to, alter_length) {
-  RIGHT[
-    # Get the number of positions that have to be checked
-    alter_length[
-      IS_ZERO[ABSOLUTE_DIFFERENCE[LEFT[from], LEFT[to]]][
-        ABSOLUTE_DIFFERENCE[RIGHT[from], RIGHT[to]],
-        ABSOLUTE_DIFFERENCE[LEFT[from], LEFT[to]]
+  ->(delta_x, delta_y) {
+    IF[
+      OR[
+        OR[
+          IS_ZERO[delta_x],
+          IS_ZERO[delta_y],
+        ],
+        IS_EQUAL[delta_x, delta_y]
       ]
     ][
-      # For each position inbetween....
-      ->(memo) {
-        ->(new_postion) {
-          PAIR[
-            new_postion,
-            # If a filled position hasn't been found, check for a piece
-            RIGHT[memo][
-              IS_EMPTY_AT[board, new_postion],
-              SECOND
+      -> {
+        RIGHT[
+          # Get the number of positions that have to be checked
+          alter_length[
+            IS_ZERO[delta_x][
+              ABSOLUTE_DIFFERENCE[RIGHT[from], RIGHT[to]],
+              delta_x
             ]
-          ]
-        }[
-          # Calculate next postion to check
-          PAIR[
-            CHANGE_FUNC[from, to, LEFT][LEFT[LEFT[memo]]],
-            CHANGE_FUNC[from, to, RIGHT][RIGHT[LEFT[memo]]]
+          ][
+            # For each position inbetween....
+            ->(memo) {
+              ->(new_postion) {
+                PAIR[
+                  new_postion,
+                  # If a filled position hasn't been found, check for a piece
+                  RIGHT[memo][
+                    IS_EMPTY_AT[board, new_postion],
+                    SECOND
+                  ]
+                ]
+              }[
+                # Calculate next postion to check
+                PAIR[
+                  CHANGE_FUNC[from, to, LEFT][LEFT[LEFT[memo]]],
+                  CHANGE_FUNC[from, to, RIGHT][RIGHT[LEFT[memo]]]
+                ]
+              ]
+            },
+            PAIR[from, FIRST]
           ]
         ]
       },
-      PAIR[from, FIRST]
+      -> { SECOND }
     ]
+  }[
+    # "delta_x"
+    ABSOLUTE_DIFFERENCE[LEFT[from], LEFT[to]],
+    # "delta_y"
+    ABSOLUTE_DIFFERENCE[RIGHT[from], RIGHT[to]]
   ]
 }
 

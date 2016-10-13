@@ -5,11 +5,6 @@
 # terms of the three-clause BSD license. See LICENSE.txt
 
 require './test_setup'
-require './../data'
-require './../pieces'
-require './../board'
-require './../play'
-require 'tet'
 
 def test_castling_to_one_side original_board:,
                               works:,
@@ -103,76 +98,58 @@ end
 
 group 'Play Functions' do
   group 'PERFORM_CASTLING' do
-    bk = BLACK_KING.to_i
-    br = BLACK_ROOK.to_i
-    bp = BLACK_PAWN.to_i
-
-    wk = WHITE_KING.to_i
-    wr = WHITE_ROOK.to_i
-    wp = WHITE_PAWN.to_i
-
     group 'path is free' do
-      board = [br,0, 0, 0, bk,0, 0, br,
+      board = [BR,0, 0, 0, BK,0, 0, BR,
                0, 0, 0, 0, 0, 0, 0, 0,
                0, 0, 0, 0, 0, 0, 0, 0,
                0, 0, 0, 0, 0, 0, 0, 0,
                0, 0, 0, 0, 0, 0, 0, 0,
                0, 0, 0, 0, 0, 0, 0, 0,
                0, 0, 0, 0, 0, 0, 0, 0,
-               wr,0, 0, 0, wk,0, 0, wr]
-              .map(&:to_peano)
-              .to_linked_list
+               WR,0, 0, 0, WK,0, 0, WR]
+              .to_board
 
       test_castling board, true
     end
 
     group 'path is blocked' do
-      board = [br,0, bp,0, bk,0, bp,br,
+      board = [BR,0, BP,0, BK,0, BP,BR,
                0, 0, 0, 0, 0, 0, 0, 0,
                0, 0, 0, 0, 0, 0, 0, 0,
                0, 0, 0, 0, 0, 0, 0, 0,
                0, 0, 0, 0, 0, 0, 0, 0,
                0, 0, 0, 0, 0, 0, 0, 0,
                0, 0, 0, 0, 0, 0, 0, 0,
-               wr,0, wp,0, wk,0, wp,wr]
-              .map(&:to_peano)
-              .to_linked_list
+               WR,0, WP,0, WK,0, WP,WR]
+              .to_board
 
       test_castling board, false
     end
 
     group 'king has moved' do
-      mbk = TO_MOVED_PIECE[BLACK_KING].to_i
-      mwk = TO_MOVED_PIECE[WHITE_KING].to_i
-
-      board = [br,0, 0, 0, mbk,0, 0, br,
+      board = [BR,0, 0, 0, MBK,0, 0, BR,
                0, 0, 0, 0, 0,  0, 0, 0,
                0, 0, 0, 0, 0,  0, 0, 0,
                0, 0, 0, 0, 0,  0, 0, 0,
                0, 0, 0, 0, 0,  0, 0, 0,
                0, 0, 0, 0, 0,  0, 0, 0,
                0, 0, 0, 0, 0,  0, 0, 0,
-               wr,0, 0, 0, mwk,0, 0, wr]
-              .map(&:to_peano)
-              .to_linked_list
+               WR,0, 0, 0, MWK,0, 0, WR]
+              .to_board
 
       test_castling board, false
     end
 
     group 'rook has moved' do
-      mbr = TO_MOVED_PIECE[BLACK_ROOK].to_i
-      mwr = TO_MOVED_PIECE[WHITE_ROOK].to_i
-
-      board = [mbr,0, 0, 0, bk,0, 0, mbr,
+      board = [MBR,0, 0, 0, BK,0, 0, MBR,
                0,  0, 0, 0, 0, 0, 0, 0,
                0,  0, 0, 0, 0, 0, 0, 0,
                0,  0, 0, 0, 0, 0, 0, 0,
                0,  0, 0, 0, 0, 0, 0, 0,
                0,  0, 0, 0, 0, 0, 0, 0,
                0,  0, 0, 0, 0, 0, 0, 0,
-               mwr,0, 0, 0, wk,0, 0, mwr]
-              .map(&:to_peano)
-              .to_linked_list
+               MWR,0, 0, 0, WK,0, 0, MWR]
+              .to_board
 
       test_castling board, false
     end

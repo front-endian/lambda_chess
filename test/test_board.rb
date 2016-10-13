@@ -5,18 +5,15 @@
 # terms of the three-clause BSD license. See LICENSE.txt
 
 require './test_setup'
-require './../data'
-require './../board'
-require 'tet'
 
 group 'Board Functions' do
   group 'POSITION_TO_INDEX' do
     assert 'translates X/Y pair into an array index' do
-      POSITION_TO_INDEX[PAIR[2.to_peano, 4.to_peano]].to_i == 34
+      34 == POSITION_TO_INDEX[position(2, 4)].to_i
     end
 
     assert 'works with zero' do
-      POSITION_TO_INDEX[PAIR[6.to_peano, 0.to_peano]].to_i == 6
+      6 == POSITION_TO_INDEX[position(6, 0)].to_i
     end
   end
 
@@ -31,8 +28,8 @@ group 'Board Functions' do
   end
 
   group 'DISTANCE' do
-    position_1 = PAIR[2.to_peano, 10.to_peano]
-    position_2 = PAIR[5.to_peano, 15.to_peano]
+    position_1 = position(2, 10)
+    position_2 = position(5, 15)
     expected   = [3, 5]
 
     assert 'returns distance of the X and Y coordinates' do
@@ -53,39 +50,55 @@ group 'Board Functions' do
       board = [0, 1, 2,  3,  4,  5,  6,  7,
                8, 9, 10, 11, 12, 13, 14, 15].to_linked_list
 
-      10 == GET_POSITION[board, PAIR[2.to_peano, 1.to_peano]]
+      10 == GET_POSITION[board, position(2, 1)]
     end
   end
 
   group 'FREE_PATH' do
-    center = PAIR[3.to_peano, 3.to_peano]
-
-    def shifted delta_x, delta_y
-      PAIR[(3 + delta_x).to_peano, (3 + delta_y).to_peano]
-    end
+    center = position(3, 3)
 
     group 'returns FIRST if there are no pieces in the way' do
       example_board = [0, 0, 0, 0, 0, 0, 0, 0,
                        0, 0, 0, 0, 0, 0, 0, 0,
                        0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 1, 0, 0, 0, 0,
+                       0, 0, 0, BP,0, 0, 0, 0,
                        0, 0, 0, 0, 0, 0, 0, 0,
                        0, 0, 0, 0, 0, 0, 0, 0,
                        0, 0, 0, 0, 0, 0, 0, 0,
                        0, 0, 0, 0, 0, 0, 0, 0]
-                      .map(&:to_peano)
-                      .to_linked_list
+                      .to_board
 
       assert 'horizontally' do
-        FREE_PATH[example_board, center, shifted(3, 0), DECREMENT][true, false]
+        expect_truthy(
+          FREE_PATH[
+            example_board,
+            center,
+            shift_position(center, 3, 0),
+            DECREMENT
+          ]
+        )
       end
 
       assert 'vertically' do
-        FREE_PATH[example_board, center, shifted(0, -3), DECREMENT][true, false]
+        expect_truthy(
+          FREE_PATH[
+            example_board,
+            center,
+            shift_position(center, 0, -3),
+            DECREMENT
+          ]
+        )
       end
 
       assert 'diagonally' do
-        FREE_PATH[example_board, center, shifted(-3, 3), DECREMENT][true, false]
+        expect_truthy(
+          FREE_PATH[
+            example_board,
+            center,
+            shift_position(center, -3, 3),
+            DECREMENT
+          ]
+        )
       end
     end
 
@@ -95,45 +108,63 @@ group 'Board Functions' do
           example_board = [0, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
-                           7, 0, 0, 7, 0, 0, 0, 0,
+                           WQ,0, 0, BQ,0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0]
-                          .map(&:to_peano)
-                          .to_linked_list
+                          .to_board
 
-          FREE_PATH[example_board, center, shifted(-3, 0), DECREMENT][true, false]
+          expect_truthy(
+            FREE_PATH[
+              example_board,
+              center,
+              shift_position(center, -3, 0),
+              DECREMENT
+            ]
+          )
         end
 
         assert 'vertically' do
           example_board = [0, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 7, 0, 0, 0, 0,
+                           0, 0, 0, BQ,0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 7, 0, 0, 0, 0]
-                          .map(&:to_peano)
-                          .to_linked_list
+                           0, 0, 0, WQ,0, 0, 0, 0]
+                          .to_board
 
-          FREE_PATH[example_board, center, shifted(0, 4), DECREMENT][true, false]
+          expect_truthy(
+            FREE_PATH[
+              example_board,
+              center,
+              shift_position(center, 0, 4),
+              DECREMENT
+            ]
+          )
         end
 
         assert 'diagonally' do
-          example_board = [0, 0, 0, 0, 0, 0, 7, 0,
+          example_board = [0, 0, 0, 0, 0, 0, WQ,0,
                            0, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 7, 0, 0, 0, 0,
+                           0, 0, 0, BQ,0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0]
-                          .map(&:to_peano)
-                          .to_linked_list
+                          .to_board
 
-          FREE_PATH[example_board, center, shifted(3, -3), DECREMENT][true, false]
+          expect_truthy(
+            FREE_PATH[
+              example_board,
+              center,
+              shift_position(center, 3, -3),
+              DECREMENT
+            ]
+          )
         end
       end
 
@@ -142,45 +173,63 @@ group 'Board Functions' do
           example_board = [0, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
-                           7, 0, 0, 7, 0, 0, 0, 0,
+                           WQ,0, 0, BQ,0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0]
-                          .map(&:to_peano)
-                          .to_linked_list
+                          .to_board
 
-          FREE_PATH[example_board, center, shifted(-3, 0), IDENTITY][false, true]
+          expect_falsy(
+            FREE_PATH[
+              example_board,
+              center,
+              shift_position(center, -3, 0),
+              IDENTITY
+            ]
+          )
         end
 
         assert 'vertically' do
           example_board = [0, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 7, 0, 0, 0, 0,
+                           0, 0, 0, BQ,0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 7, 0, 0, 0, 0]
-                          .map(&:to_peano)
-                          .to_linked_list
+                           0, 0, 0, WQ,0, 0, 0, 0]
+                          .to_board
 
-          FREE_PATH[example_board, center, shifted(0, 4), IDENTITY][false, true]
+          expect_falsy(
+            FREE_PATH[
+              example_board,
+              center,
+              shift_position(center, 0, 4),
+              IDENTITY
+            ]
+          )
         end
 
         assert 'diagonally' do
-          example_board = [0, 0, 0, 0, 0, 0, 7, 0,
+          example_board = [0, 0, 0, 0, 0, 0, WQ,0,
                            0, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 7, 0, 0, 0, 0,
+                           0, 0, 0, BQ,0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0]
-                          .map(&:to_peano)
-                          .to_linked_list
+                          .to_board
 
-          FREE_PATH[example_board, center, shifted(3, -3), IDENTITY][false, true]
+          expect_falsy(
+            FREE_PATH[
+              example_board,
+              center,
+              shift_position(center, 3, -3),
+              IDENTITY
+            ]
+          )
         end
       end
     end
@@ -190,54 +239,72 @@ group 'Board Functions' do
         example_board = [0, 0, 0, 0, 0, 0, 0, 0,
                          0, 0, 0, 0, 0, 0, 0, 0,
                          0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 7, 7, 0, 0, 0,
+                         0, 0, 0, BQ,WQ,0, 0, 0,
                          0, 0, 0, 0, 0, 0, 0, 0,
                          0, 0, 0, 0, 0, 0, 0, 0,
                          0, 0, 0, 0, 0, 0, 0, 0,
                          0, 0, 0, 0, 0, 0, 0, 0]
-                        .map(&:to_peano)
-                        .to_linked_list
+                        .to_board
 
-        FREE_PATH[example_board, center, shifted(4, 0), DECREMENT][false, true]
+        expect_falsy(
+          FREE_PATH[
+            example_board,
+            center,
+            shift_position(center, 4, 0),
+            DECREMENT
+          ]
+        )
       end
 
       assert 'vertically' do
         example_board = [0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 7, 0, 0, 0, 0,
+                         0, 0, 0, WQ,0, 0, 0, 0,
                          0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 7, 0, 0, 0, 0,
+                         0, 0, 0, BQ,0, 0, 0, 0,
                          0, 0, 0, 0, 0, 0, 0, 0,
                          0, 0, 0, 0, 0, 0, 0, 0,
                          0, 0, 0, 0, 0, 0, 0, 0,
                          0, 0, 0, 0, 0, 0, 0, 0]
-                        .map(&:to_peano)
-                        .to_linked_list
+                        .to_board
 
-        FREE_PATH[example_board, center, shifted(0, -3), DECREMENT][false, true]
+        expect_falsy(
+          FREE_PATH[
+            example_board,
+            center,
+            shift_position(center, 0, -3),
+            DECREMENT
+          ]
+        )
       end
 
       assert 'diagonally' do
         example_board = [0, 0, 0, 0, 0, 0, 0, 0,
                          0, 0, 0, 0, 0, 0, 0, 0,
                          0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 7, 0, 0, 0, 0,
+                         0, 0, 0, BQ,0, 0, 0, 0,
                          0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 7, 0, 0, 0, 0, 0, 0,
+                         0, WQ,0, 0, 0, 0, 0, 0,
                          0, 0, 0, 0, 0, 0, 0, 0,
                          0, 0, 0, 0, 0, 0, 0, 0]
-                        .map(&:to_peano)
-                        .to_linked_list
+                        .to_board
 
-        FREE_PATH[example_board, center, shifted(-3, 3), DECREMENT][false, true]
+        expect_falsy(
+          FREE_PATH[
+            example_board,
+            center,
+            shift_position(center, -3, 3),
+            DECREMENT
+          ]
+        )
       end
     end
   end
 
   group 'MOVE' do
-    example_board = index_array.map(&:to_peano).to_linked_list
+    example_board = INDEX_ARRAY.to_board
 
-    from  = PAIR[2.to_peano, 2.to_peano]
-    to    = PAIR[3.to_peano, 7.to_peano]
+    from  = position(2, 2)
+    to    = position(3, 7)
     moved = MOVE[example_board, from, to]
 
     assert 'moves the piece at the "from" position to the "to" position' do

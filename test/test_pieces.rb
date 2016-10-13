@@ -5,60 +5,33 @@
 # terms of the three-clause BSD license. See LICENSE.txt
 
 require './test_setup'
-require './../data'
-require './../board'
-require './../pieces'
-require 'tet'
 
 group 'Piece Functions' do
-  def position x, y
-    PAIR[x.to_peano, y.to_peano]
-  end
-
-  def shift_position position, delta_x, delta_y
-    PAIR[
-       (LEFT[position].to_i + delta_x).to_peano,
-      (RIGHT[position].to_i + delta_y).to_peano
-    ]
-  end
-
-   BP = BLACK_PAWN.to_i
-   WP = WHITE_PAWN.to_i
-  MBP = TO_MOVED_PIECE[BLACK_PAWN].to_i
-  MWP = TO_MOVED_PIECE[WHITE_PAWN].to_i
-   BQ = BLACK_QUEEN.to_i
-   WQ = WHITE_QUEEN.to_i
-  MBQ = TO_MOVED_PIECE[BLACK_QUEEN].to_i
-  MWQ = TO_MOVED_PIECE[WHITE_QUEEN].to_i
-  MBK = TO_MOVED_PIECE[BLACK_KING].to_i
-
   FROM_POSITION = position(4, 4)
   NULL_POSITION = position(0, 0)
 
-  NOTHING_SURROUNDING = [0, 0, 0, 0, 0,  0, 0, 0,
-                         0, 0, 0, 0, 0,  0, 0, 0,
-                         0, 0, 0, 0, 0,  0, 0, 0,
-                         0, 0, 0, 0, 0,  0, 0, 0,
-                         0, 0, 0, 0, MBQ,0, 0, 0,
-                         0, 0, 0, 0, 0,  0, 0, 0,
-                         0, 0, 0, 0, 0,  0, 0, 0,
-                         0, 0, 0, 0, 0,  0, 0, 0]
-                        .map(&:to_peano)
-                        .to_linked_list
+  NOTHING_SURROUNDING = [0, 0, 0, 0, 0, 0, 0, 0,
+                         0, 0, 0, 0, 0, 0, 0, 0,
+                         0, 0, 0, 0, 0, 0, 0, 0,
+                         0, 0, 0, 0, 0, 0, 0, 0,
+                         0, 0, 0, 0, BQ,0, 0, 0,
+                         0, 0, 0, 0, 0, 0, 0, 0,
+                         0, 0, 0, 0, 0, 0, 0, 0,
+                         0, 0, 0, 0, 0, 0, 0, 0]
+                        .to_board
 
-  SURROUNDED = [0, 0, 0, 0,  0,  0,  0, 0,
-                0, 0, 0, 0,  0,  0,  0, 0,
-                0, 0, 0, 0,  0,  0,  0, 0,
-                0, 0, 0, MWQ,MWQ,MWQ,0, 0,
-                0, 0, 0, MWQ,MBQ,MWQ,0, 0,
-                0, 0, 0, MWQ,MWQ,MWQ,0, 0,
-                0, 0, 0, 0,  0,  0,  0, 0,
-                0, 0, 0, 0,  0,  0,  0, 0]
-               .map(&:to_peano)
-               .to_linked_list
+  SURROUNDED = [0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, WQ,WQ,WQ,0, 0,
+                0, 0, 0, WQ,BQ,WQ,0, 0,
+                0, 0, 0, WQ,WQ,WQ,0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0]
+               .to_board
 
-  ALL_WHITE = Array.new(64, MWQ).map(&:to_peano).to_linked_list
-  ALL_BLACK = Array.new(64, MBQ).map(&:to_peano).to_linked_list
+  ALL_WHITE = Array.new(64, MWQ).to_board
+  ALL_BLACK = Array.new(64, MBQ).to_board
 
   def test_movement board, is_valid, rule, delta_x, delta_y
     result = rule[
@@ -169,18 +142,6 @@ group 'Piece Functions' do
     end
   end
 
-  def expect_valid result
-    result[true, false, false]
-  end
-
-  def expect_invalid result
-    result[false, true, false]
-  end
-
-  def expect_en_passant result
-    result[false, false, true]
-  end
-
   group 'ROOK_RULE' do
     capturing_basics    ROOK_RULE, 0, 1
     horizontal_movement NOTHING_SURROUNDING, 3, true,  ROOK_RULE
@@ -262,8 +223,7 @@ group 'Piece Functions' do
                     0, 0, MWQ,0, 0,  0, 0, 0,
                     0, 0, 0,  0, 0,  0, 0, 0,
                     0, 0, 0,  0, 0,  0, 0, 0]
-                   .map(&:to_peano)
-                   .to_linked_list
+                   .to_board
 
       expect_invalid(
         KING_RULE[
@@ -331,8 +291,7 @@ group 'Piece Functions' do
                       0, 0, 0, 0, 0, 0, 0, 0,
                       WP,WP,WP,WP,WP,WP,WP,WP,
                       0, 0, 0, 0, 0, 0, 0, 0]
-                     .map(&:to_peano)
-                     .to_linked_list
+                     .to_board
 
     capturing_basics PAWN_RULE, 1, 1
 
@@ -397,8 +356,7 @@ group 'Piece Functions' do
                      0, 0,  0, 0, MWP,0, 0, 0,
                      0, 0,  0, 0, 0,  0, 0, 0,
                      0, 0,  0, 0, 0,  0, 0, 0]
-                    .map(&:to_peano)
-                    .to_linked_list
+                    .to_board
 
       assert 'white' do
         expect_invalid(
@@ -512,8 +470,7 @@ group 'Piece Functions' do
                                 0, 0, 0, 0, 0, 0, 0, 0,
                                 0, 0, 0, 0, WP,BP,0, 0,
                                 0, 0, 0, 0, 0, 0, 0, 0]
-                               .map(&:to_peano)
-                               .to_linked_list
+                               .to_board
 
       assert 'white' do
         expect_invalid(
@@ -549,8 +506,7 @@ group 'Piece Functions' do
                        0,  0,  0, 0, MWP,0,  0, 0,
                        0,  0,  0, 0, 0,  0,  0, 0,
                        0,  0,  0, 0, 0,  0,  0, 0]
-                      .map(&:to_peano)
-                      .to_linked_list
+                      .to_board
 
       assert 'white' do
         expect_valid(
@@ -586,8 +542,7 @@ group 'Piece Functions' do
                        0,  0,  0, 0, MWP,0,  0, 0,
                        0,  0,  0, 0, 0,  MBP,0, 0,
                        0,  0,  0, 0, 0,  0,  0, 0]
-                      .map(&:to_peano)
-                      .to_linked_list
+                      .to_board
 
       assert 'white' do
         expect_invalid(
@@ -622,8 +577,7 @@ group 'Piece Functions' do
                         0, 0,  0, 0, 0,  0, 0, 0,
                         0, 0,  0, 0, 0,  0, 0, 0,
                         0, 0,  0, 0, 0,  0, 0, 0]
-                       .map(&:to_peano)
-                       .to_linked_list
+                       .to_board
 
     group 'can capture en passant' do
       assert 'white' do
@@ -659,8 +613,7 @@ group 'Piece Functions' do
                              0, 0, 0, 0, 0, 0, 0, 0,
                              0, 0, 0, 0, 0, 0, 0, 0,
                              0, 0, 0, 0, 0, 0, 0, 0]
-                            .map(&:to_peano)
-                            .to_linked_list
+                            .to_board
 
         assert 'white' do
           expect_invalid(

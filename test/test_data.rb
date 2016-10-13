@@ -5,35 +5,33 @@
 # terms of the three-clause BSD license. See LICENSE.txt
 
 require './test_setup'
-require './../data'
-require 'tet'
 
 group 'Choice Functions' do
   group 'AND' do
     assert 'returns a FIRST when given two FIRSTs' do
-      AND[FIRST, FIRST][true, false]
+      expect_truthy AND[FIRST, FIRST]
     end
 
     assert 'returns a SECOND when given a FIRST and a SECOND' do
-      AND[FIRST, SECOND][false, true]
+      expect_falsy AND[FIRST, SECOND]
     end
 
     assert 'returns a SECOND when given two SECONDs' do
-      AND[SECOND, SECOND][false, true]
+      expect_falsy AND[SECOND, SECOND]
     end
   end
 
   group 'OR' do
     assert 'returns a FIRST when given two FIRSTs' do
-      OR[FIRST, FIRST][true, false]
+      expect_truthy OR[FIRST, FIRST]
     end
 
     assert 'returns a FIRST when given a FIRST and a SECOND' do
-      OR[FIRST, SECOND][true, false]
+      expect_truthy OR[FIRST, SECOND]
     end
 
     assert 'returns a SECOND when given two SECONDs' do
-      OR[SECOND, SECOND][false, true]
+      expect_falsy OR[SECOND, SECOND]
     end
   end
 end
@@ -54,12 +52,12 @@ group 'Pair Functions' do
   group 'LIST_MAP' do
     assert 'maps function across list and returns a new list' do
       incremented = LIST_MAP[
-                      index_array.to_linked_list,
+                      INDEX_ARRAY.to_linked_list,
                       64.to_peano,
                       ->(x, _) { x + 1 }
                     ].to_a(64)
 
-      incremented == index_array.map { |x| x + 1 }
+      incremented == INDEX_ARRAY.map { |x| x + 1 }
     end
 
     assert 'second argument gives current position index' do
@@ -70,20 +68,20 @@ group 'Pair Functions' do
                         ->(_, i) { i.to_i }
                       ].to_a(64)
 
-      given_indexes == index_array
+      given_indexes == INDEX_ARRAY
     end
   end
 
   group 'LIST_REDUCE' do
     assert 'passes memo between iterations' do
       reduction = LIST_REDUCE[
-                    index_array.to_linked_list,
+                    INDEX_ARRAY.to_linked_list,
                     64.to_peano,
                     ->(x, _, _) { x + 1 },
                     0
                   ]
 
-      reduction == index_array.size
+      reduction == INDEX_ARRAY.size
     end
 
     assert 'third argument gives current index' do
@@ -95,18 +93,18 @@ group 'Pair Functions' do
                       []
                     ]
 
-      reduction == index_array
+      reduction == INDEX_ARRAY
     end
 
     assert 'second argument gives current value' do
       reduction = LIST_REDUCE[
-                    index_array.map(&:succ).to_linked_list,
+                    INDEX_ARRAY.map(&:succ).to_linked_list,
                     64.to_peano,
                     ->(memo, value, _) { memo << value },
                     []
                   ]
 
-      reduction == index_array.map(&:succ)
+      reduction == INDEX_ARRAY.map(&:succ)
     end
   end
 end
@@ -186,39 +184,39 @@ end
 group 'Comparison Functions' do
   group 'IS_ZERO' do
     assert 'returns FIRST when given zero' do
-      IS_ZERO[0.to_peano][true, false]
+      expect_truthy IS_ZERO[0.to_peano]
     end
 
     assert 'returns SECOND when given a non-zero number' do
-      IS_ZERO[9.to_peano][false, true]
+      expect_falsy IS_ZERO[9.to_peano]
     end
   end
 
   group 'IS_GREATER_OR_EQUAL' do
     assert 'returns FIRST when greater' do
-      IS_GREATER_OR_EQUAL[2.to_peano, 1.to_peano][true, false]
+      expect_truthy IS_GREATER_OR_EQUAL[2.to_peano, 1.to_peano]
     end
 
     assert 'returns FIRST when equal' do
-      IS_GREATER_OR_EQUAL[5.to_peano, 5.to_peano][true, false]
+      expect_truthy IS_GREATER_OR_EQUAL[5.to_peano, 5.to_peano]
     end
 
     assert 'returns SECOND when less' do
-      IS_GREATER_OR_EQUAL[4.to_peano, 9.to_peano][false, true]
+      expect_falsy IS_GREATER_OR_EQUAL[4.to_peano, 9.to_peano]
     end
   end
 
   group 'IS_EQUAL' do
     assert 'returns FIRST when equal' do
-      IS_EQUAL[6.to_peano, 6.to_peano][true, false]
+      expect_truthy IS_EQUAL[6.to_peano, 6.to_peano]
     end
 
     assert 'returns SECOND when greater' do
-      IS_EQUAL[7.to_peano, 2.to_peano][false, true]
+      expect_falsy IS_EQUAL[7.to_peano, 2.to_peano]
     end
 
     assert 'returns SECOND when less' do
-      IS_EQUAL[1.to_peano, 4.to_peano][false, true]
+      expect_falsy IS_EQUAL[1.to_peano, 4.to_peano]
     end
   end
 

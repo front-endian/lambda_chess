@@ -92,17 +92,18 @@ IS_NOT_IN_CHECK = ->(board, from, to) {
       after_move,
       BOARD_SPACES,
       ->(memo, piece, index) {
-        AND[
-          memo,
-          # Wrap in an IF to prevent expensive check when unnecessary
-          IF[
-            OR[
-              IS_EQUAL[index, POSITION_TO_INDEX[to]],
-              IS_EQUAL[piece, EMPTY_SPACE]
-            ]
-          ][
-            -> { FIRST },
-            -> {
+        IF[
+          OR[
+            IS_EQUAL[piece, EMPTY_SPACE],
+            IS_EQUAL[index, POSITION_TO_INDEX[to]]
+          ]
+        ][
+          # If this is the king under test or an empty space
+          -> { memo },
+          # If this is another piece
+          -> {
+            AND[
+              memo,
               GET_RULE[piece][
                 after_move,
                 INDEX_TO_POSITION[index],
@@ -110,12 +111,12 @@ IS_NOT_IN_CHECK = ->(board, from, to) {
                 from,
                 to
               ][
-                FIRST,
                 SECOND,
+                FIRST,
                 SECOND
               ]
-            }
-          ]
+            ][FIRST, SECOND]
+          }
         ]
       },
       FIRST

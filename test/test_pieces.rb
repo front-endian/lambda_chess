@@ -142,6 +142,98 @@ group 'Piece Functions' do
     end
   end
 
+  def check_check
+    assert 'returns FIRST with nothing around' do
+      example_board = [0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, BK,0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0]
+                      .to_board
+
+      expect_truthy yield(
+                      example_board,
+                      position(4, 4),
+                      position(4, 5)
+                    )
+    end
+
+    assert 'returns SECOND when moving into check' do
+      example_board = [0, 0, 0,  0, 0,  0, 0, 0,
+                       0, 0, 0,  0, 0,  0, 0, 0,
+                       0, 0, 0,  0, 0,  0, 0, 0,
+                       0, 0, 0,  0, 0,  0, 0, 0,
+                       0, 0, 0,  0, MBK,0, 0, 0,
+                       0, 0, MWP,0, 0,  0, 0, 0,
+                       0, 0, 0,  0, 0,  0, 0, 0,
+                       0, 0, 0,  0, 0,  0, 0, 0]
+                      .to_board
+
+      expect_falsy yield(
+                     example_board,
+                     position(4, 4),
+                     position(3, 4)
+                   )
+    end
+
+    assert 'returns FIRST when moving out of check' do
+      example_board = [0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, BK,0, 0, 0,
+                       0, 0, 0, 0, WR,0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0]
+                      .to_board
+
+      expect_truthy yield(
+                      example_board,
+                      position(4, 4),
+                      position(3, 4)
+                    )
+    end
+
+    assert 'check can not come from own color' do
+      example_board = [0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, BK,0, 0, 0,
+                       0, 0, 0, BR,0, 0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0]
+                      .to_board
+
+      expect_truthy yield(
+                      example_board,
+                      position(4, 4),
+                      position(3, 4)
+                    )
+    end
+
+    assert 'returns FIRST when moving near but not into check' do
+      example_board = [0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, BK,0, 0, 0,
+                       0, WR,0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0]
+                      .to_board
+
+      expect_truthy yield(
+                      example_board,
+                      position(4, 4),
+                      position(3, 4)
+                    )
+    end
+  end
+
   group 'ROOK_RULE' do
     capturing_basics    ROOK_RULE, 0, 1
     horizontal_movement NOTHING_SURROUNDING, 3, true,  ROOK_RULE
@@ -185,10 +277,44 @@ group 'Piece Functions' do
     end
   end
 
+  group 'IS_NOT_IN_CHECK' do
+    check_check do |board, from, to|
+      IS_NOT_IN_CHECK[board, from, to]
+    end
+
+    assert 'allows moving into same position with own pieces nearby' do
+      board = [0, 0, 0, 0, 0, 0, 0, 0,
+               0, 0, 0, 0, 0, 0, 0, 0,
+               BR,0, 0, 0, BK,0, 0, 0,
+               0, 0, 0, 0, 0, 0, 0, 0,
+               0, 0, 0, 0, 0, 0, 0, 0,
+               0, 0, 0, 0, 0, 0, 0, 0,
+               0, 0, 0, 0, 0, 0, 0, 0,
+               0, 0, 0, 0, 0, 0, 0, 0]
+              .to_board
+
+      expect_truthy IS_NOT_IN_CHECK[board, position(4, 2), position(4, 2)]
+    end
+  end
+
   group 'KING_RULE' do
     capturing_basics    KING_RULE, 1, 1
     horizontal_movement NOTHING_SURROUNDING, 1, true, KING_RULE
     diagonal_movement   NOTHING_SURROUNDING, 1, true, KING_RULE
+
+    check_check do |board, from, to|
+      KING_RULE[
+        board,
+        from,
+        to,
+        NULL_POSITION,
+        NULL_POSITION
+      ][
+        FIRST,
+        SECOND,
+        SECOND
+      ]
+    end
 
     assert 'cannot move more than one' do
       expect_invalid(
@@ -215,14 +341,14 @@ group 'Piece Functions' do
     end
 
     assert 'cannot move into check' do
-      near_check = [0, 0, 0,  0, 0,  0, 0, 0,
-                    0, 0, 0,  0, 0,  0, 0, 0,
-                    0, 0, 0,  0, 0,  0, 0, 0,
-                    0, 0, 0,  0, 0,  0, 0, 0,
-                    0, 0, 0,  0, MBK,0, 0, 0,
-                    0, 0, MWQ,0, 0,  0, 0, 0,
-                    0, 0, 0,  0, 0,  0, 0, 0,
-                    0, 0, 0,  0, 0,  0, 0, 0]
+      near_check = [0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, BK,0, 0, 0,
+                    0, 0, WQ,0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0]
                    .to_board
 
       expect_invalid(

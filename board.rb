@@ -135,10 +135,10 @@ MOVE = ->(board, from, to) {
     board,
     BOARD_SPACES,
     ->(old_piece, index) {
-      IS_EQUAL[index, POSITION_TO_INDEX[from]][
-        EMPTY_SPACE,
-        IS_EQUAL[index, POSITION_TO_INDEX[to]][
-          TO_MOVED_PIECE[GET_POSITION[board, from]],
+      IS_EQUAL[index, POSITION_TO_INDEX[to]][
+        TO_MOVED_PIECE[GET_POSITION[board, from]],
+        IS_EQUAL[index, POSITION_TO_INDEX[from]][
+          EMPTY_SPACE,
           old_piece
         ]
       ]

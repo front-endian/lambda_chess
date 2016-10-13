@@ -316,6 +316,14 @@ group 'Board Functions' do
     assert 'puts a zero in the "from" position' do
       0 == GET_POSITION[moved, from].to_i
     end
+
+    assert 'works when moving to same position' do
+      null_move = MOVE[example_board, from, from]
+
+      expected = TO_MOVED_PIECE[GET_POSITION[example_board, from]].to_i
+
+      expected == GET_POSITION[null_move, from].to_i
+    end
   end
 
   group 'INITIAL_BOARD' do

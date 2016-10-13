@@ -7,3 +7,4 @@
 require './test_data'
 require './test_board'
 require './test_pieces'
+require './test_play'

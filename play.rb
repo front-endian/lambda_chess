@@ -26,20 +26,23 @@ PERFORM_CASTLING = ->(old_board, from, to, last_from, last_to) {
         ]
       ][
         ->() {
-          # Move the rook
-          MOVE[
-            # Move the king
-            MOVE[old_board, from, to],
-            rook_from,
-            PAIR[
-              is_moving_left[THREE, FIVE],
-              RIGHT[from]
-            ]
+          IF[
+            IS_NOT_IN_CHECK[old_board, from, from]
+          ][
+            ->() {
+              MOVE[
+                MOVE[old_board, from, to],
+                rook_from,
+                PAIR[
+                  is_moving_left[THREE, FIVE],
+                  RIGHT[from]
+                ]
+              ]
+            },
+            ->() { old_board }
           ]
         },
-        ->() {
-          old_board
-        }
+        ->() { old_board }
       ]
     }[
       # "rook_from"

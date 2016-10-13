@@ -162,5 +162,19 @@ group 'Play Functions' do
 
       test_castling board, false
     end
+
+    group 'when king is in check' do
+      board = [BR,0, 0, 0, BK,0, 0, BR,
+               0, 0, 0, 0, WR,0, 0, 0,
+               0, 0, 0, 0, 0, 0, 0, 0,
+               0, 0, 0, 0, 0, 0, 0, 0,
+               0, 0, 0, 0, 0, 0, 0, 0,
+               0, 0, 0, 0, 0, 0, 0, 0,
+               0, 0, 0, 0, BR,0, 0, 0,
+               WR,0, 0, 0, WK,0, 0, WR]
+              .to_board
+
+      test_castling board, false
+    end
   end
 end

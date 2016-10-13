@@ -10,15 +10,25 @@ group 'Piece Functions' do
   FROM_POSITION = position(4, 4)
   NULL_POSITION = position(0, 0)
 
-  NOTHING_SURROUNDING = [0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, BQ,0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0]
-                        .to_board
+  NOTHING_SURROUNDING_BLACK = [0, 0, 0, 0, 0, 0, 0, 0,
+                               0, 0, 0, 0, 0, 0, 0, 0,
+                               0, 0, 0, 0, 0, 0, 0, 0,
+                               0, 0, 0, 0, 0, 0, 0, 0,
+                               0, 0, 0, 0, BQ,0, 0, 0,
+                               0, 0, 0, 0, 0, 0, 0, 0,
+                               0, 0, 0, 0, 0, 0, 0, 0,
+                               0, 0, 0, 0, 0, 0, 0, 0]
+                              .to_board
+
+  NOTHING_SURROUNDING_WHITE = [0, 0, 0, 0, 0, 0, 0, 0,
+                               0, 0, 0, 0, 0, 0, 0, 0,
+                               0, 0, 0, 0, 0, 0, 0, 0,
+                               0, 0, 0, 0, 0, 0, 0, 0,
+                               0, 0, 0, 0, WQ,0, 0, 0,
+                               0, 0, 0, 0, 0, 0, 0, 0,
+                               0, 0, 0, 0, 0, 0, 0, 0,
+                               0, 0, 0, 0, 0, 0, 0, 0]
+                              .to_board
 
   SURROUNDED = [0, 0, 0, 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 0, 0, 0,
@@ -93,7 +103,7 @@ group 'Piece Functions' do
       assert 'white' do
         expect_invalid(
           rule[
-            NOTHING_SURROUNDING,
+            NOTHING_SURROUNDING_WHITE,
             FROM_POSITION,
             FROM_POSITION,
             NULL_POSITION,
@@ -105,7 +115,7 @@ group 'Piece Functions' do
       assert 'black' do
         expect_invalid(
           rule[
-            NOTHING_SURROUNDING,
+            NOTHING_SURROUNDING_BLACK,
             FROM_POSITION,
             FROM_POSITION,
             NULL_POSITION,
@@ -117,11 +127,17 @@ group 'Piece Functions' do
 
     group 'can not capture own color' do
       assert 'black' do
+        to    = shift_position(FROM_POSITION, delta_y, delta_x)
+        board = NOTHING_SURROUNDING_BLACK.to_a(64).map(&:to_i)
+
+        board[POSITION_TO_INDEX[to].to_i] = BP
+        board = board.to_board
+
         expect_invalid(
           rule[
-            ALL_BLACK,
+            board,
             FROM_POSITION,
-            shift_position(FROM_POSITION, delta_y, delta_x),
+            to,
             NULL_POSITION,
             NULL_POSITION
           ]
@@ -129,11 +145,17 @@ group 'Piece Functions' do
       end
 
       assert 'white' do
+        to    = shift_position(FROM_POSITION, delta_y, -delta_x)
+        board = NOTHING_SURROUNDING_WHITE.to_a(64).map(&:to_i)
+
+        board[POSITION_TO_INDEX[to].to_i] = WP
+        board = board.to_board
+
         expect_invalid(
           rule[
-            ALL_WHITE,
+            board,
             FROM_POSITION,
-            shift_position(FROM_POSITION, delta_y, -delta_x),
+            to,
             NULL_POSITION,
             NULL_POSITION
           ]
@@ -236,8 +258,8 @@ group 'Piece Functions' do
 
   group 'ROOK_RULE' do
     capturing_basics    ROOK_RULE, 0, 1
-    horizontal_movement NOTHING_SURROUNDING, 3, true,  ROOK_RULE
-    diagonal_movement   NOTHING_SURROUNDING, 3, false, ROOK_RULE
+    horizontal_movement NOTHING_SURROUNDING_BLACK, 3, true,  ROOK_RULE
+    diagonal_movement   NOTHING_SURROUNDING_BLACK, 3, false, ROOK_RULE
 
     group 'if a piece is in the way' do
       horizontal_movement SURROUNDED, 3, false, ROOK_RULE
@@ -246,8 +268,8 @@ group 'Piece Functions' do
 
   group 'BISHOP_RULE' do
     capturing_basics    BISHOP_RULE, 1, 1
-    horizontal_movement NOTHING_SURROUNDING, 3, false, BISHOP_RULE
-    diagonal_movement   NOTHING_SURROUNDING, 3, true,  BISHOP_RULE
+    horizontal_movement NOTHING_SURROUNDING_BLACK, 3, false, BISHOP_RULE
+    diagonal_movement   NOTHING_SURROUNDING_BLACK, 3, true,  BISHOP_RULE
 
     group 'if a piece is in the way' do
       diagonal_movement SURROUNDED, 3, false, BISHOP_RULE
@@ -256,18 +278,18 @@ group 'Piece Functions' do
 
   group 'QUEEN_RULE' do
     capturing_basics    QUEEN_RULE, 1, 1
-    horizontal_movement NOTHING_SURROUNDING, 3, true, QUEEN_RULE
-    diagonal_movement   NOTHING_SURROUNDING, 3, true,  QUEEN_RULE
+    horizontal_movement NOTHING_SURROUNDING_BLACK, 3, true, QUEEN_RULE
+    diagonal_movement   NOTHING_SURROUNDING_BLACK, 3, true,  QUEEN_RULE
 
     group 'if a piece is in the way' do
-      diagonal_movement SURROUNDED, 3, false, QUEEN_RULE
+      diagonal_movement   SURROUNDED, 3, false, QUEEN_RULE
       horizontal_movement SURROUNDED, 3, false, QUEEN_RULE
     end
 
     assert 'cannot move arbitrarily' do
       expect_invalid(
         QUEEN_RULE[
-          NOTHING_SURROUNDING,
+          NOTHING_SURROUNDING_BLACK,
           FROM_POSITION,
           shift_position(FROM_POSITION, -1, 3),
           NULL_POSITION,
@@ -298,9 +320,9 @@ group 'Piece Functions' do
   end
 
   group 'KING_RULE' do
-    capturing_basics    KING_RULE, 1, 1
-    horizontal_movement NOTHING_SURROUNDING, 1, true, KING_RULE
-    diagonal_movement   NOTHING_SURROUNDING, 1, true, KING_RULE
+    capturing_basics    KING_RULE, 1, 0
+    horizontal_movement NOTHING_SURROUNDING_BLACK, 1, true, KING_RULE
+    diagonal_movement   NOTHING_SURROUNDING_BLACK, 1, true, KING_RULE
 
     check_check do |board, from, to|
       KING_RULE[
@@ -319,7 +341,7 @@ group 'Piece Functions' do
     assert 'cannot move more than one' do
       expect_invalid(
         KING_RULE[
-          NOTHING_SURROUNDING,
+          NOTHING_SURROUNDING_BLACK,
           FROM_POSITION,
           shift_position(FROM_POSITION, 2, 0),
           NULL_POSITION,
@@ -331,7 +353,7 @@ group 'Piece Functions' do
     assert 'cannot move arbitrarily' do
       expect_invalid(
         KING_RULE[
-          NOTHING_SURROUNDING,
+          NOTHING_SURROUNDING_BLACK,
           FROM_POSITION,
           shift_position(FROM_POSITION, 2, 1),
           NULL_POSITION,
@@ -389,7 +411,7 @@ group 'Piece Functions' do
     end
 
     capturing_basics KNIGHT_RULE, 1, 2
-    knights_moves    NOTHING_SURROUNDING
+    knights_moves    NOTHING_SURROUNDING_BLACK
 
     group 'if a piece is in the way' do
       knights_moves SURROUNDED
@@ -398,7 +420,7 @@ group 'Piece Functions' do
     assert 'cannot move arbitrarily' do
       expect_invalid(
         KNIGHT_RULE[
-          NOTHING_SURROUNDING,
+          NOTHING_SURROUNDING_BLACK,
           FROM_POSITION,
           shift_position(FROM_POSITION, -1, 1),
           NULL_POSITION,

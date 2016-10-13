@@ -4,7 +4,7 @@
 # This software may be modified and distributed under the
 # terms of the three-clause BSD license. See LICENSE.txt
 
-require './test_setup'
+require './setup'
 
 def test_castling_to_one_side original_board:,
                               works:,

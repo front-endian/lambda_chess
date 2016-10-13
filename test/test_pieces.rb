@@ -4,7 +4,7 @@
 # This software may be modified and distributed under the
 # terms of the three-clause BSD license. See LICENSE.txt
 
-require './test_setup'
+require './setup'
 
 group 'Piece Functions' do
   FROM_POSITION = position(4, 4)

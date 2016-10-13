@@ -6,7 +6,7 @@
 
 PERFORM_CASTLING = ->(old_board, from, to, last_from, last_to) {
   ->(is_moving_left) {
-    ->(rook_from, not_in_check) {
+    ->(rook_from, not_in_check, nop) {
       IF[
         AND[
           AND[
@@ -27,9 +27,22 @@ PERFORM_CASTLING = ->(old_board, from, to, last_from, last_to) {
       ][
         ->() {
           IF[
-            IS_NOT_IN_CHECK[old_board, from, from]
+            AND[
+              AND[
+                IS_NOT_IN_CHECK[old_board, from, from],
+                IS_NOT_IN_CHECK[old_board, from, to],
+              ],
+              IS_NOT_IN_CHECK[
+                old_board,
+                from,
+                PAIR[
+                  is_moving_left[DECREMENT, INCREMENT][LEFT[from]],
+                  RIGHT[from]
+                ]
+              ]
+            ]
           ][
-            ->() {
+            -> {
               MOVE[
                 MOVE[old_board, from, to],
                 rook_from,
@@ -39,10 +52,10 @@ PERFORM_CASTLING = ->(old_board, from, to, last_from, last_to) {
                 ]
               ]
             },
-            ->() { old_board }
+            nop
           ]
         },
-        ->() { old_board }
+        nop
       ]
     }[
       # "rook_from"
@@ -51,7 +64,9 @@ PERFORM_CASTLING = ->(old_board, from, to, last_from, last_to) {
         RIGHT[from]
       ],
       # "not_in_check"
-      FIRST
+      FIRST,
+      # "nop"
+      -> { old_board }
     ]
   }[
     # "is_moving_left"

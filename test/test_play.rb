@@ -8,18 +8,27 @@ require './setup'
 
 def test_castling_to_one_side original_board:,
                               works:,
-                              row:,
+                              home_row:,
                               king:,
                               rook:,
                               king_to_column:,
                               rook_to_column:
 
-  null_pos  = PAIR[ZERO, ZERO]
-  king_from = PAIR[FOUR, row]
-  king_to   = PAIR[king_to_column, row]
-  rook_from = PAIR[rook_to_column == THREE ? ZERO : SEVEN, row]
-  rook_to   = PAIR[rook_to_column, row]
-  result    = PERFORM_CASTLING[original_board, king_from, king_to, null_pos, null_pos]
+  null_position = PAIR[ZERO, ZERO]
+  king_from     = PAIR[FOUR, home_row]
+  king_to       = PAIR[king_to_column, home_row]
+  rook_from     = PAIR[
+                    (rook_to_column == THREE) ? ZERO : SEVEN,
+                    home_row
+                  ]
+  rook_to       = PAIR[rook_to_column, home_row]
+  result        = PERFORM_CASTLING[
+                    original_board,
+                    king_from,
+                    king_to,
+                    null_position,
+                    null_position
+                  ]
 
   if works
     assert "king was moved" do
@@ -55,7 +64,7 @@ def test_castling board, works
     group 'castling to the left' do
       test_castling_to_one_side original_board: board,
                                 works:          works,
-                                row:            WHITE_HOME_ROW,
+                                home_row:       WHITE_HOME_ROW,
                                 king:           WHITE_KING,
                                 rook:           WHITE_ROOK,
                                 king_to_column: TWO,
@@ -65,7 +74,7 @@ def test_castling board, works
     group 'castling to the right' do
       test_castling_to_one_side original_board: board,
                                 works:          works,
-                                row:            WHITE_HOME_ROW,
+                                home_row:       WHITE_HOME_ROW,
                                 king:           WHITE_KING,
                                 rook:           WHITE_ROOK,
                                 king_to_column: SIX,
@@ -77,7 +86,7 @@ def test_castling board, works
     group 'can castle to the left' do
       test_castling_to_one_side original_board: board,
                                 works:          works,
-                                row:            BLACK_HOME_ROW,
+                                home_row:       BLACK_HOME_ROW,
                                 king:           BLACK_KING,
                                 rook:           BLACK_ROOK,
                                 king_to_column: TWO,
@@ -87,7 +96,7 @@ def test_castling board, works
     group 'can castle to the right' do
       test_castling_to_one_side original_board: board,
                                 works:          works,
-                                row:            BLACK_HOME_ROW,
+                                home_row:       BLACK_HOME_ROW,
                                 king:           BLACK_KING,
                                 rook:           BLACK_ROOK,
                                 king_to_column: SIX,

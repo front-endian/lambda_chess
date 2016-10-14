@@ -6,7 +6,7 @@
 
 PERFORM_CASTLING = ->(old_board, from, to, last_from, last_to) {
   ->(is_moving_left) {
-    ->(rook_from, not_in_check, nop) {
+    ->(rook_from, nop, mid_to) {
       IF[
         AND[
           AND[
@@ -26,30 +26,25 @@ PERFORM_CASTLING = ->(old_board, from, to, last_from, last_to) {
         ]
       ][
         ->() {
-          IF[
-            AND[
-              AND[
-                IS_NOT_IN_CHECK[old_board, from, from],
-                IS_NOT_IN_CHECK[old_board, from, to],
-              ],
-              IS_NOT_IN_CHECK[
-                old_board,
-                from,
-                PAIR[
-                  is_moving_left[DECREMENT, INCREMENT][LEFT[from]],
-                  RIGHT[from]
-                ]
-              ]
-            ]
-          ][
+          IF[IS_NOT_IN_CHECK[old_board, from, from],][
             -> {
-              MOVE[
-                MOVE[old_board, from, to],
-                rook_from,
-                PAIR[
-                  is_moving_left[THREE, FIVE],
-                  RIGHT[from]
-                ]
+              IF[IS_NOT_IN_CHECK[old_board, from, mid_to]][
+                -> {
+                  IF[IS_NOT_IN_CHECK[old_board, from, to]][
+                    -> {
+                      MOVE[
+                        MOVE[old_board, from, to],
+                        rook_from,
+                        PAIR[
+                          is_moving_left[THREE, FIVE],
+                          RIGHT[from]
+                        ]
+                      ]
+                    },
+                    nop
+                  ]
+                },
+                nop
               ]
             },
             nop
@@ -63,10 +58,13 @@ PERFORM_CASTLING = ->(old_board, from, to, last_from, last_to) {
         is_moving_left[ZERO, SEVEN],
         RIGHT[from]
       ],
-      # "not_in_check"
-      FIRST,
       # "nop"
-      -> { old_board }
+      -> { old_board },
+      # "mid_to"
+      PAIR[
+        is_moving_left[DECREMENT, INCREMENT][LEFT[from]],
+        RIGHT[from]
+      ]
     ]
   }[
     # "is_moving_left"

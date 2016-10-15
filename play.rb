@@ -25,7 +25,7 @@ PERFORM_CASTLING = ->(old_board, from, to, last_from, last_to) {
           FREE_PATH[old_board, from, rook_from, DECREMENT]
         ]
       ][
-        ->() {
+        -> {
           IF[IS_NOT_IN_CHECK[old_board, from, from],][
             -> {
               IF[IS_NOT_IN_CHECK[old_board, from, mid_to]][

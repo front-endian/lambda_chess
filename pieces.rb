@@ -102,20 +102,22 @@ IS_NOT_IN_CHECK = ->(board, from, to) {
           -> { memo },
           # If this is another piece
           -> {
-            AND[
-              memo,
-              GET_RULE[piece][
-                after_move,
-                INDEX_TO_POSITION[index],
-                to,
-                from,
-                to
-              ][
-                SECOND,
-                FIRST,
-                SECOND
-              ]
-            ][FIRST, SECOND]
+            IF[memo][
+              -> {
+                GET_RULE[piece][
+                  after_move,
+                  INDEX_TO_POSITION[index],
+                  to,
+                  from,
+                  to
+                ][
+                  SECOND,
+                  FIRST,
+                  SECOND
+                ]
+              },
+              -> { SECOND }
+            ]
           }
         ]
       },

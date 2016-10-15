@@ -150,23 +150,25 @@ group 'Math Functions' do
     end
   end
 
-  group 'DIVIDE' do
-    assert 'divides two integers' do
-     6 == DIVIDE[30.to_peano, 5.to_peano].to_i
+  group 'MOD_AND_DIVIDE' do
+    group 'divide' do
+      assert 'divides two integers' do
+       6 == RIGHT[MOD_AND_DIVIDE[30.to_peano, 5.to_peano]].to_i
+      end
+
+      assert 'rounds down' do
+       6 == RIGHT[MOD_AND_DIVIDE[32.to_peano, 5.to_peano]].to_i
+      end
     end
 
-    assert 'rounds down' do
-     6 == DIVIDE[32.to_peano, 5.to_peano].to_i
-    end
-  end
+    group 'modulus' do
+      assert 'returns the remainder of division' do
+       2 == LEFT[MOD_AND_DIVIDE[12.to_peano, 5.to_peano]].to_i
+      end
 
-  group 'MODULUS' do
-    assert 'returns the remainder of division' do
-     2 == MODULUS[12.to_peano, 5.to_peano].to_i
-    end
-
-    assert 'returns the first argument when the second argument is larger' do
-     4 == MODULUS[4.to_peano, 10.to_peano].to_i
+      assert 'returns the first argument when the second argument is larger' do
+       4 == LEFT[MOD_AND_DIVIDE[4.to_peano, 10.to_peano]].to_i
+      end
     end
   end
 

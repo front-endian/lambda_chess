@@ -14,10 +14,7 @@ POSITION_TO_INDEX = ->(position) {
 }
 
 INDEX_TO_POSITION = ->(index) {
-  PAIR[
-    MODULUS[index, SIDE_LENGTH],
-    DIVIDE[index, SIDE_LENGTH]
-  ]
+  MOD_AND_DIVIDE[index, SIDE_LENGTH]
 }
 
 DISTANCE = ->(position_1, position_2) {

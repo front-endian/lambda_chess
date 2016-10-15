@@ -141,40 +141,18 @@ MULTIPLY = ->(a, b) {
   }
 }
 
-DIVIDE = ->(a, b) {
-  RIGHT[
-    a[
-      ->(memo) {
-        IS_GREATER_OR_EQUAL[LEFT[memo], b][
-          PAIR[
-            SUBTRACT[LEFT[memo], b],
-            INCREMENT[RIGHT[memo]]
-          ],
-          memo
-        ]
-      },
-      PAIR[a, ZERO]
-    ]
-  ]
-}
-
-MODULUS = ->(a, b) {
-  RIGHT[
-    a[
-      ->(memo) {
-        IS_GREATER_OR_EQUAL[LEFT[memo], b][
-          PAIR[
-            SUBTRACT[LEFT[memo], b],
-            ZERO
-          ],
-          PAIR[
-            LEFT[memo],
-            LEFT[memo]
-          ]
-        ]
-      },
-      PAIR[a, ZERO]
-    ]
+MOD_AND_DIVIDE = ->(a, b) {
+  a[
+    ->(memo) {
+      IS_GREATER_OR_EQUAL[LEFT[memo], b][
+        PAIR[
+          SUBTRACT[LEFT[memo], b],
+          INCREMENT[RIGHT[memo]]
+        ],
+        memo
+      ]
+    },
+    PAIR[a, ZERO]
   ]
 }
 

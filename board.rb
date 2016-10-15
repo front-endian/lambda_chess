@@ -6,15 +6,45 @@
 
 # Board Functions
 
+BOARD_MAP = ->(board, func) {
+  LIST_MAP[
+    board,
+    SIDE_LENGTH,
+    ->(row, y) {
+      LIST_MAP[
+        row,
+        SIDE_LENGTH,
+        ->(piece, x) {
+          func[piece, x, y]
+        }
+      ]
+    }
+  ]
+}
+
+BOARD_REDUCE = ->(board, func, initial) {
+  LIST_REDUCE[
+    board,
+    SIDE_LENGTH,
+    ->(memo, row, y) {
+      LIST_REDUCE[
+        row,
+        SIDE_LENGTH,
+        ->(memo, piece, x) {
+          func[memo, piece, x, y]
+        },
+        memo
+      ]
+    },
+    initial
+  ]
+}
+
 POSITION_TO_INDEX = ->(position) {
   ADD[
     LEFT[position],
     MULTIPLY[RIGHT[position], SIDE_LENGTH]
   ]
-}
-
-INDEX_TO_POSITION = ->(index) {
-  MOD_AND_DIVIDE[index, SIDE_LENGTH]
 }
 
 DISTANCE = ->(position_1, position_2) {
@@ -25,7 +55,7 @@ DISTANCE = ->(position_1, position_2) {
 }
 
 GET_POSITION = ->(board, position) {
-  NTH[board, POSITION_TO_INDEX[position]]
+  NTH[NTH[board, RIGHT[position]], LEFT[position]]
 }
 
 SET_POSITION = ->(board, position, new_value) {
@@ -148,13 +178,12 @@ FREE_PATH = ->(board, from, to, alter_length) {
 }
 
 MOVE = ->(board, from, to) {
-  LIST_MAP[
+  BOARD_MAP[
     board,
-    BOARD_SPACES,
-    ->(old_piece, index) {
-      IS_EQUAL[index, POSITION_TO_INDEX[to]][
+    ->(old_piece, x, y) {
+      IS_EQUAL[POSITION_TO_INDEX[PAIR[x, y]], POSITION_TO_INDEX[to]][
         TO_MOVED_PIECE[GET_POSITION[board, from]],
-        IS_EQUAL[index, POSITION_TO_INDEX[from]][
+        IS_EQUAL[POSITION_TO_INDEX[PAIR[x, y]], POSITION_TO_INDEX[from]][
           EMPTY_SPACE,
           old_piece
         ]
@@ -166,12 +195,12 @@ MOVE = ->(board, from, to) {
 P = PAIR
 
 INITIAL_BOARD =
-  P[BLACK_ROOK,  P[BLACK_KNIGHT, P[BLACK_BISHOP, P[BLACK_QUEEN, P[BLACK_KING,  P[BLACK_BISHOP, P[BLACK_KNIGHT, P[BLACK_ROOK,
-  P[BLACK_PAWN,  P[BLACK_PAWN,   P[BLACK_PAWN,   P[BLACK_PAWN,  P[BLACK_PAWN,  P[BLACK_PAWN,   P[BLACK_PAWN,   P[BLACK_PAWN,
-  P[EMPTY_SPACE, P[EMPTY_SPACE,  P[EMPTY_SPACE,  P[EMPTY_SPACE, P[EMPTY_SPACE, P[EMPTY_SPACE,  P[EMPTY_SPACE,  P[EMPTY_SPACE,
-  P[EMPTY_SPACE, P[EMPTY_SPACE,  P[EMPTY_SPACE,  P[EMPTY_SPACE, P[EMPTY_SPACE, P[EMPTY_SPACE,  P[EMPTY_SPACE,  P[EMPTY_SPACE,
-  P[EMPTY_SPACE, P[EMPTY_SPACE,  P[EMPTY_SPACE,  P[EMPTY_SPACE, P[EMPTY_SPACE, P[EMPTY_SPACE,  P[EMPTY_SPACE,  P[EMPTY_SPACE,
-  P[EMPTY_SPACE, P[EMPTY_SPACE,  P[EMPTY_SPACE,  P[EMPTY_SPACE, P[EMPTY_SPACE, P[EMPTY_SPACE,  P[EMPTY_SPACE,  P[EMPTY_SPACE,
-  P[WHITE_PAWN,  P[WHITE_PAWN,   P[WHITE_PAWN,   P[WHITE_PAWN,  P[WHITE_PAWN,  P[WHITE_PAWN,   P[WHITE_PAWN,   P[WHITE_PAWN,
-  P[WHITE_ROOK,  P[WHITE_KNIGHT, P[WHITE_BISHOP, P[WHITE_QUEEN, P[WHITE_KING,  P[WHITE_BISHOP, P[WHITE_KNIGHT, P[WHITE_ROOK,
-  ZERO]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+  P[P[BLACK_ROOK,  P[BLACK_KNIGHT, P[BLACK_BISHOP, P[BLACK_QUEEN, P[BLACK_KING,  P[BLACK_BISHOP, P[BLACK_KNIGHT, P[BLACK_ROOK,  ZERO]]]]]]]],
+  P[P[BLACK_PAWN,  P[BLACK_PAWN,   P[BLACK_PAWN,   P[BLACK_PAWN,  P[BLACK_PAWN,  P[BLACK_PAWN,   P[BLACK_PAWN,   P[BLACK_PAWN,  ZERO]]]]]]]],
+  P[P[EMPTY_SPACE, P[EMPTY_SPACE,  P[EMPTY_SPACE,  P[EMPTY_SPACE, P[EMPTY_SPACE, P[EMPTY_SPACE,  P[EMPTY_SPACE,  P[EMPTY_SPACE, ZERO]]]]]]]],
+  P[P[EMPTY_SPACE, P[EMPTY_SPACE,  P[EMPTY_SPACE,  P[EMPTY_SPACE, P[EMPTY_SPACE, P[EMPTY_SPACE,  P[EMPTY_SPACE,  P[EMPTY_SPACE, ZERO]]]]]]]],
+  P[P[EMPTY_SPACE, P[EMPTY_SPACE,  P[EMPTY_SPACE,  P[EMPTY_SPACE, P[EMPTY_SPACE, P[EMPTY_SPACE,  P[EMPTY_SPACE,  P[EMPTY_SPACE, ZERO]]]]]]]],
+  P[P[EMPTY_SPACE, P[EMPTY_SPACE,  P[EMPTY_SPACE,  P[EMPTY_SPACE, P[EMPTY_SPACE, P[EMPTY_SPACE,  P[EMPTY_SPACE,  P[EMPTY_SPACE, ZERO]]]]]]]],
+  P[P[WHITE_PAWN,  P[WHITE_PAWN,   P[WHITE_PAWN,   P[WHITE_PAWN,  P[WHITE_PAWN,  P[WHITE_PAWN,   P[WHITE_PAWN,   P[WHITE_PAWN,  ZERO]]]]]]]],
+  P[P[WHITE_ROOK,  P[WHITE_KNIGHT, P[WHITE_BISHOP, P[WHITE_QUEEN, P[WHITE_KING,  P[WHITE_BISHOP, P[WHITE_KNIGHT, P[WHITE_ROOK,  ZERO]]]]]]]],
+  ZERO]]]]]]]]

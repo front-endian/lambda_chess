@@ -88,14 +88,13 @@ QUEEN_RULE = BASIC_CHECKS[
 
 IS_NOT_IN_CHECK = ->(board, from, to) {
   ->(after_move) {
-    LIST_REDUCE[
+    BOARD_REDUCE[
       after_move,
-      BOARD_SPACES,
-      ->(memo, piece, index) {
+      ->(memo, piece, x, y) {
         IF[
           OR[
             IS_EQUAL[piece, EMPTY_SPACE],
-            IS_EQUAL[index, POSITION_TO_INDEX[to]]
+            IS_EQUAL[POSITION_TO_INDEX[PAIR[x, y]], POSITION_TO_INDEX[to]]
           ]
         ][
           # If this is the king under test or an empty space
@@ -104,13 +103,7 @@ IS_NOT_IN_CHECK = ->(board, from, to) {
           -> {
             IF[memo][
               -> {
-                GET_RULE[piece][
-                  after_move,
-                  INDEX_TO_POSITION[index],
-                  to,
-                  from,
-                  to
-                ][
+                GET_RULE[piece][after_move, PAIR[x, y], to, from, to][
                   SECOND,
                   FIRST,
                   SECOND

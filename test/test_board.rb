@@ -17,16 +17,6 @@ group 'Board Functions' do
     end
   end
 
-  group 'INDEX_TO_POSITION' do
-    assert 'translates array index into an X/Y pair' do
-      30 == POSITION_TO_INDEX[INDEX_TO_POSITION[30.to_peano]].to_i
-    end
-
-    assert 'works with zero' do
-      0 == POSITION_TO_INDEX[INDEX_TO_POSITION[0.to_peano]].to_i
-    end
-  end
-
   group 'DISTANCE' do
     position_1 = position(2, 10)
     position_2 = position(5, 15)
@@ -47,10 +37,9 @@ group 'Board Functions' do
 
   group 'GET_POSITION' do
     assert 'gets data at the given position' do
-      board = [0, 1, 2,  3,  4,  5,  6,  7,
-               8, 9, 10, 11, 12, 13, 14, 15].to_linked_list
+      board = INDEX_BOARD.to_board
 
-      10 == GET_POSITION[board, position(2, 1)]
+      10 == GET_POSITION[board, position(2, 1)].to_i
     end
   end
 
@@ -58,14 +47,14 @@ group 'Board Functions' do
     center = position(3, 3)
 
     group 'returns FIRST if there are no pieces in the way' do
-      example_board = [0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, BP,0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0]
+      example_board = [[0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, BP,0, 0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0]]
                       .to_board
 
       assert 'horizontally' do
@@ -105,14 +94,14 @@ group 'Board Functions' do
     group 'if the only piece in the way is at the TO location' do
       group 'returns FIRST if told to DECREMENT length' do
         assert 'horizontally' do
-          example_board = [0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           WQ,0, 0, BQ,0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0]
+          example_board = [[0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [WQ,0, 0, BQ,0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0]]
                           .to_board
 
           expect_truthy(
@@ -126,14 +115,14 @@ group 'Board Functions' do
         end
 
         assert 'vertically' do
-          example_board = [0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, BQ,0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, WQ,0, 0, 0, 0]
+          example_board = [[0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, BQ,0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, WQ,0, 0, 0, 0]]
                           .to_board
 
           expect_truthy(
@@ -147,14 +136,14 @@ group 'Board Functions' do
         end
 
         assert 'diagonally' do
-          example_board = [0, 0, 0, 0, 0, 0, WQ,0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, BQ,0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0]
+          example_board = [[0, 0, 0, 0, 0, 0, WQ,0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, BQ,0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0]]
                           .to_board
 
           expect_truthy(
@@ -170,14 +159,14 @@ group 'Board Functions' do
 
       group 'returns SECOND if told to not alter the length' do
         assert 'horizontally' do
-          example_board = [0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           WQ,0, 0, BQ,0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0]
+          example_board = [[0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [WQ,0, 0, BQ,0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0]]
                           .to_board
 
           expect_falsy(
@@ -191,14 +180,14 @@ group 'Board Functions' do
         end
 
         assert 'vertically' do
-          example_board = [0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, BQ,0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, WQ,0, 0, 0, 0]
+          example_board = [[0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, BQ,0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, WQ,0, 0, 0, 0]]
                           .to_board
 
           expect_falsy(
@@ -212,14 +201,14 @@ group 'Board Functions' do
         end
 
         assert 'diagonally' do
-          example_board = [0, 0, 0, 0, 0, 0, WQ,0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, BQ,0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0]
+          example_board = [[0, 0, 0, 0, 0, 0, WQ,0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, BQ,0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0]]
                           .to_board
 
           expect_falsy(
@@ -236,14 +225,14 @@ group 'Board Functions' do
 
     group 'returns SECOND if there is a piece in the way' do
       assert 'horizontally' do
-        example_board = [0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, BQ,WQ,0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0]
+        example_board = [[0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, BQ,WQ,0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0]]
                         .to_board
 
         expect_falsy(
@@ -257,14 +246,14 @@ group 'Board Functions' do
       end
 
       assert 'vertically' do
-        example_board = [0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, WQ,0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, BQ,0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0]
+        example_board = [[0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, WQ,0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, BQ,0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0]]
                         .to_board
 
         expect_falsy(
@@ -278,14 +267,14 @@ group 'Board Functions' do
       end
 
       assert 'diagonally' do
-        example_board = [0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, BQ,0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, WQ,0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0]
+        example_board = [[0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, BQ,0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, WQ,0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0]]
                         .to_board
 
         expect_falsy(
@@ -301,7 +290,7 @@ group 'Board Functions' do
   end
 
   group 'MOVE' do
-    example_board = INDEX_ARRAY.to_board
+    example_board = INDEX_BOARD.to_board
 
     from  = position(2, 2)
     to    = position(3, 7)
@@ -328,14 +317,18 @@ group 'Board Functions' do
 
   group 'INITIAL_BOARD' do
     assert 'is initialized to the correct values' do
-      INITIAL_BOARD.to_a(64).map(&:to_i) == [4, 2, 3, 5, 6, 3, 2, 4,
-                                             1, 1, 1, 1, 1, 1, 1, 1,
-                                             0, 0, 0, 0, 0, 0, 0, 0,
-                                             0, 0, 0, 0, 0, 0, 0, 0,
-                                             0, 0, 0, 0, 0, 0, 0, 0,
-                                             0, 0, 0, 0, 0, 0, 0, 0,
-                                             7, 7, 7, 7, 7, 7, 7, 7,
-                                             10,8, 9, 11,12,9, 8, 10]
+      INITIAL_BOARD
+        .to_a(8)
+        .map do |row|
+          row.to_a(8).map { |piece| piece.to_i}
+        end == [[4, 2, 3, 5, 6, 3, 2, 4],
+                [1, 1, 1, 1, 1, 1, 1, 1],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [7, 7, 7, 7, 7, 7, 7, 7],
+                [10,8, 9, 11,12,9, 8, 10]]
     end
   end
 end

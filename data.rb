@@ -88,8 +88,11 @@ LIST_REDUCE = ->(list, size, func, initial) {
       ->(memo) {
         PAIR[
           func[
+            # previous
             LEFT[memo],
+            # next
             NTH[list, RIGHT[memo]],
+            # index
             RIGHT[memo],
           ],
           INCREMENT[RIGHT[memo]]

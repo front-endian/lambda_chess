@@ -10,38 +10,38 @@ group 'Piece Functions' do
   FROM_POSITION = position(4, 4)
   NULL_POSITION = position(0, 0)
 
-  NOTHING_SURROUNDING_BLACK = [0, 0, 0, 0, 0, 0, 0, 0,
-                               0, 0, 0, 0, 0, 0, 0, 0,
-                               0, 0, 0, 0, 0, 0, 0, 0,
-                               0, 0, 0, 0, 0, 0, 0, 0,
-                               0, 0, 0, 0, BQ,0, 0, 0,
-                               0, 0, 0, 0, 0, 0, 0, 0,
-                               0, 0, 0, 0, 0, 0, 0, 0,
-                               0, 0, 0, 0, 0, 0, 0, 0]
+  NOTHING_SURROUNDING_BLACK = [[0, 0, 0, 0, 0, 0, 0, 0],
+                               [0, 0, 0, 0, 0, 0, 0, 0],
+                               [0, 0, 0, 0, 0, 0, 0, 0],
+                               [0, 0, 0, 0, 0, 0, 0, 0],
+                               [0, 0, 0, 0, BQ,0, 0, 0],
+                               [0, 0, 0, 0, 0, 0, 0, 0],
+                               [0, 0, 0, 0, 0, 0, 0, 0],
+                               [0, 0, 0, 0, 0, 0, 0, 0]]
                               .to_board
 
-  NOTHING_SURROUNDING_WHITE = [0, 0, 0, 0, 0, 0, 0, 0,
-                               0, 0, 0, 0, 0, 0, 0, 0,
-                               0, 0, 0, 0, 0, 0, 0, 0,
-                               0, 0, 0, 0, 0, 0, 0, 0,
-                               0, 0, 0, 0, WQ,0, 0, 0,
-                               0, 0, 0, 0, 0, 0, 0, 0,
-                               0, 0, 0, 0, 0, 0, 0, 0,
-                               0, 0, 0, 0, 0, 0, 0, 0]
+  NOTHING_SURROUNDING_WHITE = [[0, 0, 0, 0, 0, 0, 0, 0],
+                               [0, 0, 0, 0, 0, 0, 0, 0],
+                               [0, 0, 0, 0, 0, 0, 0, 0],
+                               [0, 0, 0, 0, 0, 0, 0, 0],
+                               [0, 0, 0, 0, WQ,0, 0, 0],
+                               [0, 0, 0, 0, 0, 0, 0, 0],
+                               [0, 0, 0, 0, 0, 0, 0, 0],
+                               [0, 0, 0, 0, 0, 0, 0, 0]]
                               .to_board
 
-  SURROUNDED = [0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, WQ,WQ,WQ,0, 0,
-                0, 0, 0, WQ,BQ,WQ,0, 0,
-                0, 0, 0, WQ,WQ,WQ,0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0]
+  SURROUNDED = [[0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, WQ,WQ,WQ,0, 0],
+                [0, 0, 0, WQ,BQ,WQ,0, 0],
+                [0, 0, 0, WQ,WQ,WQ,0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0]]
                .to_board
 
-  ALL_WHITE = Array.new(64, MWQ).to_board
-  ALL_BLACK = Array.new(64, MBQ).to_board
+  ALL_WHITE = Array.new(8, Array.new(8, MWQ)).to_board
+  ALL_BLACK = Array.new(8, Array.new(8, MBQ)).to_board
 
   def test_movement board, is_valid, rule, delta_x, delta_y
     result = rule[
@@ -128,9 +128,9 @@ group 'Piece Functions' do
     group 'can not capture own color' do
       assert 'black' do
         to    = shift_position(FROM_POSITION, delta_y, delta_x)
-        board = NOTHING_SURROUNDING_BLACK.to_a(64).map(&:to_i)
+        board = NOTHING_SURROUNDING_BLACK.to_a(8).map { |row| row.to_a(8).map(&:to_i) }
 
-        board[POSITION_TO_INDEX[to].to_i] = BP
+        board[RIGHT[to].to_i][LEFT[to].to_i] = BP
         board = board.to_board
 
         expect_invalid(
@@ -146,9 +146,9 @@ group 'Piece Functions' do
 
       assert 'white' do
         to    = shift_position(FROM_POSITION, delta_y, -delta_x)
-        board = NOTHING_SURROUNDING_WHITE.to_a(64).map(&:to_i)
+        board = NOTHING_SURROUNDING_WHITE.to_a(8).map { |row| row.to_a(8).map(&:to_i) }
 
-        board[POSITION_TO_INDEX[to].to_i] = WP
+        board[RIGHT[to].to_i][LEFT[to].to_i] = WP
         board = board.to_board
 
         expect_invalid(
@@ -166,14 +166,14 @@ group 'Piece Functions' do
 
   def check_check
     assert 'returns FIRST with nothing around' do
-      example_board = [0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, BK,0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0]
+      example_board = [[0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, BK,0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0]]
                       .to_board
 
       expect_truthy yield(
@@ -184,14 +184,14 @@ group 'Piece Functions' do
     end
 
     assert 'returns SECOND when moving into check' do
-      example_board = [0, 0, 0,  0, 0,  0, 0, 0,
-                       0, 0, 0,  0, 0,  0, 0, 0,
-                       0, 0, 0,  0, 0,  0, 0, 0,
-                       0, 0, 0,  0, 0,  0, 0, 0,
-                       0, 0, 0,  0, MBK,0, 0, 0,
-                       0, 0, MWP,0, 0,  0, 0, 0,
-                       0, 0, 0,  0, 0,  0, 0, 0,
-                       0, 0, 0,  0, 0,  0, 0, 0]
+      example_board = [[0, 0, 0,  0, 0,  0, 0, 0],
+                       [0, 0, 0,  0, 0,  0, 0, 0],
+                       [0, 0, 0,  0, 0,  0, 0, 0],
+                       [0, 0, 0,  0, 0,  0, 0, 0],
+                       [0, 0, 0,  0, MBK,0, 0, 0],
+                       [0, 0, MWP,0, 0,  0, 0, 0],
+                       [0, 0, 0,  0, 0,  0, 0, 0],
+                       [0, 0, 0,  0, 0,  0, 0, 0]]
                       .to_board
 
       expect_falsy yield(
@@ -202,14 +202,14 @@ group 'Piece Functions' do
     end
 
     assert 'returns FIRST when moving out of check' do
-      example_board = [0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, BK,0, 0, 0,
-                       0, 0, 0, 0, WR,0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0]
+      example_board = [[0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, BK,0, 0, 0],
+                       [0, 0, 0, 0, WR,0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0]]
                       .to_board
 
       expect_truthy yield(
@@ -220,14 +220,14 @@ group 'Piece Functions' do
     end
 
     assert 'check can not come from own color' do
-      example_board = [0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, BK,0, 0, 0,
-                       0, 0, 0, BR,0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0]
+      example_board = [[0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, BK,0, 0, 0],
+                       [0, 0, 0, BR,0, 0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0]]
                       .to_board
 
       expect_truthy yield(
@@ -238,14 +238,14 @@ group 'Piece Functions' do
     end
 
     assert 'returns FIRST when moving near but not into check' do
-      example_board = [0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, BK,0, 0, 0,
-                       0, WR,0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0]
+      example_board = [[0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, BK,0, 0, 0],
+                       [0, WR,0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, 0, 0, 0, 0]]
                       .to_board
 
       expect_truthy yield(
@@ -305,14 +305,14 @@ group 'Piece Functions' do
     end
 
     assert 'allows moving into same position with own pieces nearby' do
-      board = [0, 0, 0, 0, 0, 0, 0, 0,
-               0, 0, 0, 0, 0, 0, 0, 0,
-               BR,0, 0, 0, BK,0, 0, 0,
-               0, 0, 0, 0, 0, 0, 0, 0,
-               0, 0, 0, 0, 0, 0, 0, 0,
-               0, 0, 0, 0, 0, 0, 0, 0,
-               0, 0, 0, 0, 0, 0, 0, 0,
-               0, 0, 0, 0, 0, 0, 0, 0]
+      board = [[0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0],
+               [BR,0, 0, 0, BK,0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0]]
               .to_board
 
       expect_truthy IS_NOT_IN_CHECK[board, position(4, 2), position(4, 2)]
@@ -363,14 +363,14 @@ group 'Piece Functions' do
     end
 
     assert 'cannot move into check' do
-      near_check = [0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, BK,0, 0, 0,
-                    0, 0, WQ,0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0]
+      near_check = [[0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, BK,0, 0, 0],
+                    [0, 0, WQ,0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0]]
                    .to_board
 
       expect_invalid(
@@ -431,14 +431,14 @@ group 'Piece Functions' do
   end
 
   group 'PAWN_RULE' do
-    starting_board = [0, 0, 0, 0, 0, 0, 0, 0,
-                      BP,BP,BP,BP,BP,BP,BP,BP,
-                      0, 0, 0, 0, 0, 0, 0, 0,
-                      0, 0, 0, 0, 0, 0, 0, 0,
-                      0, 0, 0, 0, 0, 0, 0, 0,
-                      0, 0, 0, 0, 0, 0, 0, 0,
-                      WP,WP,WP,WP,WP,WP,WP,WP,
-                      0, 0, 0, 0, 0, 0, 0, 0]
+    starting_board = [[0, 0, 0, 0, 0, 0, 0, 0],
+                      [BP,BP,BP,BP,BP,BP,BP,BP],
+                      [0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0],
+                      [WP,WP,WP,WP,WP,WP,WP,WP],
+                      [0, 0, 0, 0, 0, 0, 0, 0]]
                      .to_board
 
     capturing_basics PAWN_RULE, 1, 1
@@ -496,14 +496,14 @@ group 'Piece Functions' do
     end
 
     group 'cannot move forward by two on subsequent moves' do
-      later_board = [0, 0,  0, 0, 0,  0, 0, 0,
-                     0, 0,  0, 0, 0,  0, 0, 0,
-                     0, MBP,0, 0, 0,  0, 0, 0,
-                     0, 0,  0, 0, 0,  0, 0, 0,
-                     0, 0,  0, 0, 0,  0, 0, 0,
-                     0, 0,  0, 0, MWP,0, 0, 0,
-                     0, 0,  0, 0, 0,  0, 0, 0,
-                     0, 0,  0, 0, 0,  0, 0, 0]
+      later_board = [[0, 0,  0, 0, 0,  0, 0, 0],
+                     [0, 0,  0, 0, 0,  0, 0, 0],
+                     [0, MBP,0, 0, 0,  0, 0, 0],
+                     [0, 0,  0, 0, 0,  0, 0, 0],
+                     [0, 0,  0, 0, 0,  0, 0, 0],
+                     [0, 0,  0, 0, MWP,0, 0, 0],
+                     [0, 0,  0, 0, 0,  0, 0, 0],
+                     [0, 0,  0, 0, 0,  0, 0, 0]]
                     .to_board
 
       assert 'white' do
@@ -610,14 +610,14 @@ group 'Piece Functions' do
     end
 
     group 'cannot capture sideways' do
-      sideways_capture_board = [0, 0, 0, 0, 0, 0, 0, 0,
-                                WP,BP,0, 0, 0, 0, 0, 0,
-                                0, 0, 0, 0, 0, 0, 0, 0,
-                                0, 0, 0, 0, 0, 0, 0, 0,
-                                0, 0, 0, 0, 0, 0, 0, 0,
-                                0, 0, 0, 0, 0, 0, 0, 0,
-                                0, 0, 0, 0, WP,BP,0, 0,
-                                0, 0, 0, 0, 0, 0, 0, 0]
+      sideways_capture_board = [[0, 0, 0, 0, 0, 0, 0, 0],
+                                [WP,BP,0, 0, 0, 0, 0, 0],
+                                [0, 0, 0, 0, 0, 0, 0, 0],
+                                [0, 0, 0, 0, 0, 0, 0, 0],
+                                [0, 0, 0, 0, 0, 0, 0, 0],
+                                [0, 0, 0, 0, 0, 0, 0, 0],
+                                [0, 0, 0, 0, WP,BP,0, 0],
+                                [0, 0, 0, 0, 0, 0, 0, 0]]
                                .to_board
 
       assert 'white' do
@@ -646,14 +646,14 @@ group 'Piece Functions' do
     end
 
     group 'can capture forward diagonally' do
-      capture_board = [0,  0,  0, 0, 0,  0,  0, 0,
-                       0,  0,  0, 0, 0,  0,  0, 0,
-                       0,  MBP,0, 0, 0,  0,  0, 0,
-                       MWP,0,  0, 0, 0,  0,  0, 0,
-                       0,  0,  0, 0, 0,  MBP,0, 0,
-                       0,  0,  0, 0, MWP,0,  0, 0,
-                       0,  0,  0, 0, 0,  0,  0, 0,
-                       0,  0,  0, 0, 0,  0,  0, 0]
+      capture_board = [[0,  0,  0, 0, 0,  0,  0, 0],
+                       [0,  0,  0, 0, 0,  0,  0, 0],
+                       [0,  MBP,0, 0, 0,  0,  0, 0],
+                       [MWP,0,  0, 0, 0,  0,  0, 0],
+                       [0,  0,  0, 0, 0,  MBP,0, 0],
+                       [0,  0,  0, 0, MWP,0,  0, 0],
+                       [0,  0,  0, 0, 0,  0,  0, 0],
+                       [0,  0,  0, 0, 0,  0,  0, 0]]
                       .to_board
 
       assert 'white' do
@@ -682,14 +682,14 @@ group 'Piece Functions' do
     end
 
     group 'cannot capture backwards diagonally' do
-      capture_board = [0,  0,  0, 0, 0,  0,  0, 0,
-                       MWP,0,  0, 0, 0,  0,  0, 0,
-                       0,  MBP,0, 0, 0,  0,  0, 0,
-                       0,  0,  0, 0, 0,  0,  0, 0,
-                       0,  0,  0, 0, 0,  0,  0, 0,
-                       0,  0,  0, 0, MWP,0,  0, 0,
-                       0,  0,  0, 0, 0,  MBP,0, 0,
-                       0,  0,  0, 0, 0,  0,  0, 0]
+      capture_board = [[0,  0,  0, 0, 0,  0,  0, 0],
+                       [MWP,0,  0, 0, 0,  0,  0, 0],
+                       [0,  MBP,0, 0, 0,  0,  0, 0],
+                       [0,  0,  0, 0, 0,  0,  0, 0],
+                       [0,  0,  0, 0, 0,  0,  0, 0],
+                       [0,  0,  0, 0, MWP,0,  0, 0],
+                       [0,  0,  0, 0, 0,  MBP,0, 0],
+                       [0,  0,  0, 0, 0,  0,  0, 0]]
                       .to_board
 
       assert 'white' do
@@ -717,14 +717,14 @@ group 'Piece Functions' do
       end
     end
 
-    en_passant_board = [0, 0,  0, 0, 0,  0, 0, 0,
-                        0, 0,  0, 0, 0,  0, 0, 0,
-                        0, 0,  0, 0, 0,  0, 0, 0,
-                        0, MBP,WP,0, 0,  0, 0, 0,
-                        0, 0,  0, BP,MWP,0, 0, 0,
-                        0, 0,  0, 0, 0,  0, 0, 0,
-                        0, 0,  0, 0, 0,  0, 0, 0,
-                        0, 0,  0, 0, 0,  0, 0, 0]
+    en_passant_board = [[0, 0,  0, 0, 0,  0, 0, 0],
+                        [0, 0,  0, 0, 0,  0, 0, 0],
+                        [0, 0,  0, 0, 0,  0, 0, 0],
+                        [0, MBP,WP,0, 0,  0, 0, 0],
+                        [0, 0,  0, BP,MWP,0, 0, 0],
+                        [0, 0,  0, 0, 0,  0, 0, 0],
+                        [0, 0,  0, 0, 0,  0, 0, 0],
+                        [0, 0,  0, 0, 0,  0, 0, 0]]
                        .to_board
 
     group 'can capture en passant' do
@@ -753,14 +753,14 @@ group 'Piece Functions' do
       end
 
       group 'only if last moved was a pawn' do
-        non_passant_board = [0, 0, 0, 0, 0, 0, 0, 0,
-                             0, 0, 0, 0, 0, 0, 0, 0,
-                             0, 0, 0, 0, 0, 0, 0, 0,
-                             0, BQ,WP,0, 0, 0, 0, 0,
-                             0, 0, 0, BP,WQ,0, 0, 0,
-                             0, 0, 0, 0, 0, 0, 0, 0,
-                             0, 0, 0, 0, 0, 0, 0, 0,
-                             0, 0, 0, 0, 0, 0, 0, 0]
+        non_passant_board = [[0, 0, 0, 0, 0, 0, 0, 0],
+                             [0, 0, 0, 0, 0, 0, 0, 0],
+                             [0, 0, 0, 0, 0, 0, 0, 0],
+                             [0, BQ,WP,0, 0, 0, 0, 0],
+                             [0, 0, 0, BP,WQ,0, 0, 0],
+                             [0, 0, 0, 0, 0, 0, 0, 0],
+                             [0, 0, 0, 0, 0, 0, 0, 0],
+                             [0, 0, 0, 0, 0, 0, 0, 0]]
                             .to_board
 
         assert 'white' do

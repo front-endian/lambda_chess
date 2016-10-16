@@ -15,7 +15,7 @@ BOARD_MAP = ->(board, func) {
         row,
         SIDE_LENGTH,
         ->(piece, x) {
-          func[piece, x, y]
+          func[piece, PAIR[x, y]]
         }
       ]
     }
@@ -31,7 +31,7 @@ BOARD_REDUCE = ->(board, func, initial) {
         row,
         SIDE_LENGTH,
         ->(memo, piece, x) {
-          func[memo, piece, x, y]
+          func[memo, piece, PAIR[x, y]]
         },
         memo
       ]
@@ -180,10 +180,10 @@ FREE_PATH = ->(board, from, to, alter_length) {
 MOVE = ->(board, from, to) {
   BOARD_MAP[
     board,
-    ->(old_piece, x, y) {
-      IS_EQUAL[POSITION_TO_INDEX[PAIR[x, y]], POSITION_TO_INDEX[to]][
+    ->(old_piece, position) {
+      IS_EQUAL[POSITION_TO_INDEX[position], POSITION_TO_INDEX[to]][
         TO_MOVED_PIECE[GET_POSITION[board, from]],
-        IS_EQUAL[POSITION_TO_INDEX[PAIR[x, y]], POSITION_TO_INDEX[from]][
+        IS_EQUAL[POSITION_TO_INDEX[position], POSITION_TO_INDEX[from]][
           EMPTY_SPACE,
           old_piece
         ]

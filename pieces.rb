@@ -90,11 +90,11 @@ IS_NOT_IN_CHECK = ->(board, from, to) {
   ->(after_move) {
     BOARD_REDUCE[
       after_move,
-      ->(memo, piece, x, y) {
+      ->(memo, piece, position) {
         IF[
           OR[
             IS_EQUAL[piece, EMPTY_SPACE],
-            IS_EQUAL[POSITION_TO_INDEX[PAIR[x, y]], POSITION_TO_INDEX[to]]
+            IS_EQUAL[POSITION_TO_INDEX[position], POSITION_TO_INDEX[to]]
           ]
         ][
           # If this is the king under test or an empty space
@@ -103,7 +103,7 @@ IS_NOT_IN_CHECK = ->(board, from, to) {
           -> {
             IF[memo][
               -> {
-                GET_RULE[piece][after_move, PAIR[x, y], to, from, to][
+                GET_RULE[piece][after_move, position, to, from, to][
                   SECOND,
                   FIRST,
                   SECOND

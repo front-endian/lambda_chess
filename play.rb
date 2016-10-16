@@ -71,3 +71,46 @@ PERFORM_CASTLING = ->(old_board, from, to, last_from, last_to) {
     IS_GREATER_OR_EQUAL[LEFT[from], LEFT[to]]
   ]
 }
+
+MAX_UNMOVED_SCORE = ADD[
+  MULTIPLY[BLACK_PAWN, EIGHT],
+  ADD[
+    MULTIPLY[BLACK_KNIGHT, TWO],
+    ADD[
+      MULTIPLY[BLACK_BISHOP, TWO],
+      ADD[
+        MULTIPLY[BLACK_ROOK, TWO],
+        ADD[
+          BLACK_QUEEN,
+          BLACK_KING
+        ]
+      ]
+    ]
+  ]
+]
+
+FOR_BLACK = FIRST
+FOR_WHITE = SECOND
+
+SCORE = ->(board, color) {
+  BOARD_REDUCE[
+    board,
+    ->(memo, piece, position) {
+      IF[IS_BLACK_AT[board, position]][
+        -> {
+          color[ADD, SUBTRACT][
+            memo,
+            TO_UNMOVED_PIECE[piece]
+          ]
+        },
+        -> {
+          color[SUBTRACT, ADD][
+            memo,
+            SUBTRACT[TO_UNMOVED_PIECE[piece], WHITE_OFFSET]
+          ]
+        }
+      ]
+    },
+    MAX_UNMOVED_SCORE
+  ]
+}

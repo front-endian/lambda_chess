@@ -205,4 +205,90 @@ group 'Play Functions' do
       test_castling board, false
     end
   end
+
+  group 'MAX_UNMOVED_SCORE' do
+    assert 'has the correct value' do
+      MAX_UNMOVED_SCORE.to_i == BP*8 + BN*2 + BB*2 + BR*2 + BQ + BK
+    end
+  end
+
+  group 'SCORE' do
+    group 'INITIAL_BOARD has MAX_UNMOVED_SCORE' do
+      assert 'for black' do
+        MAX_UNMOVED_SCORE.to_i == SCORE[INITIAL_BOARD, FOR_BLACK].to_i
+      end
+
+      assert 'for white' do
+        MAX_UNMOVED_SCORE.to_i == SCORE[INITIAL_BOARD, FOR_WHITE].to_i
+      end
+    end
+
+    group 'if a black piece is taken' do
+      board = [[BR,BN,0, BQ,BK,BB,BN,BR],
+               [BP,BP,BP,BP,BP,BP,BP,BP],
+               [0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0],
+               [WP,WP,WP,WP,WP,WP,WP,WP],
+               [WR,WN,WB,WQ,WK,WB,WN,WR]]
+              .to_board
+
+      assert 'the score for black goes down by that amount' do
+        expected =  MAX_UNMOVED_SCORE.to_i - BB
+        expected == SCORE[board, FOR_BLACK].to_i
+      end
+
+      assert 'the score for white goes up by that amount' do
+        expected =  MAX_UNMOVED_SCORE.to_i + BB
+        expected == SCORE[board, FOR_WHITE].to_i
+      end
+    end
+
+    group 'if a white piece is taken' do
+      board = [[BR,BN,BB,BQ,BK,BB,BN,BR],
+               [BP,BP,BP,BP,BP,BP,BP,BP],
+               [0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0],
+               [WP,WP,WP,WP,WP,WP,WP,WP],
+               [WR,WN,WB,0, WK,WB,WN,WR]]
+              .to_board
+
+      assert 'the score for black goes up by the black equivolent' do
+        expected =  MAX_UNMOVED_SCORE.to_i + BQ
+        expected == SCORE[board, FOR_BLACK].to_i
+      end
+
+      assert 'the score for white goes down by the black equivolent' do
+        expected =  MAX_UNMOVED_SCORE.to_i - BQ
+        expected == SCORE[board, FOR_WHITE].to_i
+      end
+    end
+
+    assert 'does not bottom out' do
+      one_left = [[0, 0, 0, 0, 0, 0, 0, 0],
+                  [BP,0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0],
+                  [WP,WP,WP,WP,WP,WP,WP,WP],
+                  [WR,WN,WB,WQ,WK,WB,WN,WR]]
+                 .to_board
+
+      none_left = [[0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [WP,WP,WP,WP,WP,WP,WP,WP],
+                   [WR,WN,WB,WQ,WK,WB,WN,WR]]
+                  .to_board
+
+      SCORE[one_left, FOR_BLACK].to_i > SCORE[none_left, FOR_BLACK].to_i
+    end
+  end
 end

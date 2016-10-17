@@ -93,7 +93,7 @@ IS_NOT_IN_CHECK = ->(board, from, to) {
       ->(memo, piece, position) {
         IF[
           OR[
-            IS_EQUAL[piece, EMPTY_SPACE],
+            IS_EMPTY[piece],
             IS_EQUAL[POSITION_TO_INDEX[position], POSITION_TO_INDEX[to]]
           ]
         ][
@@ -203,27 +203,37 @@ PAWN_RULE = BASIC_CHECKS[
               ],
               # If moving horizontally
               # Check if capturing en passant
-              FIVE_CONDITIONS_MET[
-                is_moving_sideways_one,
-                is_moving_forward_one,
-                # Check if the last moved piece is directly behind the new location
-                IS_EQUAL[
-                  POSITION_TO_INDEX[last_to],
-                  POSITION_TO_INDEX[PAIR[LEFT[to], from_y]]
-                ],
-                # Check if the last moved piece a pawn of the opposite color
-                IS_EQUAL[
-                  GET_POSITION[board, last_to],
-                  TO_MOVED_PIECE[this_is_black[WHITE_PAWN, BLACK_PAWN]]
-                ],
-                # Check if the last moved piece moved forward two
-                IS_EQUAL[
-                  RIGHT[DISTANCE[last_from, last_to]],
-                  TWO
+              ->(last_moved_piece) {
+                SIX_CONDITIONS_MET[
+                  is_moving_sideways_one,
+                  is_moving_forward_one,
+                  # Check if the last moved piece is directly behind the new location
+                  IS_EQUAL[
+                    POSITION_TO_INDEX[last_to],
+                    POSITION_TO_INDEX[PAIR[LEFT[to], from_y]]
+                  ],
+                  # Check if the last moved piece is the opposite color
+                  IS_BLACK[last_moved_piece][
+                    this_is_black[SECOND, FIRST],
+                    this_is_black[FIRST, SECOND]
+                  ],
+                  # Check if the last moved piece is a pawn
+                  IS_EQUAL[
+                    GET_VALUE[last_moved_piece],
+                    PAWN
+                  ],
+                  # Check if the last moved piece moved forward two
+                  IS_EQUAL[
+                    RIGHT[DISTANCE[last_from, last_to]],
+                    TWO
+                  ]
+                ][
+                  EN_PASSANT,
+                  INVALID
                 ]
-              ][
-                EN_PASSANT,
-                INVALID
+              }[
+                # "last_moved_piece"
+                GET_POSITION[board, last_to]
               ]
             ],
             # There is a piece in the way
@@ -261,28 +271,23 @@ PAWN_RULE = BASIC_CHECKS[
 ]
 
 GET_RULE = ->(piece) {
-  ->(unmoved_black_piece) {
-    IS_EQUAL[unmoved_black_piece, BLACK_PAWN][
+  ->(piece_value) {
+    IS_EQUAL[piece_value, PAWN][
       PAWN_RULE,
-    IS_EQUAL[unmoved_black_piece, BLACK_ROOK][
+    IS_EQUAL[piece_value, ROOK][
       ROOK_RULE,
-    IS_EQUAL[unmoved_black_piece, BLACK_KNIGHT][
+    IS_EQUAL[piece_value, KNIGHT][
       KNIGHT_RULE,
-    IS_EQUAL[unmoved_black_piece, BLACK_BISHOP][
+    IS_EQUAL[piece_value, BISHOP][
       BISHOP_RULE,
-    IS_EQUAL[unmoved_black_piece, BLACK_QUEEN][
+    IS_EQUAL[piece_value, QUEEN][
       QUEEN_RULE,
-    IS_EQUAL[unmoved_black_piece, BLACK_KING][
+    IS_EQUAL[piece_value, KING][
       KING_RULE,
       NULL_PIECE
     ]]]]]]
   }[
-    # "unmoved_black_piece"
-    TO_UNMOVED_PIECE[
-      IS_ZERO[SUBTRACT[piece, WHITE_OFFSET]][
-        piece,
-        SUBTRACT[piece, WHITE_OFFSET]
-      ]
-    ]
+    # "piece_value"
+    GET_VALUE[piece]
   ]
 }

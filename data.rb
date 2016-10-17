@@ -27,10 +27,11 @@ NOT = ->(choice) {
   }
 }
 
-FIVE_CONDITIONS_MET = ->(cond_1, cond_2, cond_3, cond_4, cond_5) {
+SIX_CONDITIONS_MET = ->(cond_1, cond_2, cond_3, cond_4, cond_5, cond_6) {
   ->(first, second) {
-    cond_1[cond_2[cond_3[cond_4[cond_5[
+    cond_1[cond_2[cond_3[cond_4[cond_5[cond_6[
       first,
+      second],
       second],
       second],
       second],
@@ -181,9 +182,6 @@ SIXTY_FOUR = MULTIPLY[MULTIPLY[FOUR, FOUR], FOUR]
 
 # Magic Numbers
 
-MOVED_OFFSET = THIRTEEN
-WHITE_OFFSET = SIX
-
 BOARD_SPACES = SIXTY_FOUR
 SIDE_LENGTH  = EIGHT
 
@@ -193,24 +191,102 @@ BLACK_HOME_ROW = ZERO
 WHITE_HOME_ROW = SEVEN
 KING_COLUMN    = FOUR
 
+GET_COLOR    = ->(piece) { LEFT[LEFT[piece]] }
+GET_VALUE    = ->(piece) { RIGHT[LEFT[piece]] }
+GET_OCCUPIED = ->(piece) { LEFT[RIGHT[piece]] }
+GET_MOVED    = ->(piece) { RIGHT[RIGHT[piece]] }
+
+OCCUPIED = FIRST
+EMPTY    = SECOND
+
+UNMOVED  = SECOND
+MOVED    = FIRST
+
 BLACK = FIRST
 WHITE = SECOND
 
-EMPTY_SPACE = ZERO
+PAWN   = ONE
+KNIGHT = TWO
+BISHOP = THREE
+ROOK   = FOUR
+QUEEN  = FIVE
+KING   = SIX
 
-BLACK_PAWN   = ONE
-BLACK_KNIGHT = TWO
-BLACK_BISHOP = THREE
-BLACK_ROOK   = FOUR
-BLACK_QUEEN  = FIVE
-BLACK_KING   = SIX
+MAKE_PIECE = ->(color, value, occupied, moved) {
+  PAIR[PAIR[color, value], PAIR[occupied, moved]]
+}
 
-WHITE_PAWN   = ADD[BLACK_PAWN,   WHITE_OFFSET]
-WHITE_ROOK   = ADD[BLACK_ROOK,   WHITE_OFFSET]
-WHITE_KNIGHT = ADD[BLACK_KNIGHT, WHITE_OFFSET]
-WHITE_BISHOP = ADD[BLACK_BISHOP, WHITE_OFFSET]
-WHITE_QUEEN  = ADD[BLACK_QUEEN,  WHITE_OFFSET]
-WHITE_KING   = ADD[BLACK_KING,   WHITE_OFFSET]
+INITIAL_PIECE = ->(color, value) {
+  MAKE_PIECE[color, value, OCCUPIED, UNMOVED]
+}
+
+EMPTY_SPACE = MAKE_PIECE[BLACK, ZERO, EMPTY, UNMOVED]
+
+BLACK_PAWN   = INITIAL_PIECE[BLACK, PAWN]
+BLACK_KNIGHT = INITIAL_PIECE[BLACK, KNIGHT]
+BLACK_BISHOP = INITIAL_PIECE[BLACK, BISHOP]
+BLACK_ROOK   = INITIAL_PIECE[BLACK, ROOK]
+BLACK_QUEEN  = INITIAL_PIECE[BLACK, QUEEN]
+BLACK_KING   = INITIAL_PIECE[BLACK, KING]
+
+WHITE_PAWN   = INITIAL_PIECE[WHITE, PAWN]
+WHITE_ROOK   = INITIAL_PIECE[WHITE, ROOK]
+WHITE_KNIGHT = INITIAL_PIECE[WHITE, KNIGHT]
+WHITE_BISHOP = INITIAL_PIECE[WHITE, BISHOP]
+WHITE_QUEEN  = INITIAL_PIECE[WHITE, QUEEN]
+WHITE_KING   = INITIAL_PIECE[WHITE, KING]
+
+IS_EMPTY_AT = ->(board, position) {
+  COLOR_AT_SWITCH[board, position][SECOND, SECOND, FIRST]
+}
+
+IS_BLACK_AT = ->(board, position) {
+  COLOR_AT_SWITCH[board, position][FIRST, SECOND, SECOND]
+}
+
+IS_WHITE_AT = ->(board, position) {
+  COLOR_AT_SWITCH[board, position][SECOND, FIRST, SECOND]
+}
+
+COLOR_AT_SWITCH = ->(board, position) {
+  COLOR_SWITCH[GET_POSITION[board, position]]
+}
+
+IS_EMPTY = ->(piece) {
+  NOT[GET_OCCUPIED[piece]]
+}
+
+IS_BLACK = ->(piece) {
+  COLOR_SWITCH[piece][FIRST, SECOND, SECOND]
+}
+
+IS_WHITE = ->(piece) {
+  COLOR_SWITCH[piece][SECOND, FIRST, SECOND]
+}
+
+COLOR_SWITCH = ->(piece) {
+  ->(black, white, empty) {
+    GET_OCCUPIED[piece][
+      GET_COLOR[piece][
+        black,
+        white
+      ],
+      empty
+    ]
+  }
+}
+
+TO_MOVED_PIECE = ->(piece) {
+  MAKE_PIECE[GET_COLOR[piece], GET_VALUE[piece], OCCUPIED, MOVED]
+}
+
+TO_UNMOVED_PIECE = ->(piece) {
+  MAKE_PIECE[GET_COLOR[piece], GET_VALUE[piece], OCCUPIED, UNMOVED]
+}
+
+IS_MOVED = ->(piece) {
+  GET_MOVED[piece]
+}
 
 # Comparisons
 

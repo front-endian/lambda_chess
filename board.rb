@@ -71,51 +71,6 @@ SET_POSITION = ->(board, position, new_value) {
   ]
 }
 
-IS_EMPTY_AT = ->(board, position) {
-  COLOR_AT_SWITCH[board, position][SECOND, SECOND, FIRST]
-}
-
-IS_BLACK_AT = ->(board, position) {
-  COLOR_AT_SWITCH[board, position][FIRST, SECOND, SECOND]
-}
-
-IS_WHITE_AT = ->(board, position) {
-  COLOR_AT_SWITCH[board, position][SECOND, FIRST, SECOND]
-}
-
-COLOR_AT_SWITCH = ->(board, position) {
-  ->(black, white, empty) {
-    IS_GREATER_OR_EQUAL[
-      TO_MOVED_PIECE[WHITE_OFFSET],
-      TO_MOVED_PIECE[GET_POSITION[board, position]]
-    ][
-      IS_EQUAL[GET_POSITION[board, position], EMPTY_SPACE][
-        empty,
-        black,
-      ],
-      white
-    ]
-  }
-}
-
-TO_MOVED_PIECE = ->(piece_number) {
-  IS_MOVED[piece_number][
-    piece_number,
-    ADD[piece_number, MOVED_OFFSET]
-  ]
-}
-
-TO_UNMOVED_PIECE = ->(piece_number) {
-  IS_MOVED[piece_number][
-    SUBTRACT[piece_number, MOVED_OFFSET],
-    piece_number
-  ]
-}
-
-IS_MOVED = ->(piece_number) {
-  IS_GREATER_OR_EQUAL[piece_number, MOVED_OFFSET]
-}
-
 CHANGE_FUNC = ->(from, to, coordinate) {
   COMPARE[coordinate[from], coordinate[to]][
     INCREMENT,
@@ -181,12 +136,16 @@ MOVE = ->(board, from, to) {
   BOARD_MAP[
     board,
     ->(old_piece, position) {
-      IS_EQUAL[POSITION_TO_INDEX[position], POSITION_TO_INDEX[to]][
-        TO_MOVED_PIECE[GET_POSITION[board, from]],
-        IS_EQUAL[POSITION_TO_INDEX[position], POSITION_TO_INDEX[from]][
-          EMPTY_SPACE,
-          old_piece
-        ]
+      IF[
+        IS_EQUAL[POSITION_TO_INDEX[position], POSITION_TO_INDEX[to]]
+      ][
+        -> { TO_MOVED_PIECE[GET_POSITION[board, from]] },
+        -> {
+          IS_EQUAL[POSITION_TO_INDEX[position], POSITION_TO_INDEX[from]][
+            EMPTY_SPACE,
+            old_piece
+          ]
+        }
       ]
     }
   ]

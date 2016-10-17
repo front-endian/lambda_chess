@@ -126,11 +126,18 @@ group 'Piece Functions' do
     end
 
     group 'can not capture own color' do
-      assert 'black' do
-        to    = shift_position(FROM_POSITION, delta_y, delta_x)
-        board = NOTHING_SURROUNDING_BLACK.to_a(8).map { |row| row.to_a(8).map(&:to_i) }
+      def test_own_capture rule, color, delta_y, delta_x
+        direction, piece, board = case color
+                                  when :black
+                                    [1, BP, NOTHING_SURROUNDING_BLACK]
+                                  when :white
+                                    [-1, WP, NOTHING_SURROUNDING_WHITE]
+                                  end
 
-        board[RIGHT[to].to_i][LEFT[to].to_i] = BP
+        to    = shift_position(FROM_POSITION, delta_y, direction * delta_x)
+        board = board.to_a(8).map { |row| row.to_a(8) }
+
+        board[RIGHT[to].to_i][LEFT[to].to_i] = piece
         board = board.to_board
 
         expect_invalid(
@@ -144,23 +151,8 @@ group 'Piece Functions' do
         )
       end
 
-      assert 'white' do
-        to    = shift_position(FROM_POSITION, delta_y, -delta_x)
-        board = NOTHING_SURROUNDING_WHITE.to_a(8).map { |row| row.to_a(8).map(&:to_i) }
-
-        board[RIGHT[to].to_i][LEFT[to].to_i] = WP
-        board = board.to_board
-
-        expect_invalid(
-          rule[
-            board,
-            FROM_POSITION,
-            to,
-            NULL_POSITION,
-            NULL_POSITION
-          ]
-        )
-      end
+      assert('black') { test_own_capture rule, :black, delta_y, delta_x }
+      assert('white') { test_own_capture rule, :white, delta_y, delta_x }
     end
   end
 

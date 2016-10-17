@@ -8,21 +8,24 @@ PERFORM_CASTLING = ->(old_board, from, to, last_from, last_to) {
   ->(is_moving_left) {
     ->(rook_from, nop, mid_to) {
       IF[
-        AND[
-          AND[
-            # Moving an unmoved king
-            IS_EQUAL[
-              GET_POSITION[old_board, from],
-              IS_BLACK_AT[old_board, from][BLACK_KING, WHITE_KING]
-            ],
-            # Moving an unmoved rook
-            IS_EQUAL[
-              GET_POSITION[old_board, rook_from],
-              IS_BLACK_AT[old_board, rook_from][BLACK_ROOK, WHITE_ROOK]
-            ]
+        SIX_CONDITIONS_MET[
+          # Moving a king
+          IS_EQUAL[
+            GET_VALUE[GET_POSITION[old_board, from]],
+            KING
           ],
-          # The path is free
-          FREE_PATH[old_board, from, rook_from, DECREMENT]
+          # King is unmoved
+          NOT[GET_MOVED[GET_POSITION[old_board, from]]],
+          # Moving a rook
+          IS_EQUAL[
+            GET_VALUE[GET_POSITION[old_board, rook_from]],
+            ROOK
+          ],
+          # Rook is unmoved
+          NOT[GET_MOVED[GET_POSITION[old_board, rook_from]]],
+          # Path is free
+          FREE_PATH[old_board, from, rook_from, DECREMENT],
+          FIRST
         ]
       ][
         -> {
@@ -73,16 +76,16 @@ PERFORM_CASTLING = ->(old_board, from, to, last_from, last_to) {
 }
 
 MAX_UNMOVED_SCORE = ADD[
-  MULTIPLY[BLACK_PAWN, EIGHT],
+  MULTIPLY[PAWN, EIGHT],
   ADD[
-    MULTIPLY[BLACK_KNIGHT, TWO],
+    MULTIPLY[KNIGHT, TWO],
     ADD[
-      MULTIPLY[BLACK_BISHOP, TWO],
+      MULTIPLY[BISHOP, TWO],
       ADD[
-        MULTIPLY[BLACK_ROOK, TWO],
+        MULTIPLY[ROOK, TWO],
         ADD[
-          BLACK_QUEEN,
-          BLACK_KING
+          QUEEN,
+          KING
         ]
       ]
     ]
@@ -96,19 +99,12 @@ SCORE = ->(board, color) {
   BOARD_REDUCE[
     board,
     ->(memo, piece, position) {
-      IF[IS_BLACK_AT[board, position]][
-        -> {
-          color[ADD, SUBTRACT][
-            memo,
-            TO_UNMOVED_PIECE[piece]
-          ]
-        },
-        -> {
-          color[SUBTRACT, ADD][
-            memo,
-            SUBTRACT[TO_UNMOVED_PIECE[piece], WHITE_OFFSET]
-          ]
-        }
+      IS_BLACK_AT[board, position][
+        color[ADD, SUBTRACT],
+        color[SUBTRACT, ADD]
+      ][
+        memo,
+        GET_VALUE[piece]
       ]
     },
     MAX_UNMOVED_SCORE

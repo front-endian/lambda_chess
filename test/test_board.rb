@@ -37,9 +37,9 @@ group 'Board Functions' do
 
   group 'GET_POSITION' do
     assert 'gets data at the given position' do
-      board = INDEX_BOARD.to_board
+      piece = GET_POSITION[INITIAL_BOARD, PAIR[KING_COLUMN, BLACK_HOME_ROW]]
 
-      10 == GET_POSITION[board, position(2, 1)].to_i
+      GET_VALUE[piece].to_i == KING.to_i
     end
   end
 
@@ -290,45 +290,33 @@ group 'Board Functions' do
   end
 
   group 'MOVE' do
-    example_board = INDEX_BOARD.to_board
+    example_board = INITIAL_BOARD
 
-    from  = position(2, 2)
-    to    = position(3, 7)
+    from  = position(0, 0)
+    to    = position(2, 2)
     moved = MOVE[example_board, from, to]
 
     assert 'moves the piece at the "from" position to the "to" position' do
-      expected = TO_MOVED_PIECE[GET_POSITION[example_board, from]].to_i
+      expected = GET_VALUE[GET_POSITION[example_board, from]].to_i
 
-      expected == GET_POSITION[moved, to].to_i
+      expected == GET_VALUE[GET_POSITION[moved, to]].to_i
     end
 
-    assert 'puts a zero in the "from" position' do
-      0 == GET_POSITION[moved, from].to_i
+    assert 'marks the moved piece as moved' do
+      expect_falsy(GET_MOVED[GET_POSITION[moved, from]]) &&
+      expect_truthy(GET_MOVED[GET_POSITION[moved, to]])
+    end
+
+    assert 'puts an empty piece in the "from" position' do
+      EMPTY_SPACE == GET_POSITION[moved, from]
     end
 
     assert 'works when moving to same position' do
       null_move = MOVE[example_board, from, from]
 
-      expected = TO_MOVED_PIECE[GET_POSITION[example_board, from]].to_i
+      expected = GET_VALUE[GET_POSITION[example_board, from]].to_i
 
-      expected == GET_POSITION[null_move, from].to_i
-    end
-  end
-
-  group 'INITIAL_BOARD' do
-    assert 'is initialized to the correct values' do
-      INITIAL_BOARD
-        .to_a(8)
-        .map do |row|
-          row.to_a(8).map { |piece| piece.to_i}
-        end == [[4, 2, 3, 5, 6, 3, 2, 4],
-                [1, 1, 1, 1, 1, 1, 1, 1],
-                [0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0],
-                [7, 7, 7, 7, 7, 7, 7, 7],
-                [10,8, 9, 11,12,9, 8, 10]]
+      expected == GET_VALUE[GET_POSITION[null_move, from]].to_i
     end
   end
 end

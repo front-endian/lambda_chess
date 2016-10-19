@@ -159,10 +159,15 @@ MOD_AND_DIVIDE = ->(a, b) {
   ]
 }
 
-ABSOLUTE_DIFFERENCE = ->(x, y) {
-  IS_GREATER_OR_EQUAL[x, y][
-    SUBTRACT[x, y],
-    SUBTRACT[y, x]
+DELTA = ->(position_1, position_2, direction) {
+  ->(a, b) {
+    IS_GREATER_OR_EQUAL[a, b][
+      SUBTRACT[a, b],
+      SUBTRACT[b, a]
+    ]
+  }[
+    direction[position_1],
+    direction[position_2]
   ]
 }
 

@@ -82,7 +82,7 @@ FREE_PATH = ->(board, from, to, alter_length) {
           # Get the number of positions that have to be checked
           alter_length[
             IS_ZERO[delta_x][
-              ABSOLUTE_DIFFERENCE[RIGHT[from], RIGHT[to]],
+              DELTA[from, to, RIGHT],
               delta_x
             ]
           ][
@@ -113,9 +113,9 @@ FREE_PATH = ->(board, from, to, alter_length) {
     ]
   }[
     # "delta_x"
-    ABSOLUTE_DIFFERENCE[LEFT[from], LEFT[to]],
+    DELTA[from, to, LEFT],
     # "delta_y"
-    ABSOLUTE_DIFFERENCE[RIGHT[from], RIGHT[to]]
+    DELTA[from, to, RIGHT]
   ]
 }
 

@@ -171,16 +171,6 @@ group 'Math Functions' do
       end
     end
   end
-
-  group 'ABSOLUTE_DIFFERENCE' do
-    assert 'returns difference when second argument is smaller' do
-      7 == ABSOLUTE_DIFFERENCE[10.to_peano, 3.to_peano].to_i
-    end
-
-    assert 'returns absolute value of difference when second argument is larger' do
-      18 == ABSOLUTE_DIFFERENCE[2.to_peano, 20.to_peano].to_i
-    end
-  end
 end
 
 group 'Comparison Functions' do

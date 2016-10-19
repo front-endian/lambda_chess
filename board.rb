@@ -51,11 +51,18 @@ GET_POSITION = ->(board, position) {
   NTH[NTH[board, RIGHT[position]], LEFT[position]]
 }
 
-CHANGE_FUNC = ->(from, to, coordinate) {
-  COMPARE[coordinate[from], coordinate[to]][
-    INCREMENT,
-    IDENTITY,
-    DECREMENT
+CHANGE_FUNC = ->(from, to, direction) {
+  ->(a, b) {
+    IS_GREATER_OR_EQUAL[a, b][
+      IS_EQUAL[a, b][
+        IDENTITY,
+        DECREMENT
+      ],
+      INCREMENT
+    ]
+  }[
+    direction[from],
+    direction[to]
   ]
 }
 
@@ -86,7 +93,7 @@ FREE_PATH = ->(board, from, to, alter_length) {
                   new_postion,
                   # If a filled position hasn't been found, check for a piece
                   RIGHT[memo][
-                    IS_EMPTY_AT[board, new_postion],
+                    IS_EMPTY[GET_POSITION[board, new_postion]],
                     SECOND
                   ]
                 ]

@@ -149,28 +149,6 @@ group 'Math Functions' do
       0 == MULTIPLY[0.to_peano, 23.to_peano].to_i
     end
   end
-
-  group 'MOD_AND_DIVIDE' do
-    group 'divide' do
-      assert 'divides two integers' do
-       6 == RIGHT[MOD_AND_DIVIDE[30.to_peano, 5.to_peano]].to_i
-      end
-
-      assert 'rounds down' do
-       6 == RIGHT[MOD_AND_DIVIDE[32.to_peano, 5.to_peano]].to_i
-      end
-    end
-
-    group 'modulus' do
-      assert 'returns the remainder of division' do
-       2 == LEFT[MOD_AND_DIVIDE[12.to_peano, 5.to_peano]].to_i
-      end
-
-      assert 'returns the first argument when the second argument is larger' do
-       4 == LEFT[MOD_AND_DIVIDE[4.to_peano, 10.to_peano]].to_i
-      end
-    end
-  end
 end
 
 group 'Comparison Functions' do
@@ -209,20 +187,6 @@ group 'Comparison Functions' do
 
     assert 'returns SECOND when less' do
       expect_falsy IS_EQUAL[1.to_peano, 4.to_peano]
-    end
-  end
-
-  group 'COMPARE' do
-    assert 'returns first option when first argument is less than the second' do
-      COMPARE[2.to_peano, 9.to_peano][true, false, false]
-    end
-
-    assert 'returns second option when first argument is equal to the second' do
-      COMPARE[4.to_peano, 4.to_peano][false, true, false]
-    end
-
-    assert 'returns third option when first argument is equal to the second' do
-      COMPARE[8.to_peano, 3.to_peano][false, false, true]
     end
   end
 end

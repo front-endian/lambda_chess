@@ -10,17 +10,13 @@ VALID      = ->(valid, invalid, en_passant) { valid }
 INVALID    = ->(valid, invalid, en_passant) { invalid }
 EN_PASSANT = ->(valid, invalid, en_passant) { en_passant }
 
-NULL_PIECE = ->(board, from, to, last_from, last_to) { INVALID }
-
 BASIC_CHECKS = ->(rule) {
   ->(board, from, to, last_from, last_to) {
     IF[
-      AND[
-        NOT[IS_EMPTY_AT[board, to]],
-        IS_BLACK_AT[board, from][
-          IS_BLACK_AT[board, to],
-          IS_WHITE_AT[board, to]
-        ]
+      COLOR_SWITCH[GET_POSITION[board, from]][
+        IS_BLACK[GET_POSITION[board, to]],
+        IS_WHITE[GET_POSITION[board, to]],
+        SECOND
       ]
     ][
       -> { INVALID },
@@ -258,7 +254,7 @@ PAWN_RULE = BASIC_CHECKS[
         IS_EQUAL[amount, DELTA[from, to, direction]]
       },
       # "this_is_black"
-      IS_BLACK_AT[board, from],
+      IS_BLACK[GET_POSITION[board, from]],
       # "from_y"
       RIGHT[from],
       # "to_y"
@@ -281,7 +277,7 @@ GET_RULE = ->(piece) {
       QUEEN_RULE,
     IS_EQUAL[piece_value, KING][
       KING_RULE,
-      NULL_PIECE
+      ZERO
     ]]]]]]
   }[
     # "piece_value"

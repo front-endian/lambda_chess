@@ -42,10 +42,7 @@ SIX_CONDITIONS_MET = ->(cond_1, cond_2, cond_3, cond_4, cond_5, cond_6) {
 
 IF = ->(condition) {
   ->(first, second) {
-    condition[
-      -> { first[] },
-      -> { second[] }
-    ][]
+    condition[first, second][]
   }
 }
 
@@ -144,21 +141,6 @@ MULTIPLY = ->(a, b) {
   }
 }
 
-MOD_AND_DIVIDE = ->(a, b) {
-  a[
-    ->(memo) {
-      IS_GREATER_OR_EQUAL[LEFT[memo], b][
-        PAIR[
-          SUBTRACT[LEFT[memo], b],
-          INCREMENT[RIGHT[memo]]
-        ],
-        memo
-      ]
-    },
-    PAIR[a, ZERO]
-  ]
-}
-
 DELTA = ->(position_1, position_2, direction) {
   ->(a, b) {
     IS_GREATER_OR_EQUAL[a, b][
@@ -182,13 +164,11 @@ FIVE       = ADD[TWO, THREE]
 SIX        = MULTIPLY[TWO, THREE]
 SEVEN      = ADD[THREE, FOUR]
 EIGHT      = MULTIPLY[TWO, FOUR]
-THIRTEEN   = ADD[MULTIPLY[THREE, FOUR], ONE]
 SIXTY_FOUR = MULTIPLY[MULTIPLY[FOUR, FOUR], FOUR]
 
 # Magic Numbers
 
-BOARD_SPACES = SIXTY_FOUR
-SIDE_LENGTH  = EIGHT
+SIDE_LENGTH = EIGHT
 
 BLACK_PAWN_ROW = ONE
 WHITE_PAWN_ROW = SIX
@@ -241,22 +221,6 @@ WHITE_BISHOP = INITIAL_PIECE[WHITE, BISHOP]
 WHITE_QUEEN  = INITIAL_PIECE[WHITE, QUEEN]
 WHITE_KING   = INITIAL_PIECE[WHITE, KING]
 
-IS_EMPTY_AT = ->(board, position) {
-  COLOR_AT_SWITCH[board, position][SECOND, SECOND, FIRST]
-}
-
-IS_BLACK_AT = ->(board, position) {
-  COLOR_AT_SWITCH[board, position][FIRST, SECOND, SECOND]
-}
-
-IS_WHITE_AT = ->(board, position) {
-  COLOR_AT_SWITCH[board, position][SECOND, FIRST, SECOND]
-}
-
-COLOR_AT_SWITCH = ->(board, position) {
-  COLOR_SWITCH[GET_POSITION[board, position]]
-}
-
 IS_EMPTY = ->(piece) {
   NOT[GET_OCCUPIED[piece]]
 }
@@ -285,10 +249,6 @@ TO_MOVED_PIECE = ->(piece) {
   MAKE_PIECE[GET_COLOR[piece], GET_VALUE[piece], OCCUPIED, MOVED]
 }
 
-TO_UNMOVED_PIECE = ->(piece) {
-  MAKE_PIECE[GET_COLOR[piece], GET_VALUE[piece], OCCUPIED, UNMOVED]
-}
-
 IS_MOVED = ->(piece) {
   GET_MOVED[piece]
 }
@@ -308,16 +268,4 @@ IS_EQUAL = ->(a, b) {
     -> { IS_GREATER_OR_EQUAL[b, a] },
     -> { SECOND }
   ]
-}
-
-COMPARE = ->(a, b) {
-  ->(less, equal, greater) {
-    IS_GREATER_OR_EQUAL[a, b][
-      IS_EQUAL[a, b][
-        equal,
-        greater
-      ],
-      less
-    ]
-  }
 }

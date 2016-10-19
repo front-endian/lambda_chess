@@ -107,7 +107,7 @@ SCORE = ->(board, color) {
   BOARD_REDUCE[
     board,
     ->(memo, piece, position) {
-      IS_BLACK_AT[board, position][
+      IS_BLACK[piece][
         color[ADD, SUBTRACT],
         color[SUBTRACT, ADD]
       ][

@@ -7,16 +7,6 @@
 require './setup'
 
 group 'Board Functions' do
-  group 'POSITION_TO_INDEX' do
-    assert 'translates X/Y pair into an array index' do
-      34 == POSITION_TO_INDEX[position(2, 4)].to_i
-    end
-
-    assert 'works with zero' do
-      6 == POSITION_TO_INDEX[position(6, 0)].to_i
-    end
-  end
-
   group 'DISTANCE' do
     position_1 = position(2, 10)
     position_2 = position(5, 15)

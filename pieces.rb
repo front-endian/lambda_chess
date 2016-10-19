@@ -94,7 +94,7 @@ IS_NOT_IN_CHECK = ->(board, from, to) {
         IF[
           OR[
             IS_EMPTY[piece],
-            IS_EQUAL[POSITION_TO_INDEX[position], POSITION_TO_INDEX[to]]
+            SAME_POSITION[position, to]
           ]
         ][
           # If this is the king under test or an empty space
@@ -208,10 +208,7 @@ PAWN_RULE = BASIC_CHECKS[
                   is_moving_sideways_one,
                   is_moving_forward_one,
                   # Check if the last moved piece is directly behind the new location
-                  IS_EQUAL[
-                    POSITION_TO_INDEX[last_to],
-                    POSITION_TO_INDEX[PAIR[LEFT[to], from_y]]
-                  ],
+                  SAME_POSITION[last_to, PAIR[LEFT[to], from_y]],
                   # Check if the last moved piece is the opposite color
                   IS_BLACK[last_moved_piece][
                     this_is_black[SECOND, FIRST],

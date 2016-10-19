@@ -40,10 +40,10 @@ BOARD_REDUCE = ->(board, func, initial) {
   ]
 }
 
-POSITION_TO_INDEX = ->(position) {
-  ADD[
-    LEFT[position],
-    MULTIPLY[RIGHT[position], SIDE_LENGTH]
+SAME_POSITION = ->(a, b) {
+  AND[
+    IS_EQUAL[LEFT[a], LEFT[b]],
+    IS_EQUAL[RIGHT[a], RIGHT[b]]
   ]
 }
 
@@ -56,19 +56,6 @@ DISTANCE = ->(position_1, position_2) {
 
 GET_POSITION = ->(board, position) {
   NTH[NTH[board, RIGHT[position]], LEFT[position]]
-}
-
-SET_POSITION = ->(board, position, new_value) {
-  LIST_MAP[
-    board,
-    BOARD_SPACES,
-    ->(old_piece, index) {
-      IS_EQUAL[index, POSITION_TO_INDEX[position]][
-        new_value,
-        old_piece
-      ]
-    }
-  ]
 }
 
 CHANGE_FUNC = ->(from, to, coordinate) {
@@ -136,12 +123,10 @@ MOVE = ->(board, from, to) {
   BOARD_MAP[
     board,
     ->(old_piece, position) {
-      IF[
-        IS_EQUAL[POSITION_TO_INDEX[position], POSITION_TO_INDEX[to]]
-      ][
+      IF[SAME_POSITION[position, to]][
         -> { TO_MOVED_PIECE[GET_POSITION[board, from]] },
         -> {
-          IS_EQUAL[POSITION_TO_INDEX[position], POSITION_TO_INDEX[from]][
+          SAME_POSITION[position, from][
             EMPTY_SPACE,
             old_piece
           ]

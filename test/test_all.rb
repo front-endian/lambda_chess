@@ -4,7 +4,7 @@
 # This software may be modified and distributed under the
 # terms of the three-clause BSD license. See LICENSE.txt
 
-require './test_data'
-require './test_board'
-require './test_pieces'
-require './test_play'
+require_relative './test_data'
+require_relative './test_board'
+require_relative './test_pieces'
+require_relative './test_play'

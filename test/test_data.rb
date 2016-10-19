@@ -4,7 +4,7 @@
 # This software may be modified and distributed under the
 # terms of the three-clause BSD license. See LICENSE.txt
 
-require './setup'
+require_relative './setup'
 
 group 'Choice Functions' do
   group 'AND' do

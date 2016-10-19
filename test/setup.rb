@@ -5,10 +5,10 @@
 # terms of the three-clause BSD license. See LICENSE.txt
 
 require 'tet'
-require './../data'
-require './../board'
-require './../pieces'
-require './../play'
+require_relative './../data'
+require_relative './../board'
+require_relative './../pieces'
+require_relative './../play'
 
 class Proc
   def to_i

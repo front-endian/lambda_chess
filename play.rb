@@ -8,24 +8,32 @@ PERFORM_CASTLING = ->(old_board, from, to, last_from, last_to) {
   ->(is_moving_left) {
     ->(rook_from, nop, mid_to) {
       IF[
-        SIX_CONDITIONS_MET[
-          # Moving a king
-          IS_EQUAL[
-            GET_VALUE[GET_POSITION[old_board, from]],
-            KING
-          ],
-          # King is unmoved
-          NOT[GET_MOVED[GET_POSITION[old_board, from]]],
-          # Moving a rook
-          IS_EQUAL[
-            GET_VALUE[GET_POSITION[old_board, rook_from]],
-            ROOK
-          ],
-          # Rook is unmoved
-          NOT[GET_MOVED[GET_POSITION[old_board, rook_from]]],
-          # Path is free
-          FREE_PATH[old_board, from, rook_from, DECREMENT],
-          FIRST
+        ->(king, rook) {
+          SIX_CONDITIONS_MET[
+            # Moving a king
+            IS_EQUAL[
+              GET_VALUE[king],
+              KING
+            ],
+            # King is unmoved
+            NOT[GET_MOVED[king]],
+            # Moving a rook
+            IS_EQUAL[
+              GET_VALUE[rook],
+              ROOK
+            ],
+            # Rook is unmoved
+            NOT[GET_MOVED[rook]],
+            # Path is free
+            FREE_PATH[old_board, from, rook_from, DECREMENT],
+
+            FIRST
+          ]
+        }[
+          # "king"
+          GET_POSITION[old_board, from],
+          # "rook"
+          GET_POSITION[old_board, rook_from]
         ]
       ][
         -> {

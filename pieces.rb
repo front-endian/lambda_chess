@@ -35,8 +35,8 @@ STRAIGHT_LINE_RULE = ->(rule) {
       AND[
         FREE_PATH[board, from, to, DECREMENT],
         rule[
-          LEFT[DISTANCE[from, to]],
-          RIGHT[DISTANCE[from, to]]
+          DELTA[from, to, LEFT],
+          DELTA[from, to, RIGHT]
         ]
       ][
         VALID,
@@ -127,8 +127,8 @@ KING_RULE = BASIC_CHECKS[
     # Wrap in an IF to prevent expensive check when unnecessary
     IF[
       AND[
-        IS_GREATER_OR_EQUAL[ONE, LEFT[DISTANCE[from, to]]],
-        IS_GREATER_OR_EQUAL[ONE, RIGHT[DISTANCE[from, to]]]
+        IS_GREATER_OR_EQUAL[ONE, DELTA[from, to, LEFT]],
+        IS_GREATER_OR_EQUAL[ONE, DELTA[from, to, RIGHT]]
       ]
     ][
       # Only moving one space in any direction
@@ -164,9 +164,9 @@ KNIGHT_RULE = BASIC_CHECKS[
       ]
     }[
       # "delta_x"
-      LEFT[DISTANCE[from, to]],
+      DELTA[from, to, LEFT],
       # "delta_y"
-      RIGHT[DISTANCE[from, to]]
+      DELTA[from, to, RIGHT]
     ]
   }
 ]
@@ -185,7 +185,7 @@ PAWN_RULE = BASIC_CHECKS[
           FREE_PATH[board, from, to, IDENTITY][
             # If the path is free
             # Check if there is horizontal movement
-            IS_ZERO[LEFT[DISTANCE[from, to]]][
+            IS_ZERO[DELTA[from, to, LEFT]][
               # If not moving horizontally
               OR[
                 is_moving_forward_one,
@@ -221,7 +221,7 @@ PAWN_RULE = BASIC_CHECKS[
                   ],
                   # Check if the last moved piece moved forward two
                   IS_EQUAL[
-                    RIGHT[DISTANCE[last_from, last_to]],
+                    DELTA[last_from, last_to, RIGHT],
                     TWO
                   ]
                 ][
@@ -255,7 +255,7 @@ PAWN_RULE = BASIC_CHECKS[
     }[
       # "check_movement_in_axis"
       ->(direction, amount) {
-        IS_EQUAL[amount, direction[DISTANCE[from, to]]]
+        IS_EQUAL[amount, DELTA[from, to, direction]]
       },
       # "this_is_black"
       IS_BLACK_AT[board, from],

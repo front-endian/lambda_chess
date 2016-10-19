@@ -7,24 +7,6 @@
 require './setup'
 
 group 'Board Functions' do
-  group 'DISTANCE' do
-    position_1 = position(2, 10)
-    position_2 = position(5, 15)
-    expected   = [3, 5]
-
-    assert 'returns distance of the X and Y coordinates' do
-      result = DISTANCE[position_1, position_2]
-
-      expected == [LEFT[result], RIGHT[result]].map(&:to_i)
-    end
-
-    assert 'argument order does not matter' do
-      result = DISTANCE[position_2, position_1]
-
-      expected == [LEFT[result], RIGHT[result]].map(&:to_i)
-    end
-  end
-
   group 'GET_POSITION' do
     assert 'gets data at the given position' do
       piece = GET_POSITION[INITIAL_BOARD, PAIR[KING_COLUMN, BLACK_HOME_ROW]]

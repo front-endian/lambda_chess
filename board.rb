@@ -47,13 +47,6 @@ SAME_POSITION = ->(a, b) {
   ]
 }
 
-DISTANCE = ->(position_1, position_2) {
-  PAIR[
-    ABSOLUTE_DIFFERENCE[LEFT[position_1], LEFT[position_2]],
-    ABSOLUTE_DIFFERENCE[RIGHT[position_1], RIGHT[position_2]]
-  ]
-}
-
 GET_POSITION = ->(board, position) {
   NTH[NTH[board, RIGHT[position]], LEFT[position]]
 }

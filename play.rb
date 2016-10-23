@@ -79,7 +79,7 @@ PERFORM_CASTLING = ->(old_board, from, to, last_from, last_to) {
   ]
 }
 
-MAX_UNMOVED_SCORE = ADD[
+MAX_PIECE_TOTAL = ADD[
   MULTIPLY[PAWN_VALUE, EIGHT],
   ADD[
     MULTIPLY[KNIGHT_VALUE, TWO],
@@ -96,9 +96,6 @@ MAX_UNMOVED_SCORE = ADD[
   ]
 ]
 
-FOR_BLACK = FIRST
-FOR_WHITE = SECOND
-
 SCORE = ->(board, color) {
   BOARD_REDUCE[
     board,
@@ -111,6 +108,6 @@ SCORE = ->(board, color) {
         GET_VALUE[piece]
       ]
     },
-    MAX_UNMOVED_SCORE
+    MAX_PIECE_TOTAL
   ]
 }

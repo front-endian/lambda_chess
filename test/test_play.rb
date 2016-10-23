@@ -214,25 +214,25 @@ group 'Play Functions' do
     end
   end
 
-  group 'MAX_UNMOVED_SCORE' do
+  group 'MAX_PIECE_TOTAL' do
     assert 'has the correct value' do
-      MAX_UNMOVED_SCORE.to_i == (GET_VALUE[BP].to_i * 8) +
-                                (GET_VALUE[BN].to_i * 2) +
-                                (GET_VALUE[BB].to_i * 2) +
-                                (GET_VALUE[BR].to_i * 2) +
-                                 GET_VALUE[BQ].to_i +
-                                 GET_VALUE[BK].to_i
+      MAX_PIECE_TOTAL.to_i == (GET_VALUE[BP].to_i * 8) +
+                              (GET_VALUE[BN].to_i * 2) +
+                              (GET_VALUE[BB].to_i * 2) +
+                              (GET_VALUE[BR].to_i * 2) +
+                               GET_VALUE[BQ].to_i +
+                               GET_VALUE[BK].to_i
      end
   end
 
   group 'SCORE' do
-    group 'INITIAL_BOARD has MAX_UNMOVED_SCORE' do
+    group 'INITIAL_BOARD has MAX_PIECE_TOTAL' do
       assert 'for black' do
-        MAX_UNMOVED_SCORE.to_i == SCORE[INITIAL_BOARD, FOR_BLACK].to_i
+        MAX_PIECE_TOTAL.to_i == SCORE[INITIAL_BOARD, BLACK].to_i
       end
 
       assert 'for white' do
-        MAX_UNMOVED_SCORE.to_i == SCORE[INITIAL_BOARD, FOR_WHITE].to_i
+        MAX_PIECE_TOTAL.to_i == SCORE[INITIAL_BOARD, WHITE].to_i
       end
     end
 
@@ -248,13 +248,13 @@ group 'Play Functions' do
               .to_board
 
       assert 'the score for black goes down by that amount' do
-        expected =  MAX_UNMOVED_SCORE.to_i - GET_VALUE[BB].to_i
-        expected == SCORE[board, FOR_BLACK].to_i
+        expected =  MAX_PIECE_TOTAL.to_i - GET_VALUE[BB].to_i
+        expected == SCORE[board, BLACK].to_i
       end
 
       assert 'the score for white goes up by that amount' do
-        expected =  MAX_UNMOVED_SCORE.to_i + GET_VALUE[BB].to_i
-        expected == SCORE[board, FOR_WHITE].to_i
+        expected =  MAX_PIECE_TOTAL.to_i + GET_VALUE[BB].to_i
+        expected == SCORE[board, WHITE].to_i
       end
     end
 
@@ -270,13 +270,13 @@ group 'Play Functions' do
               .to_board
 
       assert 'the score for black goes up by the black equivolent' do
-        expected =  MAX_UNMOVED_SCORE.to_i + GET_VALUE[BQ].to_i
-        expected == SCORE[board, FOR_BLACK].to_i
+        expected =  MAX_PIECE_TOTAL.to_i + GET_VALUE[BQ].to_i
+        expected == SCORE[board, BLACK].to_i
       end
 
       assert 'the score for white goes down by the black equivolent' do
-        expected =  MAX_UNMOVED_SCORE.to_i - GET_VALUE[BQ].to_i
-        expected == SCORE[board, FOR_WHITE].to_i
+        expected =  MAX_PIECE_TOTAL.to_i - GET_VALUE[BQ].to_i
+        expected == SCORE[board, WHITE].to_i
       end
     end
 
@@ -301,7 +301,7 @@ group 'Play Functions' do
                    [WR,WN,WB,WQ,WK,WB,WN,WR]]
                   .to_board
 
-      SCORE[one_left, FOR_BLACK].to_i > SCORE[none_left, FOR_BLACK].to_i
+      SCORE[one_left, BLACK].to_i > SCORE[none_left, BLACK].to_i
     end
   end
 end

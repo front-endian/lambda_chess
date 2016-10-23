@@ -29,15 +29,14 @@ BASIC_CHECKS = ->(rule) {
 STRAIGHT_LINE_RULE = ->(rule) {
   BASIC_CHECKS[
     ->(board, from, to, last_from, last_to) {
-      AND[
-        FREE_PATH[board, from, to, DECREMENT],
-        rule[
-          DELTA[from, to, LEFT],
-          DELTA[from, to, RIGHT]
-        ]
-      ][
-        VALID,
-        INVALID
+      IF[rule[DELTA[from, to, LEFT], DELTA[from, to, RIGHT]]][
+        -> {
+          FREE_PATH[board, from, to, DECREMENT][
+            VALID,
+            INVALID
+          ]
+        },
+        -> { INVALID }
       ]
     }
   ]

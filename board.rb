@@ -136,6 +136,19 @@ MOVE = ->(board, from, to) {
   ]
 }
 
+POSITION_SELECT = ->(board, condition) {
+  BOARD_REDUCE[
+    board,
+    ->(memo, piece, position) {
+      condition[piece][
+        VECTOR_APPEND[memo, position],
+        memo
+      ]
+    },
+    EMPTY_VECTOR
+  ]
+}
+
 P = PAIR
 
 INITIAL_BOARD =

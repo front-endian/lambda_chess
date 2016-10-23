@@ -27,33 +27,30 @@ BASIC_CHECKS = ->(rule) {
             -> {
               ->(moved_piece, after_move) {
                 ->(king_data) {
-                  IF[LEFT[king_data]][
-                    -> {
+                  VECTOR_REDUCE[
+                    king_data,
+                    ->(memo, king_position) {
                       IS_NOT_IN_CHECK[
                         after_move,
-                        RIGHT[king_data],
-                        RIGHT[king_data]
+                        king_position,
+                        king_position
                       ]
                     },
-                    -> { FIRST }
+                    FIRST
                   ]
                 }[
                   # "king_data"
-                  BOARD_REDUCE[
+                  POSITION_SELECT[
                     after_move,
-                    ->(memo, king, position) {
+                    ->(possible) {
                       AND[
-                        HAS_VALUE[king, KING_VALUE],
-                        IS_BLACK[king][
+                        HAS_VALUE[possible, KING_VALUE],
+                        IS_BLACK[possible][
                           IS_BLACK[moved_piece],
                           IS_WHITE[moved_piece]
                         ]
-                      ][
-                        PAIR[FIRST, position],
-                        memo
                       ]
-                    },
-                    PAIR[SECOND, ZERO]
+                    }
                   ]
                 ]
               }[

@@ -36,7 +36,7 @@ group 'Choice Functions' do
   end
 end
 
-group 'Pair Functions' do
+group 'List Functions' do
   group 'NTH' do
     example = [:A, :B, :C].to_linked_list
 

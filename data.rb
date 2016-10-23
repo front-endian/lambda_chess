@@ -45,59 +45,7 @@ IF = ->(condition) {
   }
 }
 
-# Pair Functions
-
-PAIR = ->(left, right) {
-  ->(select) { select[left, right] }
-}
-
-LEFT  = ->(pair) { pair[FIRST]  }
-RIGHT = ->(pair) { pair[SECOND] }
-
-# Lists
-
-NTH = ->(list, index) { LEFT[index[RIGHT, list]] }
-
-LIST_MAP = ->(list, size, func) {
-  LEFT[
-    size[
-      ->(memo) {
-        PAIR[
-         PAIR[
-           func[
-             NTH[list, RIGHT[memo]],
-             RIGHT[memo]
-           ],
-           LEFT[memo]
-          ],
-          DECREMENT[RIGHT[memo]]
-        ]
-      },
-      PAIR[ZERO, DECREMENT[size]]
-    ]
-  ]
-}
-
-LIST_REDUCE = ->(list, size, func, initial) {
-  LEFT[
-    size[
-      ->(memo) {
-        PAIR[
-          func[
-            # previous
-            LEFT[memo],
-            # next
-            NTH[list, RIGHT[memo]],
-            # index
-            RIGHT[memo],
-          ],
-          INCREMENT[RIGHT[memo]]
-        ]
-      },
-      PAIR[initial, ZERO]
-    ]
-  ]
-}
+ALWAYS_FIRST = ->(condition) { FIRST }
 
 # Math Functions
 
@@ -163,6 +111,98 @@ FIVE       = ADD[TWO, THREE]
 SIX        = MULTIPLY[TWO, THREE]
 SEVEN      = ADD[THREE, FOUR]
 EIGHT      = MULTIPLY[TWO, FOUR]
+
+# Pair Functions
+
+PAIR = ->(left, right) {
+  ->(select) { select[left, right] }
+}
+
+LEFT  = ->(pair) { pair[FIRST]  }
+RIGHT = ->(pair) { pair[SECOND] }
+
+# Lists Functions
+
+NTH = ->(list, index) { LEFT[index[RIGHT, list]] }
+
+LIST_MAP = ->(list, size, func) {
+  LEFT[
+    size[
+      ->(memo) {
+        PAIR[
+         PAIR[
+           func[
+             NTH[list, RIGHT[memo]],
+             RIGHT[memo]
+           ],
+           LEFT[memo]
+          ],
+          DECREMENT[RIGHT[memo]]
+        ]
+      },
+      PAIR[ZERO, DECREMENT[size]]
+    ]
+  ]
+}
+
+LIST_REDUCE = ->(list, size, func, initial) {
+  LEFT[
+    size[
+      ->(memo) {
+        PAIR[
+          func[
+            # previous
+            LEFT[memo],
+            # next
+            NTH[list, RIGHT[memo]],
+            # index
+            RIGHT[memo],
+          ],
+          INCREMENT[RIGHT[memo]]
+        ]
+      },
+      PAIR[initial, ZERO]
+    ]
+  ]
+}
+
+# Vector Functions
+
+EMPTY_VECTOR = PAIR[ZERO, ZERO]
+
+VECTOR_SIZE = RIGHT
+VECTOR_LIST = LEFT
+
+VECTOR_APPEND = ->(vector, item) {
+  PAIR[
+    PAIR[item, VECTOR_LIST[vector]],
+    INCREMENT[VECTOR_SIZE[vector]]
+  ]
+}
+
+VECTOR_FIRST = ->(vector) {
+  NTH[VECTOR_LIST[vector], ZERO]
+}
+
+VECTOR_MAP = ->(vector, func) {
+  PAIR[
+    LIST_MAP[
+      VECTOR_LIST[vector],
+      VECTOR_SIZE[vector],
+      ->(item, index) { func[item] }
+    ],
+    VECTOR_SIZE[vector]
+  ]
+}
+
+VECTOR_REDUCE = ->(vector, func, initial) {
+  LIST_REDUCE[
+    VECTOR_LIST[vector],
+    VECTOR_SIZE[vector],
+    ->(memo, item, index) { func[memo, item] },
+    initial
+  ]
+}
 
 # Magic Numbers
 

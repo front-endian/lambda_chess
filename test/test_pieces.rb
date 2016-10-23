@@ -30,6 +30,26 @@ group 'Piece Functions' do
                                [0, 0, 0, 0, 0, 0, 0, 0]]
                               .to_board
 
+  BLACK_KING_IN_DANGER = [[0, 0, 0, 0, 0, 0, 0, 0],
+                          [0, 0, 0, 0, 0, 0, 0, 0],
+                          [0, 0, 0, 0, 0, 0, 0, 0],
+                          [0, 0, 0, 0, 0, 0, 0, 0],
+                          [WR,0, 0, 0, BQ,0, 0,BK],
+                          [0, 0, 0, 0, 0, 0, 0, 0],
+                          [0, 0, 0, 0, 0, 0, 0, 0],
+                          [0, 0, 0, 0, 0, 0, 0, 0]]
+                         .to_board
+
+  WHITE_KING_IN_DANGER = [[0, 0, 0, 0, 0, 0, 0, 0],
+                          [0, 0, 0, 0, 0, 0, 0, 0],
+                          [0, 0, 0, 0, 0, 0, 0, 0],
+                          [0, 0, 0, 0, 0, 0, 0, 0],
+                          [BR,0, 0, 0, WQ,0, 0,WK],
+                          [0, 0, 0, 0, 0, 0, 0, 0],
+                          [0, 0, 0, 0, 0, 0, 0, 0],
+                          [0, 0, 0, 0, 0, 0, 0, 0]]
+                         .to_board
+
   SURROUNDED = [[0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
@@ -94,6 +114,34 @@ group 'Piece Functions' do
 
       assert 'down + right' do
         test_movement board, is_valid, rule, -delta, -delta
+      end
+    end
+  end
+
+  def cannot_cause_check rule, delta_x, delta_y
+    group 'cannot move putting own king in check' do
+      assert 'white' do
+        expect_invalid(
+          rule[
+            WHITE_KING_IN_DANGER,
+            FROM_POSITION,
+            shift_position(FROM_POSITION, delta_x, -delta_y),
+            NULL_POSITION,
+            NULL_POSITION
+          ]
+        )
+      end
+
+      assert 'black' do
+        expect_invalid(
+          rule[
+            BLACK_KING_IN_DANGER,
+            FROM_POSITION,
+            shift_position(FROM_POSITION, delta_x, delta_y),
+            NULL_POSITION,
+            NULL_POSITION
+          ]
+        )
       end
     end
   end
@@ -250,6 +298,7 @@ group 'Piece Functions' do
 
   group 'ROOK_RULE' do
     capturing_basics    ROOK_RULE, 0, 1
+    cannot_cause_check  ROOK_RULE, 0, 1
     horizontal_movement NOTHING_SURROUNDING_BLACK, 3, true,  ROOK_RULE
     diagonal_movement   NOTHING_SURROUNDING_BLACK, 3, false, ROOK_RULE
 
@@ -260,6 +309,7 @@ group 'Piece Functions' do
 
   group 'BISHOP_RULE' do
     capturing_basics    BISHOP_RULE, 1, 1
+    cannot_cause_check  BISHOP_RULE, 1, 1
     horizontal_movement NOTHING_SURROUNDING_BLACK, 3, false, BISHOP_RULE
     diagonal_movement   NOTHING_SURROUNDING_BLACK, 3, true,  BISHOP_RULE
 
@@ -270,6 +320,7 @@ group 'Piece Functions' do
 
   group 'QUEEN_RULE' do
     capturing_basics    QUEEN_RULE, 1, 1
+    cannot_cause_check  QUEEN_RULE, 1, 1
     horizontal_movement NOTHING_SURROUNDING_BLACK, 3, true, QUEEN_RULE
     diagonal_movement   NOTHING_SURROUNDING_BLACK, 3, true,  QUEEN_RULE
 
@@ -402,8 +453,9 @@ group 'Piece Functions' do
       end
     end
 
-    capturing_basics KNIGHT_RULE, 1, 2
-    knights_moves    NOTHING_SURROUNDING_BLACK
+    capturing_basics   KNIGHT_RULE, 1, 2
+    cannot_cause_check KNIGHT_RULE, 1, 2
+    knights_moves      NOTHING_SURROUNDING_BLACK
 
     group 'if a piece is in the way' do
       knights_moves SURROUNDED
@@ -433,7 +485,8 @@ group 'Piece Functions' do
                       [0, 0, 0, 0, 0, 0, 0, 0]]
                      .to_board
 
-    capturing_basics PAWN_RULE, 1, 1
+    capturing_basics   PAWN_RULE, 1, 1
+    cannot_cause_check PAWN_RULE, 0, 1
 
     group 'can move forward by one' do
       assert 'white' do

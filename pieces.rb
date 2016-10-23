@@ -21,7 +21,58 @@ BASIC_CHECKS = ->(rule) {
       ]
     ][
       -> { INVALID },
-      -> { rule[board, from, to, last_from, last_to] }
+      -> {
+        ->(validity) {
+          IF[validity[FIRST, SECOND, FIRST]][
+            -> {
+              ->(moved_piece, after_move) {
+                ->(king_data) {
+                  IF[LEFT[king_data]][
+                    -> {
+                      IS_NOT_IN_CHECK[
+                        after_move,
+                        RIGHT[king_data],
+                        RIGHT[king_data]
+                      ]
+                    },
+                    -> { FIRST }
+                  ]
+                }[
+                  # "king_data"
+                  BOARD_REDUCE[
+                    after_move,
+                    ->(memo, king, position) {
+                      AND[
+                        HAS_VALUE[king, KING_VALUE],
+                        IS_BLACK[king][
+                          IS_BLACK[moved_piece],
+                          IS_WHITE[moved_piece]
+                        ]
+                      ][
+                        PAIR[FIRST, position],
+                        memo
+                      ]
+                    },
+                    PAIR[SECOND, ZERO]
+                  ]
+                ]
+              }[
+                # "moved_piece"
+                GET_POSITION[board, from],
+                # "after_move"
+                MOVE[board, from, to]
+              ][
+                validity,
+                INVALID
+              ]
+            },
+            -> { validity },
+          ]
+        }[
+          # "validity"
+          rule[board, from, to, last_from, last_to]
+        ]
+      }
     ]
   }
 }
@@ -120,24 +171,12 @@ IS_NOT_IN_CHECK = ->(board, from, to) {
 
 KING_RULE = BASIC_CHECKS[
   ->(board, from, to, last_from, last_to) {
-    # Wrap in an IF to prevent expensive check when unnecessary
-    IF[
-      AND[
-        IS_GREATER_OR_EQUAL[ONE, DELTA[from, to, LEFT]],
-        IS_GREATER_OR_EQUAL[ONE, DELTA[from, to, RIGHT]]
-      ]
+    AND[
+      IS_GREATER_OR_EQUAL[ONE, DELTA[from, to, LEFT]],
+      IS_GREATER_OR_EQUAL[ONE, DELTA[from, to, RIGHT]]
     ][
-      # Only moving one space in any direction
-      -> {
-        IS_NOT_IN_CHECK[board, from, to][
-          # Not moving into check
-          VALID,
-          # Not moving into check
-          INVALID
-        ]
-      },
-      # Moving more than one space in any direction
-      -> { INVALID }
+      VALID,
+      INVALID
     ]
   }
 ]

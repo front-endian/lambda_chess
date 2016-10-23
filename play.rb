@@ -33,7 +33,7 @@ PERFORM_CASTLING = ->(old_board, from, to, last_from, last_to) {
         ]
       ][
         -> {
-          IF[IS_NOT_IN_CHECK[old_board, from, from],][
+          IF[IS_NOT_IN_CHECK[old_board, from, from]][
             -> {
               IF[IS_NOT_IN_CHECK[old_board, from, mid_to]][
                 -> {

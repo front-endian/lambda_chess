@@ -55,12 +55,12 @@ def test_castling_to_one_side original_board:,
   end
 end
 
-def test_castling board, works
+def test_castling black_board, white_board, works
   null_pos = PAIR[ZERO, ZERO]
 
   group 'with a white king' do
     group 'castling to the left' do
-      test_castling_to_one_side original_board: board,
+      test_castling_to_one_side original_board: white_board,
                                 works:          works,
                                 home_row:       WHITE_HOME_ROW,
                                 king:           WHITE_KING,
@@ -70,7 +70,7 @@ def test_castling board, works
     end
 
     group 'castling to the right' do
-      test_castling_to_one_side original_board: board,
+      test_castling_to_one_side original_board: white_board,
                                 works:          works,
                                 home_row:       WHITE_HOME_ROW,
                                 king:           WHITE_KING,
@@ -82,7 +82,7 @@ def test_castling board, works
 
   group 'with a black king' do
     group 'can castle to the left' do
-      test_castling_to_one_side original_board: board,
+      test_castling_to_one_side original_board: black_board,
                                 works:          works,
                                 home_row:       BLACK_HOME_ROW,
                                 king:           BLACK_KING,
@@ -92,7 +92,7 @@ def test_castling board, works
     end
 
     group 'can castle to the right' do
-      test_castling_to_one_side original_board: board,
+      test_castling_to_one_side original_board: black_board,
                                 works:          works,
                                 home_row:       BLACK_HOME_ROW,
                                 king:           BLACK_KING,
@@ -116,7 +116,7 @@ group 'Play Functions' do
                [WR,0, 0, 0, WK,0, 0, WR]]
               .to_board
 
-      test_castling board, true
+      test_castling board, board, true
     end
 
     group 'path is blocked' do
@@ -130,7 +130,7 @@ group 'Play Functions' do
                [WR,0, WP,0, WK,0, WP,WR]]
               .to_board
 
-      test_castling board, false
+      test_castling board, board, false
     end
 
     group 'king has moved' do
@@ -144,7 +144,7 @@ group 'Play Functions' do
                [WR,0, 0, 0, MWK,0, 0, WR]]
               .to_board
 
-      test_castling board, false
+      test_castling board, board, false
     end
 
     group 'rook has moved' do
@@ -158,21 +158,31 @@ group 'Play Functions' do
                [MWR,0, 0, 0, WK,0, 0, MWR]]
               .to_board
 
-      test_castling board, false
+      test_castling board, board, false
     end
 
     group 'when king is in check' do
-      board = [[BR,0, 0, 0, BK,0, 0, BR],
-               [0, 0, 0, 0, WR,0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, BR,0, 0, 0],
-               [WR,0, 0, 0, WK,0, 0, WR]]
-              .to_board
+      black_board = [[BR,0, 0, 0, BK,0, 0, BR],
+                     [0, 0, 0, 0, WR,0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0] ]
+                    .to_board
 
-      test_castling board, false
+      white_board = [[0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, BR,0, 0, 0],
+                     [WR,0, 0, 0, WK,0, 0, WR]]
+                    .to_board
+
+      test_castling black_board, white_board, false
     end
 
     group 'when king is moving into check' do
@@ -186,7 +196,7 @@ group 'Play Functions' do
                [WR,0, 0, 0, WK,0, 0, WR]]
               .to_board
 
-      test_castling board, false
+      test_castling board, board, false
     end
 
     group 'when king is moving past check' do
@@ -200,7 +210,7 @@ group 'Play Functions' do
                [WR,0, 0, 0, WK,0, 0, WR]]
               .to_board
 
-      test_castling board, false
+      test_castling board, board, false
     end
   end
 

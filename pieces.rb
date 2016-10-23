@@ -13,6 +13,7 @@ EN_PASSANT = ->(valid, invalid, en_passant) { en_passant }
 BASIC_CHECKS = ->(rule) {
   ->(board, from, to, last_from, last_to) {
     IF[
+      # Cannot capture own color
       COLOR_SWITCH[GET_POSITION[board, from]][
         IS_BLACK[GET_POSITION[board, to]],
         IS_WHITE[GET_POSITION[board, to]],
@@ -198,23 +199,21 @@ PAWN_RULE = BASIC_CHECKS[
                             # Not performing a normal capture
                             -> {
                               ->(last_moved) {
-                                AND[
-                                  AND[
-                                    # Position behind "to" is "last_to"
-                                    SAME_POSITION[
-                                      last_to,
-                                      PAIR[LEFT[to], from_y]
-                                    ],
-                                    IS_EQUAL[PAWN, GET_VALUE[last_moved]]
+                                FIVE_CONDITIONS_MET[
+                                  FIRST,
+                                  # Position behind "to" is "last_to"
+                                  SAME_POSITION[
+                                    last_to,
+                                    PAIR[LEFT[to], from_y]
                                   ],
-                                  AND[
-                                    # "last_moved" is the opposite color
-                                    pawn_is_black[IS_WHITE, IS_BLACK][last_moved],
-                                    # "last_moved" moved forward two
-                                    IS_EQUAL[
-                                      DELTA[last_from, last_to, RIGHT],
-                                      TWO
-                                    ]
+                                  # "last_moved" is a pawn
+                                  HAS_VALUE[last_moved, PAWN_VALUE],
+                                  # "last_moved" is the opposite color
+                                  pawn_is_black[IS_WHITE, IS_BLACK][last_moved],
+                                  # "last_moved" moved forward two
+                                  IS_EQUAL[
+                                    DELTA[last_from, last_to, RIGHT],
+                                    TWO
                                   ]
                                 ][
                                   EN_PASSANT,
@@ -298,17 +297,17 @@ PAWN_RULE = BASIC_CHECKS[
 
 GET_RULE = ->(piece) {
   ->(piece_value) {
-    IS_EQUAL[piece_value, PAWN][
+    IS_EQUAL[piece_value, PAWN_VALUE][
       PAWN_RULE,
-    IS_EQUAL[piece_value, ROOK][
+    IS_EQUAL[piece_value, ROOK_VALUE][
       ROOK_RULE,
-    IS_EQUAL[piece_value, KNIGHT][
+    IS_EQUAL[piece_value, KNIGHT_VALUE][
       KNIGHT_RULE,
-    IS_EQUAL[piece_value, BISHOP][
+    IS_EQUAL[piece_value, BISHOP_VALUE][
       BISHOP_RULE,
-    IS_EQUAL[piece_value, QUEEN][
+    IS_EQUAL[piece_value, QUEEN_VALUE][
       QUEEN_RULE,
-    IS_EQUAL[piece_value, KING][
+    IS_EQUAL[piece_value, KING_VALUE][
       KING_RULE,
       ZERO
     ]]]]]]

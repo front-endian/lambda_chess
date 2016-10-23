@@ -11,7 +11,7 @@ group 'Board Functions' do
     assert 'gets data at the given position' do
       piece = GET_POSITION[INITIAL_BOARD, PAIR[KING_COLUMN, BLACK_HOME_ROW]]
 
-      GET_VALUE[piece].to_i == KING.to_i
+      GET_VALUE[piece].to_i == KING_VALUE.to_i
     end
   end
 

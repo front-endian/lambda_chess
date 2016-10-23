@@ -51,7 +51,7 @@ GET_POSITION = ->(board, position) {
   NTH[NTH[board, RIGHT[position]], LEFT[position]]
 }
 
-CHANGE_FUNC = ->(from, to, direction) {
+CHANGE_FUNC = ->(from, to, coordinate) {
   ->(a, b) {
     IS_GREATER_OR_EQUAL[a, b][
       IS_EQUAL[a, b][
@@ -61,8 +61,8 @@ CHANGE_FUNC = ->(from, to, direction) {
       INCREMENT
     ]
   }[
-    direction[from],
-    direction[to]
+    coordinate[from],
+    coordinate[to]
   ]
 }
 

@@ -4,30 +4,26 @@
 # This software may be modified and distributed under the
 # terms of the three-clause BSD license. See LICENSE.txt
 
+PLAY = ->(board, from, to, last_from, last_to, move_type, promotion) {
+
+}
+
 PERFORM_CASTLING = ->(old_board, from, to, last_from, last_to) {
   ->(is_moving_left) {
     ->(rook_from, nop, mid_to) {
       IF[
         ->(king, rook) {
-          SIX_CONDITIONS_MET[
+          FIVE_CONDITIONS_MET[
             # Moving a king
-            IS_EQUAL[
-              GET_VALUE[king],
-              KING
-            ],
+            HAS_VALUE[king, KING_VALUE],
             # King is unmoved
             NOT[GET_MOVED[king]],
             # Moving a rook
-            IS_EQUAL[
-              GET_VALUE[rook],
-              ROOK
-            ],
+            HAS_VALUE[rook, ROOK_VALUE],
             # Rook is unmoved
             NOT[GET_MOVED[rook]],
             # Path is free
-            FREE_PATH[old_board, from, rook_from, DECREMENT],
-
-            FIRST
+            FREE_PATH[old_board, from, rook_from, DECREMENT]
           ]
         }[
           # "king"
@@ -84,16 +80,16 @@ PERFORM_CASTLING = ->(old_board, from, to, last_from, last_to) {
 }
 
 MAX_UNMOVED_SCORE = ADD[
-  MULTIPLY[PAWN, EIGHT],
+  MULTIPLY[PAWN_VALUE, EIGHT],
   ADD[
-    MULTIPLY[KNIGHT, TWO],
+    MULTIPLY[KNIGHT_VALUE, TWO],
     ADD[
-      MULTIPLY[BISHOP, TWO],
+      MULTIPLY[BISHOP_VALUE, TWO],
       ADD[
-        MULTIPLY[ROOK, TWO],
+        MULTIPLY[ROOK_VALUE, TWO],
         ADD[
-          QUEEN,
-          KING
+          QUEEN_VALUE,
+          KING_VALUE
         ]
       ]
     ]

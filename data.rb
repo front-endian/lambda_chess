@@ -27,11 +27,10 @@ NOT = ->(choice) {
   }
 }
 
-SIX_CONDITIONS_MET = ->(cond_1, cond_2, cond_3, cond_4, cond_5, cond_6) {
+FIVE_CONDITIONS_MET = ->(cond_1, cond_2, cond_3, cond_4, cond_5) {
   ->(first, second) {
-    cond_1[cond_2[cond_3[cond_4[cond_5[cond_6[
+    cond_1[cond_2[cond_3[cond_4[cond_5[
       first,
-      second],
       second],
       second],
       second],
@@ -141,30 +140,29 @@ MULTIPLY = ->(a, b) {
   }
 }
 
-DELTA = ->(position_1, position_2, direction) {
+DELTA = ->(position_1, position_2, coordinate) {
   ->(a, b) {
     IS_GREATER_OR_EQUAL[a, b][
       SUBTRACT[a, b],
       SUBTRACT[b, a]
     ]
   }[
-    direction[position_1],
-    direction[position_2]
+    coordinate[position_1],
+    coordinate[position_2]
   ]
 }
 
 # Numbers
 
-ZERO       = ->(func, zero) { zero }
-ONE        = ->(func, zero) { func[zero] }
-TWO        = ->(func, zero) { func[func[zero]] }
-THREE      = ->(func, zero) { func[func[func[zero]]] }
-FOUR       = ->(func, zero) { func[func[func[func[zero]]]] }
+ZERO       = ->(succ, zero) { zero }
+ONE        = ->(succ, zero) { succ[zero] }
+TWO        = ->(succ, zero) { succ[succ[zero]] }
+THREE      = ->(succ, zero) { succ[succ[succ[zero]]] }
+FOUR       = ->(succ, zero) { succ[succ[succ[succ[zero]]]] }
 FIVE       = ADD[TWO, THREE]
 SIX        = MULTIPLY[TWO, THREE]
 SEVEN      = ADD[THREE, FOUR]
 EIGHT      = MULTIPLY[TWO, FOUR]
-SIXTY_FOUR = MULTIPLY[MULTIPLY[FOUR, FOUR], FOUR]
 
 # Magic Numbers
 
@@ -190,12 +188,12 @@ MOVED    = FIRST
 BLACK = FIRST
 WHITE = SECOND
 
-PAWN   = ONE
-KNIGHT = TWO
-BISHOP = THREE
-ROOK   = FOUR
-QUEEN  = FIVE
-KING   = SIX
+PAWN_VALUE   = ONE
+KNIGHT_VALUE = TWO
+BISHOP_VALUE = THREE
+ROOK_VALUE   = FOUR
+QUEEN_VALUE  = FIVE
+KING_VALUE   = SIX
 
 MAKE_PIECE = ->(color, value, occupied, moved) {
   PAIR[PAIR[color, value], PAIR[occupied, moved]]
@@ -207,19 +205,19 @@ INITIAL_PIECE = ->(color, value) {
 
 EMPTY_SPACE = MAKE_PIECE[BLACK, ZERO, EMPTY, UNMOVED]
 
-BLACK_PAWN   = INITIAL_PIECE[BLACK, PAWN]
-BLACK_KNIGHT = INITIAL_PIECE[BLACK, KNIGHT]
-BLACK_BISHOP = INITIAL_PIECE[BLACK, BISHOP]
-BLACK_ROOK   = INITIAL_PIECE[BLACK, ROOK]
-BLACK_QUEEN  = INITIAL_PIECE[BLACK, QUEEN]
-BLACK_KING   = INITIAL_PIECE[BLACK, KING]
+BLACK_PAWN   = INITIAL_PIECE[BLACK, PAWN_VALUE]
+BLACK_KNIGHT = INITIAL_PIECE[BLACK, KNIGHT_VALUE]
+BLACK_BISHOP = INITIAL_PIECE[BLACK, BISHOP_VALUE]
+BLACK_ROOK   = INITIAL_PIECE[BLACK, ROOK_VALUE]
+BLACK_QUEEN  = INITIAL_PIECE[BLACK, QUEEN_VALUE]
+BLACK_KING   = INITIAL_PIECE[BLACK, KING_VALUE]
 
-WHITE_PAWN   = INITIAL_PIECE[WHITE, PAWN]
-WHITE_ROOK   = INITIAL_PIECE[WHITE, ROOK]
-WHITE_KNIGHT = INITIAL_PIECE[WHITE, KNIGHT]
-WHITE_BISHOP = INITIAL_PIECE[WHITE, BISHOP]
-WHITE_QUEEN  = INITIAL_PIECE[WHITE, QUEEN]
-WHITE_KING   = INITIAL_PIECE[WHITE, KING]
+WHITE_PAWN   = INITIAL_PIECE[WHITE, PAWN_VALUE]
+WHITE_ROOK   = INITIAL_PIECE[WHITE, ROOK_VALUE]
+WHITE_KNIGHT = INITIAL_PIECE[WHITE, KNIGHT_VALUE]
+WHITE_BISHOP = INITIAL_PIECE[WHITE, BISHOP_VALUE]
+WHITE_QUEEN  = INITIAL_PIECE[WHITE, QUEEN_VALUE]
+WHITE_KING   = INITIAL_PIECE[WHITE, KING_VALUE]
 
 IS_EMPTY = ->(piece) {
   NOT[GET_OCCUPIED[piece]]
@@ -251,6 +249,10 @@ TO_MOVED_PIECE = ->(piece) {
 
 IS_MOVED = ->(piece) {
   GET_MOVED[piece]
+}
+
+HAS_VALUE = ->(piece, value) {
+  IS_EQUAL[value, GET_VALUE[piece]]
 }
 
 # Comparisons

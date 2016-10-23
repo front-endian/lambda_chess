@@ -32,13 +32,13 @@ def test_castling_to_one_side original_board:,
 
   if works
     assert "king was moved" do
-     piece_in_position = KING == GET_VALUE[GET_POSITION[result, king_to]]
+     piece_in_position = KING_VALUE == GET_VALUE[GET_POSITION[result, king_to]]
 
      piece_in_position == works
     end
 
     assert "rook was moved" do
-      piece_in_position = ROOK == GET_VALUE[GET_POSITION[result, rook_to]]
+      piece_in_position = ROOK_VALUE == GET_VALUE[GET_POSITION[result, rook_to]]
 
       piece_in_position == works
     end

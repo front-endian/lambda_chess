@@ -445,10 +445,54 @@ group 'Piece Functions' do
                  [WR,0, 0, 0, WK,0, 0, WR]]
                 .to_board
 
-        test_castling board, board, perform: rule_proc, expect:  castle_result
+        test_castling board, board, perform: rule_proc, expect: castle_result
       end
 
       group 'is invalid when' do
+        group 'when positions are off' do
+          board = [[BR,0, 0, 0, BK,0, 0, BR],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [WR,0, 0, 0, WK,0, 0, WR]]
+                  .to_board
+
+          group 'horizontally' do
+            test_castling board, board,
+              perform: proc { |board, from, to|
+                         amount = LEFT[from].to_i > LEFT[to].to_i ? 1 : -1
+
+                         KING_RULE[
+                           board,
+                           shift_position(from, amount, 0),
+                           to,
+                           NULL_POS,
+                           NULL_POS
+                         ]
+                       },
+              expect: invalid_result
+          end
+
+          group 'vertically' do
+            test_castling board, board,
+              perform: proc { |board, from, to|
+                         amount = IS_BLACK[GET_POSITION[board, from]][1, -1]
+
+                         KING_RULE[
+                           board,
+                           shift_position(from, 0, amount),
+                           to,
+                           NULL_POS,
+                           NULL_POS
+                         ]
+                       },
+              expect: invalid_result
+          end
+        end
+
         group 'path is blocked' do
           board = [[BR,0, BP,0, BK,0, BP,BR],
                    [0, 0, 0, 0, 0, 0, 0, 0],

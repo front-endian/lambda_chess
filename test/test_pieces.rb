@@ -377,6 +377,7 @@ group 'Piece Functions' do
       ][
         FIRST,
         SECOND,
+        SECOND,
         SECOND
       ]
     end
@@ -425,6 +426,124 @@ group 'Piece Functions' do
           NULL_POSITION
         ]
       )
+    end
+
+    group 'castling' do
+      rule_proc      = proc { |board, from, to|
+                         KING_RULE[board, from, to, NULL_POSITION, NULL_POSITION]
+                       }
+      castle_result  = proc { |result| result == CASTLE }
+      invalid_result = proc { |result| result == INVALID }
+
+      group 'is valid' do
+        board = [[BR,0, 0, 0, BK,0, 0, BR],
+                 [0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0],
+                 [WR,0, 0, 0, WK,0, 0, WR]]
+                .to_board
+
+        test_castling board, board, perform: rule_proc, expect:  castle_result
+      end
+
+      group 'is invalid when' do
+        group 'path is blocked' do
+          board = [[BR,0, BP,0, BK,0, BP,BR],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [WR,0, WP,0, WK,0, WP,WR]]
+                  .to_board
+
+          test_castling board, board, perform: rule_proc, expect: invalid_result
+        end
+
+        group 'king has moved' do
+          board = [[BR,0, 0, 0, MBK,0, 0, BR],
+                   [0, 0, 0, 0, 0,  0, 0, 0],
+                   [0, 0, 0, 0, 0,  0, 0, 0],
+                   [0, 0, 0, 0, 0,  0, 0, 0],
+                   [0, 0, 0, 0, 0,  0, 0, 0],
+                   [0, 0, 0, 0, 0,  0, 0, 0],
+                   [0, 0, 0, 0, 0,  0, 0, 0],
+                   [WR,0, 0, 0, MWK,0, 0, WR]]
+                  .to_board
+
+          test_castling board, board, perform: rule_proc, expect: invalid_result
+        end
+
+        group 'rook has moved' do
+          board = [[MBR,0, 0, 0, BK,0, 0, MBR],
+                   [0,  0, 0, 0, 0, 0, 0, 0],
+                   [0,  0, 0, 0, 0, 0, 0, 0],
+                   [0,  0, 0, 0, 0, 0, 0, 0],
+                   [0,  0, 0, 0, 0, 0, 0, 0],
+                   [0,  0, 0, 0, 0, 0, 0, 0],
+                   [0,  0, 0, 0, 0, 0, 0, 0],
+                   [MWR,0, 0, 0, WK,0, 0, MWR]]
+                  .to_board
+
+          test_castling board, board, perform: rule_proc, expect: invalid_result
+        end
+
+        group 'king is in check' do
+          black_board = [[BR,0, 0, 0, BK,0, 0, BR],
+                         [0, 0, 0, 0, WR,0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0] ]
+                        .to_board
+
+          white_board = [[0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, BR,0, 0, 0],
+                         [WR,0, 0, 0, WK,0, 0, WR]]
+                        .to_board
+
+          test_castling black_board, white_board, perform: rule_proc, expect: invalid_result
+        end
+
+        group 'king is moving into check' do
+          board = [[BR,0, 0, 0, BK,0, 0, BR],
+                   [0, 0, WR,0, 0, 0, WR,0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, BR,0, 0, 0, BR,0],
+                   [WR,0, 0, 0, WK,0, 0, WR]]
+                  .to_board
+
+          test_castling board, board, perform: rule_proc, expect: invalid_result
+        end
+
+        group 'king is moving past check' do
+          board = [[BR,0, 0, 0, BK,0, 0, BR],
+                   [0, 0, 0, WR,0, WR,0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, BR,0, BR,0, 0],
+                   [WR,0, 0, 0, WK,0, 0, WR]]
+                  .to_board
+
+          test_castling board, board, perform: rule_proc, expect: invalid_result
+        end
+      end
     end
   end
 

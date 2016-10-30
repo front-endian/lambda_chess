@@ -64,6 +64,80 @@ def shift_position position, delta_x, delta_y
   ]
 end
 
+def test_castling_to_one_side board:,
+                              home_row:,
+                              king:,
+                              rook:,
+                              king_to_column:,
+                              rook_to_column:,
+                              perform:,
+                              expect:
+
+  null_position = PAIR[ZERO, ZERO]
+  king_from     = PAIR[FOUR, home_row]
+  king_to       = PAIR[king_to_column, home_row]
+  rook_from     = PAIR[
+                    (rook_to_column == THREE) ? ZERO : SEVEN,
+                    home_row
+                  ]
+  rook_to       = PAIR[rook_to_column, home_row]
+  result        = perform.call(board, king_from, king_to)
+
+  expect.call(result, king_to, rook_to, rook_from)
+end
+
+def test_castling black_board, white_board, perform:, expect:
+  null_pos = PAIR[ZERO, ZERO]
+
+  group 'with a white king' do
+    assert 'castling to the left' do
+      test_castling_to_one_side board:          white_board,
+                                home_row:       WHITE_HOME_ROW,
+                                king:           WHITE_KING,
+                                rook:           WHITE_ROOK,
+                                king_to_column: TWO,
+                                rook_to_column: THREE,
+                                perform:        perform,
+                                expect:         expect
+    end
+
+    assert 'castling to the right' do
+      test_castling_to_one_side board:          white_board,
+                                home_row:       WHITE_HOME_ROW,
+                                king:           WHITE_KING,
+                                rook:           WHITE_ROOK,
+                                king_to_column: SIX,
+                                rook_to_column: FIVE,
+                                perform:        perform,
+                                expect:         expect
+    end
+  end
+
+  group 'with a black king' do
+    assert 'can castle to the left' do
+      test_castling_to_one_side board:          black_board,
+                                home_row:       BLACK_HOME_ROW,
+                                king:           BLACK_KING,
+                                rook:           BLACK_ROOK,
+                                king_to_column: TWO,
+                                rook_to_column: THREE,
+                                perform:        perform,
+                                expect:         expect
+    end
+
+    assert 'can castle to the right' do
+      test_castling_to_one_side board:          black_board,
+                                home_row:       BLACK_HOME_ROW,
+                                king:           BLACK_KING,
+                                rook:           BLACK_ROOK,
+                                king_to_column: SIX,
+                                rook_to_column: FIVE,
+                                perform:        perform,
+                                expect:         expect
+    end
+  end
+end
+
 def expect_truthy func
   func[true, false]
 end
@@ -73,15 +147,19 @@ def expect_falsy func
 end
 
 def expect_valid result
-  result[true, false, false]
+  result[true, false, false, false]
 end
 
 def expect_invalid result
-  result[false, true, false]
+  result[false, true, false, false]
 end
 
 def expect_en_passant result
-  result[false, false, true]
+  result[false, false, true, false]
+end
+
+def expect_castle result
+  result[false, false, false, true]
 end
 
 INDEX_ARRAY = [0,  1,  2,  3,  4,  5,  6,  7,

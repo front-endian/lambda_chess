@@ -6,9 +6,10 @@
 
 # Piece Helper Functions
 
-VALID      = ->(valid, invalid, en_passant) { valid }
-INVALID    = ->(valid, invalid, en_passant) { invalid }
-EN_PASSANT = ->(valid, invalid, en_passant) { en_passant }
+VALID      = ->(valid, invalid, en_passant, castle) { valid }
+INVALID    = ->(valid, invalid, en_passant, castle) { invalid }
+EN_PASSANT = ->(valid, invalid, en_passant, castle) { en_passant }
+CASTLE     = ->(valid, invalid, en_passant, castle) { castle }
 
 BASIC_CHECKS = ->(rule) {
   ->(board, from, to, last_from, last_to) {
@@ -23,7 +24,7 @@ BASIC_CHECKS = ->(rule) {
       -> { INVALID },
       -> {
         ->(validity) {
-          IF[validity[FIRST, SECOND, FIRST]][
+          IF[validity[FIRST, SECOND, FIRST, FIRST]][
             -> {
               ->(moved_piece, after_move) {
                 ->(king_data) {
@@ -123,12 +124,72 @@ QUEEN_RULE = BASIC_CHECKS[
         rule[board, from, to, last_from, last_to][
           FIRST,
           SECOND,
+          SECOND,
           SECOND
         ]
       }
     ]
   }
 ]
+
+VALID_CASTLE = ->(board, from, to) {
+  ->(is_moving_left) {
+    ->(rook_from, invalid, mid_to) {
+      IF[
+        ->(king, rook) {
+          FIVE_CONDITIONS_MET[
+            # Moving a king
+            HAS_VALUE[king, KING_VALUE],
+            # King is unmoved
+            NOT[GET_MOVED[king]],
+            # Moving a rook
+            HAS_VALUE[rook, ROOK_VALUE],
+            # Rook is unmoved
+            NOT[GET_MOVED[rook]],
+            # Path is free
+            FREE_PATH[board, from, rook_from, DECREMENT]
+          ]
+        }[
+          # "king"
+          GET_POSITION[board, from],
+          # "rook"
+          GET_POSITION[board, rook_from]
+        ]
+      ][
+        -> {
+          IF[IS_NOT_IN_CHECK[board, from, from]][
+            -> {
+              IF[IS_NOT_IN_CHECK[board, from, mid_to]][
+                -> {
+                  IF[IS_NOT_IN_CHECK[board, from, to]][
+                    -> { FIRST },
+                    invalid
+                  ]
+                },
+                invalid
+              ]
+            },
+            invalid
+          ]
+        },
+        invalid
+      ]
+    }[
+      # "rook_from"
+      PAIR[is_moving_left[ZERO, SEVEN], RIGHT[from]],
+      # "invalid"
+      -> { SECOND },
+      # "mid_to"
+      PAIR[
+        is_moving_left[DECREMENT, INCREMENT][LEFT[from]],
+        RIGHT[from]
+      ]
+    ]
+  }[
+    # "is_moving_left"
+    IS_GREATER_OR_EQUAL[LEFT[from], LEFT[to]]
+  ]
+}
 
 IS_NOT_IN_CHECK = ->(board, from, to) {
   ->(after_move) {
@@ -150,6 +211,7 @@ IS_NOT_IN_CHECK = ->(board, from, to) {
                 GET_RULE[piece][after_move, position, to, from, to][
                   SECOND,
                   FIRST,
+                  SECOND,
                   SECOND
                 ]
               },
@@ -168,12 +230,19 @@ IS_NOT_IN_CHECK = ->(board, from, to) {
 
 KING_RULE = BASIC_CHECKS[
   ->(board, from, to, last_from, last_to) {
-    AND[
-      IS_GREATER_OR_EQUAL[ONE, DELTA[from, to, LEFT]],
-      IS_GREATER_OR_EQUAL[ONE, DELTA[from, to, RIGHT]]
+    IF[
+      AND[
+        IS_GREATER_OR_EQUAL[ONE, DELTA[from, to, LEFT]],
+        IS_GREATER_OR_EQUAL[ONE, DELTA[from, to, RIGHT]]
+      ]
     ][
-      VALID,
-      INVALID
+      -> { VALID },
+      -> {
+        VALID_CASTLE[board, from, to][
+          CASTLE,
+          INVALID
+        ]
+      }
     ]
   }
 ]

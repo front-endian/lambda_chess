@@ -7,40 +7,6 @@
 require_relative './setup'
 
 group 'Play Functions' do
-  group 'PERFORM_CASTLING' do
-    board = [[BR,0, 0, 0, BK,0, 0, BR],
-             [0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0],
-             [WR,0, 0, 0, WK,0, 0, WR]]
-            .to_board
-
-    test_castling board, board,
-      perform: proc { |board, from, to| PERFORM_CASTLING[board, from, to] },
-      expect:  proc { |result, king_to, rook_to, rook_from|
-        assert "king was moved" do
-         piece_in_position = KING_VALUE == GET_VALUE[GET_POSITION[result, king_to]]
-
-         piece_in_position
-        end
-
-        assert "rook was moved" do
-          piece_in_position = ROOK_VALUE == GET_VALUE[GET_POSITION[result, rook_to]]
-
-          piece_in_position
-        end
-
-        assert "correct rook was moved" do
-          piece_in_position = EMPTY_SPACE == GET_POSITION[result, rook_from]
-
-          piece_in_position
-        end
-      }
-  end
-
   group 'MAX_PIECE_TOTAL' do
     assert 'has the correct value' do
       MAX_PIECE_TOTAL.to_i == (GET_VALUE[BP].to_i * 8) +

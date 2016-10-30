@@ -286,7 +286,7 @@ COLOR_SWITCH = ->(piece) {
 }
 
 TO_MOVED_PIECE = ->(piece) {
-  MAKE_PIECE[GET_COLOR[piece], GET_VALUE[piece], OCCUPIED, MOVED]
+  MAKE_PIECE[GET_COLOR[piece], GET_VALUE[piece], GET_OCCUPIED[piece], MOVED]
 }
 
 IS_MOVED = ->(piece) {

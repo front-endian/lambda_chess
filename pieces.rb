@@ -11,6 +11,16 @@ INVALID    = ->(valid, invalid, en_passant, castle) { invalid }
 EN_PASSANT = ->(valid, invalid, en_passant, castle) { en_passant }
 CASTLE     = ->(valid, invalid, en_passant, castle) { castle }
 
+ISNT_INVALID = ->(move_result) { move_result[FIRST, SECOND, FIRST, FIRST] }
+MOVE_FUNC    = ->(move_result) {
+  move_result[
+    NORMAL_MOVE,
+    ZERO,
+    EN_PASSANT_MOVE,
+    CASTLING_MOVE
+  ]
+}
+
 BASIC_CHECKS = ->(rule) {
   ->(board, from, to, last_from, last_to) {
     IF[
@@ -58,7 +68,7 @@ BASIC_CHECKS = ->(rule) {
                 # "moved_piece"
                 GET_POSITION[board, from],
                 # "after_move"
-                MOVE[board, from, to]
+                NORMAL_MOVE[board, from, to, ZERO]
               ][
                 validity,
                 INVALID
@@ -120,14 +130,7 @@ QUEEN_RULE = BASIC_CHECKS[
       ]
     }[
       # "follows_rule"
-      ->(rule) {
-        rule[board, from, to, last_from, last_to][
-          FIRST,
-          SECOND,
-          SECOND,
-          SECOND
-        ]
-      }
+      ->(rule) { ISNT_INVALID[rule[board, from, to, last_from, last_to]] }
     ]
   }
 ]
@@ -221,7 +224,7 @@ IS_NOT_IN_CHECK = ->(board, from, to) {
     ]
   }[
     # "after_move"
-    MOVE[board, from, to]
+    NORMAL_MOVE[board, from, to, ZERO]
   ]
 }
 

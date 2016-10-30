@@ -119,20 +119,48 @@ FREE_PATH = ->(board, from, to, alter_length) {
   ]
 }
 
-MOVE = ->(board, from, to) {
+NORMAL_MOVE = ->(board, from, to, new_piece) {
+  CHANGE_MOVE[board, from, to, GET_POSITION[board, from]]
+}
+
+CASTLING_MOVE = ->(board, from, to, new_piece) {
+  ->(is_moving_left) {
+    NORMAL_MOVE[
+      NORMAL_MOVE[board, from, to, new_piece],
+      # Rook positions
+      PAIR[is_moving_left[ZERO, SEVEN], RIGHT[from]],
+      PAIR[is_moving_left[THREE, FIVE], RIGHT[from]],
+      new_piece
+    ]
+  }[
+    # "is_moving_left"
+    IS_GREATER_OR_EQUAL[LEFT[from], LEFT[to]]
+  ]
+}
+
+CHANGE_MOVE = ->(board, from, to, new_piece) {
   BOARD_MAP[
     board,
     ->(old_piece, position) {
       IF[SAME_POSITION[position, to]][
-        -> { TO_MOVED_PIECE[GET_POSITION[board, from]] },
-        -> {
-          SAME_POSITION[position, from][
-            EMPTY_SPACE,
-            old_piece
-          ]
-        }
+        -> { TO_MOVED_PIECE[new_piece] },
+        -> { SAME_POSITION[position, from][EMPTY_SPACE, old_piece] }
       ]
     }
+  ]
+}
+
+EN_PASSANT_MOVE = ->(board, from, to, new_piece) {
+  ->(captured) {
+    CHANGE_MOVE[
+      NORMAL_MOVE[board, from, to, new_piece],
+      captured,
+      captured,
+      EMPTY_SPACE
+    ]
+  }[
+    # "captured"
+    PAIR[LEFT[to], RIGHT[from]]
   ]
 }
 

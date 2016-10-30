@@ -261,12 +261,12 @@ group 'Board Functions' do
     end
   end
 
-  group 'MOVE' do
+  group 'NORMAL_MOVE' do
     example_board = INITIAL_BOARD
 
     from  = position(0, 0)
     to    = position(2, 2)
-    moved = MOVE[example_board, from, to]
+    moved = NORMAL_MOVE[example_board, from, to, nil]
 
     assert 'moves the piece at the "from" position to the "to" position' do
       expected = GET_VALUE[GET_POSITION[example_board, from]].to_i
@@ -284,11 +284,114 @@ group 'Board Functions' do
     end
 
     assert 'works when moving to same position' do
-      null_move = MOVE[example_board, from, from]
+      null_move = NORMAL_MOVE[example_board, from, from, nil]
 
       expected = GET_VALUE[GET_POSITION[example_board, from]].to_i
 
       expected == GET_VALUE[GET_POSITION[null_move, from]].to_i
+    end
+  end
+
+  group 'CHANGE_MOVE' do
+    example_board = INITIAL_BOARD
+
+    from      = position(0, 0)
+    to        = position(2, 2)
+    new_piece = BLACK_PAWN
+    moved     = CHANGE_MOVE[example_board, from, to, new_piece]
+
+    assert 'puts the "new_piece" in the "to" position' do
+      expected = GET_VALUE[new_piece].to_i
+
+      expected == GET_VALUE[GET_POSITION[moved, to]].to_i
+    end
+
+    assert 'marks the moved piece as moved' do
+      expect_falsy(GET_MOVED[GET_POSITION[moved, from]]) &&
+      expect_truthy(GET_MOVED[GET_POSITION[moved, to]])
+    end
+
+    assert 'puts an empty piece in the "from" position' do
+      EMPTY_SPACE == GET_POSITION[moved, from]
+    end
+
+    assert 'works when moving to same position' do
+      null_move = CHANGE_MOVE[example_board, from, from, new_piece]
+
+      expected = GET_VALUE[new_piece].to_i
+
+      expected == GET_VALUE[GET_POSITION[null_move, from]].to_i
+    end
+  end
+
+  group 'CASTLING_MOVE' do
+    board = [[BR,0, 0, 0, BK,0, 0, BR],
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             [WR,0, 0, 0, WK,0, 0, WR]]
+            .to_board
+
+    test_castling board, board,
+      perform: proc { |board, from, to| CASTLING_MOVE[board, from, to, nil] },
+      expect:  proc { |result, king_to, rook_to, rook_from|
+        assert "king was moved" do
+         piece_in_position = KING_VALUE == GET_VALUE[GET_POSITION[result, king_to]]
+
+         piece_in_position
+        end
+
+        assert "rook was moved" do
+          piece_in_position = ROOK_VALUE == GET_VALUE[GET_POSITION[result, rook_to]]
+
+          piece_in_position
+        end
+
+        assert "correct rook was moved" do
+          piece_in_position = EMPTY_SPACE == GET_POSITION[result, rook_from]
+
+          piece_in_position
+        end
+      }
+  end
+
+  group 'EN_PASSANT_MOVE' do
+    example_board = [[0, 0, 0, 0, 0,  0, 0, 0],
+                     [0, 0, 0, 0, 0,  0, 0, 0],
+                     [0, 0, 0, 0, 0,  0, 0, 0],
+                     [0, 0, 0, 0, 0,  0, 0, 0],
+                     [0, 0, 0, BP,MWP,0, 0, 0],
+                     [0, 0, 0, 0, 0,  0, 0, 0],
+                     [0, 0, 0, 0, 0,  0, 0, 0],
+                     [0, 0, 0, 0, 0,  0, 0, 0]]
+                    .to_board
+
+    from  = position(3, 4)
+    to    = position(4, 5)
+    moved = EN_PASSANT_MOVE[example_board, from, to, nil]
+
+    assert 'moves the piece at the "from" position to the "to" position' do
+      expected = GET_VALUE[GET_POSITION[example_board, from]].to_i
+
+      expected == GET_VALUE[GET_POSITION[moved, to]].to_i
+    end
+
+    assert 'marks the moved piece as moved' do
+      expect_falsy(GET_MOVED[GET_POSITION[moved, from]]) &&
+      expect_truthy(GET_MOVED[GET_POSITION[moved, to]])
+    end
+
+    group 'puts an empty piece' do
+      assert 'in the "from" position' do
+        expect_truthy IS_EMPTY[GET_POSITION[moved, from]]
+      end
+
+      assert 'in space behind "to"' do
+        expect_truthy IS_EMPTY[GET_POSITION[moved, position(4, 4)]]
+      end
     end
   end
 end

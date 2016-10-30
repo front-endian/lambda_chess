@@ -8,7 +8,6 @@ require_relative './setup'
 
 group 'Piece Functions' do
   FROM_POSITION = position(4, 4)
-  NULL_POSITION = position(0, 0)
 
   NOTHING_SURROUNDING_BLACK = [[0, 0, 0, 0, 0, 0, 0, 0],
                                [0, 0, 0, 0, 0, 0, 0, 0],
@@ -68,8 +67,8 @@ group 'Piece Functions' do
                board,
                FROM_POSITION,
                shift_position(FROM_POSITION, delta_y, delta_x),
-               NULL_POSITION,
-               NULL_POSITION
+               NULL_POS,
+               NULL_POS
              ]
     if is_valid
       expect_valid result
@@ -126,8 +125,8 @@ group 'Piece Functions' do
             WHITE_KING_IN_DANGER,
             FROM_POSITION,
             shift_position(FROM_POSITION, delta_x, -delta_y),
-            NULL_POSITION,
-            NULL_POSITION
+            NULL_POS,
+            NULL_POS
           ]
         )
       end
@@ -138,8 +137,8 @@ group 'Piece Functions' do
             BLACK_KING_IN_DANGER,
             FROM_POSITION,
             shift_position(FROM_POSITION, delta_x, delta_y),
-            NULL_POSITION,
-            NULL_POSITION
+            NULL_POS,
+            NULL_POS
           ]
         )
       end
@@ -154,8 +153,8 @@ group 'Piece Functions' do
             NOTHING_SURROUNDING_WHITE,
             FROM_POSITION,
             FROM_POSITION,
-            NULL_POSITION,
-            NULL_POSITION
+            NULL_POS,
+            NULL_POS
           ]
         )
       end
@@ -166,8 +165,8 @@ group 'Piece Functions' do
             NOTHING_SURROUNDING_BLACK,
             FROM_POSITION,
             FROM_POSITION,
-            NULL_POSITION,
-            NULL_POSITION
+            NULL_POS,
+            NULL_POS
           ]
         )
       end
@@ -193,8 +192,8 @@ group 'Piece Functions' do
             board,
             FROM_POSITION,
             to,
-            NULL_POSITION,
-            NULL_POSITION
+            NULL_POS,
+            NULL_POS
           ]
         )
       end
@@ -335,8 +334,8 @@ group 'Piece Functions' do
           NOTHING_SURROUNDING_BLACK,
           FROM_POSITION,
           shift_position(FROM_POSITION, -1, 3),
-          NULL_POSITION,
-          NULL_POSITION
+          NULL_POS,
+          NULL_POS
         ]
       )
     end
@@ -372,8 +371,8 @@ group 'Piece Functions' do
         board,
         from,
         to,
-        NULL_POSITION,
-        NULL_POSITION
+        NULL_POS,
+        NULL_POS
       ][
         FIRST,
         SECOND,
@@ -388,8 +387,8 @@ group 'Piece Functions' do
           NOTHING_SURROUNDING_BLACK,
           FROM_POSITION,
           shift_position(FROM_POSITION, 2, 0),
-          NULL_POSITION,
-          NULL_POSITION
+          NULL_POS,
+          NULL_POS
         ]
       )
     end
@@ -400,8 +399,8 @@ group 'Piece Functions' do
           NOTHING_SURROUNDING_BLACK,
           FROM_POSITION,
           shift_position(FROM_POSITION, 2, 1),
-          NULL_POSITION,
-          NULL_POSITION
+          NULL_POS,
+          NULL_POS
         ]
       )
     end
@@ -422,15 +421,15 @@ group 'Piece Functions' do
           near_check,
           FROM_POSITION,
           shift_position(FROM_POSITION, -1, 0),
-          NULL_POSITION,
-          NULL_POSITION
+          NULL_POS,
+          NULL_POS
         ]
       )
     end
 
     group 'castling' do
       rule_proc      = proc { |board, from, to|
-                         KING_RULE[board, from, to, NULL_POSITION, NULL_POSITION]
+                         KING_RULE[board, from, to, NULL_POS, NULL_POS]
                        }
       castle_result  = proc { |result| result == CASTLE }
       invalid_result = proc { |result| result == INVALID }
@@ -564,8 +563,8 @@ group 'Piece Functions' do
               board,
               FROM_POSITION,
               valid_move,
-              NULL_POSITION,
-              NULL_POSITION
+              NULL_POS,
+              NULL_POS
             ]
           )
         end
@@ -586,8 +585,8 @@ group 'Piece Functions' do
           NOTHING_SURROUNDING_BLACK,
           FROM_POSITION,
           shift_position(FROM_POSITION, -1, 1),
-          NULL_POSITION,
-          NULL_POSITION
+          NULL_POS,
+          NULL_POS
         ]
       )
     end
@@ -614,8 +613,8 @@ group 'Piece Functions' do
             starting_board,
             position(4, 6),
             position(4, 5),
-            NULL_POSITION,
-            NULL_POSITION
+            NULL_POS,
+            NULL_POS
           ]
         )
       end
@@ -626,8 +625,8 @@ group 'Piece Functions' do
             starting_board,
             position(1, 1),
             position(1, 2),
-            NULL_POSITION,
-            NULL_POSITION
+            NULL_POS,
+            NULL_POS
           ]
         )
       end
@@ -640,8 +639,8 @@ group 'Piece Functions' do
             starting_board,
             position(4, 6),
             position(4, 4),
-            NULL_POSITION,
-            NULL_POSITION
+            NULL_POS,
+            NULL_POS
           ]
         )
       end
@@ -652,8 +651,8 @@ group 'Piece Functions' do
             starting_board,
             position(1, 1),
             position(1, 3),
-            NULL_POSITION,
-            NULL_POSITION
+            NULL_POS,
+            NULL_POS
           ]
         )
       end
@@ -676,8 +675,8 @@ group 'Piece Functions' do
             later_board,
             position(4, 5),
             position(4, 3),
-            NULL_POSITION,
-            NULL_POSITION
+            NULL_POS,
+            NULL_POS
           ]
         )
       end
@@ -688,8 +687,8 @@ group 'Piece Functions' do
             later_board,
             position(1, 2),
             position(1, 4),
-            NULL_POSITION,
-            NULL_POSITION
+            NULL_POS,
+            NULL_POS
           ]
         )
       end
@@ -702,8 +701,8 @@ group 'Piece Functions' do
             starting_board,
             position(4, 6),
             position(4, 7),
-            NULL_POSITION,
-            NULL_POSITION
+            NULL_POS,
+            NULL_POS
           ]
         )
       end
@@ -714,8 +713,8 @@ group 'Piece Functions' do
             starting_board,
             position(1, 1),
             position(1, 0),
-            NULL_POSITION,
-            NULL_POSITION
+            NULL_POS,
+            NULL_POS
           ]
         )
       end
@@ -728,8 +727,8 @@ group 'Piece Functions' do
             starting_board,
             position(4, 6),
             position(5, 5),
-            NULL_POSITION,
-            NULL_POSITION
+            NULL_POS,
+            NULL_POS
           ]
         )
       end
@@ -740,8 +739,8 @@ group 'Piece Functions' do
             starting_board,
             position(1, 1),
             position(0, 2),
-            NULL_POSITION,
-            NULL_POSITION
+            NULL_POS,
+            NULL_POS
           ]
         )
       end
@@ -754,8 +753,8 @@ group 'Piece Functions' do
             starting_board,
             position(4, 6),
             position(5, 6),
-            NULL_POSITION,
-            NULL_POSITION
+            NULL_POS,
+            NULL_POS
           ]
         )
       end
@@ -766,8 +765,8 @@ group 'Piece Functions' do
             starting_board,
             position(1, 1),
             position(0, 1),
-            NULL_POSITION,
-            NULL_POSITION
+            NULL_POS,
+            NULL_POS
           ]
         )
       end
@@ -790,8 +789,8 @@ group 'Piece Functions' do
             sideways_capture_board,
             position(4, 6),
             position(5, 6),
-            NULL_POSITION,
-            NULL_POSITION
+            NULL_POS,
+            NULL_POS
           ]
         )
       end
@@ -802,8 +801,8 @@ group 'Piece Functions' do
             sideways_capture_board,
             position(1, 1),
             position(0, 1),
-            NULL_POSITION,
-            NULL_POSITION
+            NULL_POS,
+            NULL_POS
           ]
         )
       end
@@ -826,8 +825,8 @@ group 'Piece Functions' do
             capture_board,
             position(4, 5),
             position(5, 4),
-            NULL_POSITION,
-            NULL_POSITION
+            NULL_POS,
+            NULL_POS
           ]
         )
       end
@@ -838,8 +837,8 @@ group 'Piece Functions' do
             capture_board,
             position(1, 2),
             position(0, 3),
-            NULL_POSITION,
-            NULL_POSITION
+            NULL_POS,
+            NULL_POS
           ]
         )
       end
@@ -862,8 +861,8 @@ group 'Piece Functions' do
             capture_board,
             position(4, 5),
             position(5, 6),
-            NULL_POSITION,
-            NULL_POSITION
+            NULL_POS,
+            NULL_POS
           ]
         )
       end
@@ -874,8 +873,8 @@ group 'Piece Functions' do
             capture_board,
             position(1, 2),
             position(0, 1),
-            NULL_POSITION,
-            NULL_POSITION
+            NULL_POS,
+            NULL_POS
           ]
         )
       end

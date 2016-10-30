@@ -214,6 +214,15 @@ BLACK_HOME_ROW = ZERO
 WHITE_HOME_ROW = SEVEN
 KING_COLUMN    = FOUR
 
+PAWN_VALUE   = ONE
+KNIGHT_VALUE = TWO
+BISHOP_VALUE = THREE
+ROOK_VALUE   = FOUR
+QUEEN_VALUE  = FIVE
+KING_VALUE   = SIX
+
+# Piece data
+
 GET_COLOR    = ->(piece) { LEFT[LEFT[piece]] }
 GET_VALUE    = ->(piece) { RIGHT[LEFT[piece]] }
 GET_OCCUPIED = ->(piece) { LEFT[RIGHT[piece]] }
@@ -227,13 +236,6 @@ MOVED    = FIRST
 
 BLACK = FIRST
 WHITE = SECOND
-
-PAWN_VALUE   = ONE
-KNIGHT_VALUE = TWO
-BISHOP_VALUE = THREE
-ROOK_VALUE   = FOUR
-QUEEN_VALUE  = FIVE
-KING_VALUE   = SIX
 
 MAKE_PIECE = ->(color, value, occupied, moved) {
   PAIR[PAIR[color, value], PAIR[occupied, moved]]

@@ -160,12 +160,9 @@ VALID_CASTLE = ->(board, from, to) {
           IF[IS_NOT_IN_CHECK[board, from, from]][
             -> {
               IF[IS_NOT_IN_CHECK[board, from, mid_to]][
-                -> {
-                  IF[IS_NOT_IN_CHECK[board, from, to]][
-                    -> { FIRST },
-                    invalid
-                  ]
-                },
+                # Don't check IS_NOT_IN_CHECK[board, from, to] since
+                # BASIC_CHECKS does that.
+                -> { FIRST },
                 invalid
               ]
             },

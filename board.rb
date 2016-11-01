@@ -119,6 +119,21 @@ FREE_PATH = ->(board, from, to, alter_length) {
   ]
 }
 
+POSITION_SELECT = ->(board, condition) {
+  BOARD_REDUCE[
+    board,
+    ->(memo, piece, position) {
+      condition[piece][
+        VECTOR_APPEND[memo, position],
+        memo
+      ]
+    },
+    EMPTY_VECTOR
+  ]
+}
+
+# Move Functions
+
 NORMAL_MOVE = ->(board, from, to, new_piece) {
   CHANGE_MOVE[board, from, to, GET_POSITION[board, from]]
 }
@@ -164,18 +179,7 @@ EN_PASSANT_MOVE = ->(board, from, to, new_piece) {
   ]
 }
 
-POSITION_SELECT = ->(board, condition) {
-  BOARD_REDUCE[
-    board,
-    ->(memo, piece, position) {
-      condition[piece][
-        VECTOR_APPEND[memo, position],
-        memo
-      ]
-    },
-    EMPTY_VECTOR
-  ]
-}
+# Initial Board
 
 P = PAIR
 

@@ -55,7 +55,7 @@ group 'List Functions' do
                       INDEX_ARRAY.to_linked_list,
                       64.to_peano,
                       ->(x, _) { x + 1 }
-                    ].to_a(64)
+                    ].list_to_a(64)
 
       incremented == INDEX_ARRAY.map { |x| x + 1 }
     end
@@ -66,7 +66,7 @@ group 'List Functions' do
                         empty_board,
                         64.to_peano,
                         ->(_, i) { i.to_i }
-                      ].to_a(64)
+                      ].list_to_a(64)
 
       given_indexes == INDEX_ARRAY
     end

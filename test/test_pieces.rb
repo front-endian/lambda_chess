@@ -182,7 +182,7 @@ group 'Piece Functions' do
                                   end
 
         to    = shift_position(FROM_POSITION, delta_y, direction * delta_x)
-        board = board.to_a(8).map { |row| row.to_a(8) }
+        board = board.list_to_a(8).map { |row| row.list_to_a(8) }
 
         board[RIGHT[to].to_i][LEFT[to].to_i] = piece
         board = board.to_board

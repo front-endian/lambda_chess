@@ -15,7 +15,7 @@ class Proc
     call proc { |x| x + 1 }, 0
   end
 
-  def to_a length
+  def list_to_a length
     result = []
     part   = self
 
@@ -25,6 +25,10 @@ class Proc
     end
 
     result
+  end
+
+  def vector_to_a
+    VECTOR_LIST[self].list_to_a(VECTOR_SIZE[self].to_i)
   end
 end
 
@@ -41,6 +45,12 @@ class Array
   def to_linked_list
     reverse.inject(ZERO) do |previous, element|
       PAIR[element, previous]
+    end
+  end
+
+  def to_vector
+    reverse.inject(EMPTY_VECTOR) do |previous, element|
+      VECTOR_APPEND[previous, element]
     end
   end
 

@@ -100,6 +100,26 @@ DELTA = ->(position_1, position_2, coordinate) {
   ]
 }
 
+MODULUS = ->(a, b) {
+  RIGHT[
+    a[
+      ->(memo) {
+        IS_GREATER_OR_EQUAL[LEFT[memo], b][
+          PAIR[
+            SUBTRACT[LEFT[memo], b],
+            ZERO
+          ],
+          PAIR[
+            LEFT[memo],
+            LEFT[memo]
+          ]
+        ]
+      },
+      PAIR[a, ZERO]
+    ]
+  ]
+}
+
 # Numbers
 
 ZERO       = ->(succ, zero) { zero }
@@ -311,5 +331,52 @@ IS_EQUAL = ->(a, b) {
   IF[IS_GREATER_OR_EQUAL[a, b]][
     -> { IS_GREATER_OR_EQUAL[b, a] },
     -> { SECOND }
+  ]
+}
+
+# Board State
+
+CREATE_STATE = ->(from, to, last_from, last_to, board, score) {
+  PAIR[
+    PAIR[
+      PAIR[from, to],
+      PAIR[board, score]
+    ],
+    PAIR[last_from, last_to]
+  ]
+}
+
+GET_LAST_FROM = ->(state) {
+  LEFT[RIGHT[state]]
+}
+
+GET_LAST_TO = ->(state) {
+  RIGHT[RIGHT[state]]
+}
+
+GET_FROM = ->(state) {
+  LEFT[LEFT[LEFT[state]]]
+}
+
+GET_TO = ->(state) {
+  RIGHT[LEFT[LEFT[state]]]
+}
+
+GET_BOARD = ->(state) {
+  LEFT[RIGHT[LEFT[state]]]
+}
+
+GET_SCORE = ->(state) {
+  RIGHT[RIGHT[LEFT[state]]]
+}
+
+UPDATE_STATE = ->(older, newer) {
+  CREATE_STATE[
+    GET_FROM[older],
+    GET_TO[older],
+    GET_FROM[newer],
+    GET_TO[newer],
+    GET_BOARD[newer],
+    GET_SCORE[newer]
   ]
 }

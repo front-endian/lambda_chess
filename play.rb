@@ -4,17 +4,14 @@
 # This software may be modified and distributed under the
 # terms of the three-clause BSD license. See LICENSE.txt
 
-PLAY = ->(board, from, to, last_from, last_to, move_type, promotion) {
-  ->(perform_normal_move) {
-
-    move_type[
-      # Normal Move
-      # Castle Left
-      # Castle Right
-      # Promote
+PLAY = ->(state) {
+  ->(move_type) {
+    ADVANCE_STATE[state][
+      ->(new_state, _) { BLACK_AI[new_state] },
+      -> { state }
     ]
   }[
-    # "perform_normal_move"
+    # "move_type"
     -> {
       GET_RULE[GET_POSITION[board, from]][board, from, to, from, to]
     }
@@ -38,13 +35,13 @@ MAX_PIECE_TOTAL = ADD[
   ]
 ]
 
-SCORE = ->(board, color) {
+SCORE = ->(board) {
   BOARD_REDUCE[
     board,
     ->(memo, piece, position) {
       IS_BLACK[piece][
-        color[ADD, SUBTRACT],
-        color[SUBTRACT, ADD]
+        ADD,
+        SUBTRACT
       ][
         memo,
         GET_VALUE[piece]
@@ -54,12 +51,12 @@ SCORE = ->(board, color) {
   ]
 }
 
-FROM_TO_REDUCE = ->(from_vector, to_vector, func, initial) {
+FROM_TO_REDUCE = ->(from_vector, possible_tos, func, initial) {
   VECTOR_REDUCE[
     from_vector,
     ->(memo, from_position) {
       VECTOR_REDUCE[
-        to_vector,
+        possible_tos,
         ->(inner_memo, to_position) {
           func[inner_memo, from_position, to_position]
         },
@@ -70,59 +67,41 @@ FROM_TO_REDUCE = ->(from_vector, to_vector, func, initial) {
   ]
 }
 
-POSSIBLE_MOVES = ->(board, color, to_vector, last_from, last_to) {
-  FROM_TO_REDUCE[
-    POSITION_SELECT[board, color[IS_BLACK, IS_WHITE]],
-    to_vector,
-    ->(move_vector, from, to) {
-      ->(move_result) {
-        IF[ISNT_INVALID[move_result]][
-          -> {
-            ->(new_board) {
-              VECTOR_APPEND[
-                move_vector,
-                CREATE_STATE[
-                  from,
-                  to,
-                  from,
-                  to,
-                  new_board,
-                  SCORE[new_board, BLACK]
-                ]
-              ]
-            }[
-              MOVE_FUNC[move_result][
-                board,
-                from,
-                to,
-                color[BLACK_QUEEN, WHITE_QUEEN]
-              ]
-            ]
-          },
-          -> { move_vector }
+POSSIBLE_MOVES = ->(state, color, possible_tos) {
+  ->(board) {
+    FROM_TO_REDUCE[
+      POSITION_SELECT[board, color[IS_BLACK, IS_WHITE]],
+      possible_tos,
+      ->(possible_moves, from, to) {
+        ADVANCE_STATE[
+          CREATE_STATE[
+            from,
+            to,
+            GET_LAST_FROM[state],
+            GET_LAST_TO[state],
+            board,
+            SCORE[board],
+            color[BLACK_QUEEN, WHITE_QUEEN],
+            GET_SEED[state]
+          ]
+        ][
+          ->(new_state, _) { VECTOR_APPEND[possible_moves, new_state] },
+          -> { possible_moves }
         ]
-      }[
-        # "move_result"
-        GET_RULE[GET_POSITION[board, from]][
-          board,
-          from,
-          to,
-          last_from,
-          last_to
-        ]
-      ]
-    },
-    EMPTY_VECTOR
+      },
+      EMPTY_VECTOR
+    ]
+  }[
+    # "board"
+    GET_BOARD[state]
   ]
 }
 
-POSSIBLE_BLACK_RESPONSES = ->(board, last_from, last_to) {
+POSSIBLE_BLACK_RESPONSES = ->(state) {
   POSSIBLE_MOVES[
-    board,
+    state,
     BLACK,
-    POSITION_SELECT[board, ALWAYS_FIRST],
-    last_from,
-    last_to
+    POSITION_SELECT[GET_BOARD[state], ALWAYS_FIRST]
   ]
 }
 
@@ -136,16 +115,14 @@ COUNTER_RESPONSES = ->(reponses, color) {
         VECTOR_REDUCE[
           # Find all possble responses
           POSSIBLE_MOVES[
-            GET_BOARD[old_state],
+            old_state,
             color,
-            VECTOR_APPEND[EMPTY_VECTOR, GET_TO[old_state]],
-            GET_LAST_FROM[old_state],
-            GET_LAST_TO[old_state]
+            VECTOR_APPEND[EMPTY_VECTOR, GET_TO[old_state]]
           ],
           ->(memo, new_state) {
             IS_GREATER_OR_EQUAL[GET_SCORE[new_state], GET_SCORE[memo]][
-              color[UPDATE_STATE[memo, new_state], memo],
-              color[memo, UPDATE_STATE[memo, new_state]]
+              color[UPDATE_ALL_BUT_FROM_TO[memo, new_state], memo],
+              color[memo, UPDATE_ALL_BUT_FROM_TO[memo, new_state]]
             ]
           },
           old_state
@@ -180,35 +157,37 @@ BEST_SET_OF_STATES = ->(states) {
   ]
 }
 
-BEST_MOVE = ->(states, random) {
+BEST_MOVE = ->(states) {
   IF[IS_ZERO[VECTOR_SIZE[states]]][
     -> { PAIR[SECOND, ZERO] },
     -> {
-      ->(best) {
+      ->(best_vector) {
         PAIR[
           FIRST,
           NTH[
-            VECTOR_LIST[best],
-            MODULUS[random, VECTOR_SIZE[best]]
+            VECTOR_LIST[best_vector],
+            MODULUS[
+              GET_SEED[VECTOR_FIRST[best_vector]],
+              VECTOR_SIZE[best_vector]
+            ]
           ]
         ]
       }[
-        # "best"
+        # "best_vector"
         BEST_SET_OF_STATES[states]
       ]
     }
   ]
 }
 
-BLACK_AI = ->(board, last_from, last_to, random) {
+BLACK_AI = ->(state) {
   BEST_MOVE[
     COUNTER_RESPONSES[
       COUNTER_RESPONSES[
-        POSSIBLE_BLACK_RESPONSES[board, last_from, last_to],
+        POSSIBLE_BLACK_RESPONSES[state],
         WHITE
       ],
       BLACK
-    ],
-    random
+    ]
   ]
 }

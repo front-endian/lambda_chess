@@ -336,22 +336,33 @@ IS_EQUAL = ->(a, b) {
 
 # Board State
 
-CREATE_STATE = ->(from, to, last_from, last_to, board, score) {
+CREATE_STATE = ->(from, to, last_from, last_to, board, score, promotion, seed) {
   PAIR[
     PAIR[
       PAIR[from, to],
       PAIR[board, score]
     ],
-    PAIR[last_from, last_to]
+    PAIR[
+      PAIR[seed, promotion],
+      PAIR[last_from, last_to]
+    ]
   ]
 }
 
+GET_SEED = ->(state) {
+  LEFT[LEFT[RIGHT[state]]]
+}
+
+GET_PROMOTION = ->(state) {
+  RIGHT[LEFT[RIGHT[state]]]
+}
+
 GET_LAST_FROM = ->(state) {
-  LEFT[RIGHT[state]]
+  LEFT[RIGHT[RIGHT[state]]]
 }
 
 GET_LAST_TO = ->(state) {
-  RIGHT[RIGHT[state]]
+  RIGHT[RIGHT[RIGHT[state]]]
 }
 
 GET_FROM = ->(state) {
@@ -370,13 +381,28 @@ GET_SCORE = ->(state) {
   RIGHT[RIGHT[LEFT[state]]]
 }
 
-UPDATE_STATE = ->(older, newer) {
+UPDATE_ALL_BUT_FROM_TO = ->(older, newer) {
   CREATE_STATE[
     GET_FROM[older],
     GET_TO[older],
     GET_FROM[newer],
     GET_TO[newer],
     GET_BOARD[newer],
-    GET_SCORE[newer]
+    GET_SCORE[newer],
+    GET_PROMOTION[newer],
+    GET_SEED[newer]
+  ]
+}
+
+UPDATE_BOARD = ->(older, board) {
+  CREATE_STATE[
+    GET_FROM[older],
+    GET_TO[older],
+    GET_FROM[older],
+    GET_TO[older],
+    board,
+    SCORE[board],
+    GET_PROMOTION[older],
+    GET_SEED[older]
   ]
 }

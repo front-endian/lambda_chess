@@ -21,11 +21,7 @@ group 'Play Functions' do
   group 'SCORE' do
     group 'INITIAL_BOARD has MAX_PIECE_TOTAL' do
       assert 'for black' do
-        MAX_PIECE_TOTAL.to_i == SCORE[INITIAL_BOARD, BLACK].to_i
-      end
-
-      assert 'for white' do
-        MAX_PIECE_TOTAL.to_i == SCORE[INITIAL_BOARD, WHITE].to_i
+        MAX_PIECE_TOTAL.to_i == SCORE[INITIAL_BOARD].to_i
       end
     end
 
@@ -42,12 +38,7 @@ group 'Play Functions' do
 
       assert 'the score for black goes down by that amount' do
         expected =  MAX_PIECE_TOTAL.to_i - GET_VALUE[BB].to_i
-        expected == SCORE[board, BLACK].to_i
-      end
-
-      assert 'the score for white goes up by that amount' do
-        expected =  MAX_PIECE_TOTAL.to_i + GET_VALUE[BB].to_i
-        expected == SCORE[board, WHITE].to_i
+        expected == SCORE[board].to_i
       end
     end
 
@@ -64,12 +55,7 @@ group 'Play Functions' do
 
       assert 'the score for black goes up by the black equivolent' do
         expected =  MAX_PIECE_TOTAL.to_i + GET_VALUE[BQ].to_i
-        expected == SCORE[board, BLACK].to_i
-      end
-
-      assert 'the score for white goes down by the black equivolent' do
-        expected =  MAX_PIECE_TOTAL.to_i - GET_VALUE[BQ].to_i
-        expected == SCORE[board, WHITE].to_i
+        expected == SCORE[board].to_i
       end
     end
 
@@ -94,11 +80,26 @@ group 'Play Functions' do
                    [WR,WN,WB,WQ,WK,WB,WN,WR]]
                   .to_board
 
-      SCORE[one_left, BLACK].to_i > SCORE[none_left, BLACK].to_i
+      SCORE[one_left].to_i > SCORE[none_left].to_i
     end
   end
 
   group 'BLACK_AI' do
+    def run_black_ai board, seed
+      BLACK_AI[
+        CREATE_STATE[
+          NULL_POS,
+          NULL_POS,
+          NULL_POS,
+          NULL_POS,
+          board,
+          0.to_peano,
+          0.to_peano,
+          seed
+        ]
+      ]
+    end
+
     assert 'flags when no moves are valid' do
       board = [[0, 0, 0, 0, 0, 0, 0, 0],
                [0, 0, 0, 0, 0, 0, 0, 0],
@@ -110,7 +111,7 @@ group 'Play Functions' do
                [0, 0, 0, 0, 0, WR,0, BK]]
               .to_board
 
-      expect_falsy LEFT[BLACK_AI[board, NULL_POS, NULL_POS, 1.to_peano]]
+      expect_falsy LEFT[run_black_ai(board, 1.to_peano)]
     end
 
     group 'give multiple valid moves' do
@@ -124,8 +125,8 @@ group 'Play Functions' do
                [0, 0, 0, 0, 0, 0, 0, BK]]
               .to_board
 
-      result_1 = BLACK_AI[board, NULL_POS, NULL_POS, 1.to_peano]
-      result_2 = BLACK_AI[board, NULL_POS, NULL_POS, 2.to_peano]
+      result_1 = run_black_ai(board, 1.to_peano)
+      result_2 = run_black_ai(board, 2.to_peano)
 
 
       assert 'flags when moves are valid' do
@@ -141,7 +142,7 @@ group 'Play Functions' do
       end
     end
 
-    assert 'selects "to" based on "random" parameter' do
+    assert 'selects "to" based on "seed" parameter' do
       board = [[0, 0, 0, 0, 0, 0, 0, 0],
                [0, 0, 0, 0, 0, 0, 0, 0],
                [0, 0, 0, 0, 0, 0, 0, 0],
@@ -152,8 +153,8 @@ group 'Play Functions' do
                [BN,0, 0, 0, 0, 0, 0, BK]]
               .to_board
 
-      result_1 = BLACK_AI[board, NULL_POS, NULL_POS, 1.to_peano]
-      result_2 = BLACK_AI[board, NULL_POS, NULL_POS, 2.to_peano]
+      result_1 = run_black_ai(board, 1.to_peano)
+      result_2 = run_black_ai(board, 2.to_peano)
 
       possible_tos = [GET_TO[RIGHT[result_1]], GET_TO[RIGHT[result_2]]]
 
@@ -174,8 +175,8 @@ group 'Play Functions' do
                [0, 0, 0, 0, 0, WR,0, BK]]
               .to_board
 
-      result_1 = RIGHT[BLACK_AI[board, NULL_POS, NULL_POS, 1.to_peano]]
-      result_2 = RIGHT[BLACK_AI[board, NULL_POS, NULL_POS, 2.to_peano]]
+      result_1 = RIGHT[run_black_ai(board, 1.to_peano)]
+      result_2 = RIGHT[run_black_ai(board, 2.to_peano)]
 
       expect_truthy(SAME_POSITION[GET_TO[result_1], position(7, 6)]) &&
       expect_truthy(SAME_POSITION[GET_TO[result_2], position(7, 6)])
@@ -192,8 +193,8 @@ group 'Play Functions' do
                [0, 0, 0, 0, 0, 0, WN,BK]]
               .to_board
 
-      result_1 = RIGHT[BLACK_AI[board, NULL_POS, NULL_POS, 1.to_peano]]
-      result_2 = RIGHT[BLACK_AI[board, NULL_POS, NULL_POS, 2.to_peano]]
+      result_1 = RIGHT[run_black_ai(board, 1.to_peano)]
+      result_2 = RIGHT[run_black_ai(board, 2.to_peano)]
 
       expect_truthy(SAME_POSITION[GET_TO[result_1], position(6, 6)]) &&
       expect_truthy(SAME_POSITION[GET_TO[result_2], position(6, 6)])

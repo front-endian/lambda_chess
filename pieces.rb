@@ -12,12 +12,42 @@ EN_PASSANT = ->(valid, invalid, en_passant, castle) { en_passant }
 CASTLE     = ->(valid, invalid, en_passant, castle) { castle }
 
 ISNT_INVALID = ->(move_result) { move_result[FIRST, SECOND, FIRST, FIRST] }
-MOVE_FUNC    = ->(move_result) {
-  move_result[
-    NORMAL_MOVE,
-    ZERO,
-    EN_PASSANT_MOVE,
-    CASTLING_MOVE
+
+ADVANCE_STATE = ->(state) {
+  ->(maybe_func) {
+    ->(if_valid, if_invalid) {
+      IF[LEFT[maybe_func]][
+        -> {
+          if_valid[
+            UPDATE_BOARD[
+              state,
+              RIGHT[maybe_func][
+                GET_BOARD[state],
+                GET_FROM[state],
+                GET_TO[state],
+                GET_PROMOTION[state]
+              ]
+            ],
+            RIGHT[maybe_func]
+          ]
+        },
+        -> { if_invalid[] }
+      ]
+    }
+  }[
+    # "maybe_func"
+    GET_RULE[GET_POSITION[GET_BOARD[state], GET_FROM[state]]][
+      GET_BOARD[state],
+      GET_FROM[state],
+      GET_TO[state],
+      GET_LAST_FROM[state],
+      GET_LAST_TO[state]
+    ][
+      PAIR[FIRST, NORMAL_MOVE],
+      PAIR[SECOND, ZERO],
+      PAIR[FIRST, EN_PASSANT_MOVE],
+      PAIR[FIRST, CASTLING_MOVE]
+    ]
   ]
 }
 

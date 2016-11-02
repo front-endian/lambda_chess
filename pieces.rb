@@ -46,77 +46,80 @@ ADVANCE_STATE = ->(state) {
 }
 
 BASIC_CHECKS = ->(rule) {
-  ->(state) {
-    WITH_BASIC_INFO[
-      state,
-      ->(board, from, to) {
-        IF[
-          # Cannot capture own color
-          COLOR_SWITCH[GET_POSITION[board, from]][
-            IS_BLACK[GET_POSITION[board, to]],
-            IS_WHITE[GET_POSITION[board, to]],
-            SECOND
-          ]
-        ][
-          -> { INVALID },
-          -> {
-            ->(move_func) {
-              IF[ISNT_INVALID[move_func]][
-                -> {
-                  ->(moved_piece, after_move) {
-                    ->(king_data) {
-                      VECTOR_REDUCE[
-                        king_data,
-                        ->(memo, king_position) {
-                          IS_NOT_IN_CHECK[
-                            after_move,
-                            king_position,
-                            king_position
-                          ]
-                        },
-                        FIRST
+  ->(get_rule) {
+    ->(state) {
+      WITH_BASIC_INFO[
+        state,
+        ->(board, from, to) {
+          IF[
+            # Cannot capture own color
+            COLOR_SWITCH[GET_POSITION[board, from]][
+              IS_BLACK[GET_POSITION[board, to]],
+              IS_WHITE[GET_POSITION[board, to]],
+              SECOND
+            ]
+          ][
+            -> { INVALID },
+            -> {
+              ->(move_func) {
+                IF[ISNT_INVALID[move_func]][
+                  -> {
+                    ->(moved_piece, after_move) {
+                      ->(king_data) {
+                        VECTOR_REDUCE[
+                          king_data,
+                          ->(memo, king_position) {
+                            IS_NOT_IN_CHECK[
+                              after_move,
+                              king_position,
+                              king_position,
+                              get_rule
+                            ]
+                          },
+                          FIRST
+                        ]
+                      }[
+                        # "king_data"
+                        POSITION_SELECT[
+                          after_move,
+                          ->(possible) {
+                            AND[
+                              HAS_VALUE[possible, KING_VALUE],
+                              IS_BLACK[possible][
+                                IS_BLACK[moved_piece],
+                                IS_WHITE[moved_piece]
+                              ]
+                            ]
+                          }
+                        ]
                       ]
                     }[
-                      # "king_data"
-                      POSITION_SELECT[
-                        after_move,
-                        ->(possible) {
-                          AND[
-                            HAS_VALUE[possible, KING_VALUE],
-                            IS_BLACK[possible][
-                              IS_BLACK[moved_piece],
-                              IS_WHITE[moved_piece]
-                            ]
-                          ]
-                        }
-                      ]
+                      # "moved_piece"
+                      GET_POSITION[board, from],
+                      # "after_move"
+                      NORMAL_MOVE[board, from, to, ZERO]
+                    ][
+                      move_func,
+                      INVALID
                     ]
-                  }[
-                    # "moved_piece"
-                    GET_POSITION[board, from],
-                    # "after_move"
-                    NORMAL_MOVE[board, from, to, ZERO]
-                  ][
-                    move_func,
-                    INVALID
-                  ]
-                },
-                -> { move_func },
+                  },
+                  -> { move_func },
+                ]
+              }[
+                # "move_func"
+                rule[state, get_rule]
               ]
-            }[
-              # "move_func"
-              rule[state]
-            ]
-          }
-        ]
-      }
-    ]
+            }
+          ]
+        }
+      ]
+    }
   }
 }
 
 STRAIGHT_LINE_RULE = ->(rule) {
   BASIC_CHECKS[
-    ->(state) {
+    ->(state, _) {
       WITH_BASIC_INFO[
         state,
         ->(board, from, to) {
@@ -152,12 +155,12 @@ BISHOP_RULE = STRAIGHT_LINE_RULE[
   }
 ]
 
-QUEEN_RULE = BASIC_CHECKS[
+QUEEN_RULE = ->(get_rule) {
   ->(state) {
     ->(follows_rule) {
       OR[
-        follows_rule[ROOK_RULE],
-        follows_rule[BISHOP_RULE]
+        follows_rule[ROOK_RULE[get_rule]],
+        follows_rule[BISHOP_RULE[get_rule]]
       ][
         VALID,
         INVALID
@@ -167,9 +170,9 @@ QUEEN_RULE = BASIC_CHECKS[
       ->(rule) { ISNT_INVALID[rule[state]] }
     ]
   }
-]
+}
 
-VALID_CASTLE = ->(state) {
+VALID_CASTLE = ->(state, get_rule) {
   WITH_BASIC_INFO[
     state,
     ->(board, from, to) {
@@ -197,9 +200,9 @@ VALID_CASTLE = ->(state) {
             ]
           ][
             -> {
-              IF[IS_NOT_IN_CHECK[board, from, from]][
+              IF[IS_NOT_IN_CHECK[board, from, from, get_rule]][
                 -> {
-                  IF[IS_NOT_IN_CHECK[board, from, mid_to]][
+                  IF[IS_NOT_IN_CHECK[board, from, mid_to, get_rule]][
                     # Don't check IS_NOT_IN_CHECK[board, from, to] since
                     # BASIC_CHECKS does that.
                     -> { FIRST },
@@ -230,7 +233,7 @@ VALID_CASTLE = ->(state) {
   ]
 }
 
-IS_NOT_IN_CHECK = ->(board, from, to) {
+IS_NOT_IN_CHECK = ->(board, from, to, get_rule) {
   ->(after_move) {
     BOARD_REDUCE[
       after_move,
@@ -247,7 +250,7 @@ IS_NOT_IN_CHECK = ->(board, from, to) {
           -> {
             IF[memo][
               -> {
-                GET_RULE[piece][
+                get_rule[piece][
                   CREATE_STATE[
                     position,
                     to,
@@ -279,7 +282,7 @@ IS_NOT_IN_CHECK = ->(board, from, to) {
 }
 
 KING_RULE = BASIC_CHECKS[
-  ->(state) {
+  ->(state, get_rule) {
     IF[
       AND[
         IS_GREATER_OR_EQUAL[ONE, DELTA[GET_FROM[state], GET_TO[state], LEFT]],
@@ -288,7 +291,7 @@ KING_RULE = BASIC_CHECKS[
     ][
       -> { VALID },
       -> {
-        VALID_CASTLE[state][
+        VALID_CASTLE[state, get_rule][
           CASTLE,
           INVALID
         ]
@@ -298,7 +301,7 @@ KING_RULE = BASIC_CHECKS[
 ]
 
 KNIGHT_RULE = BASIC_CHECKS[
-  ->(state) {
+  ->(state, _) {
     ->(delta_x, delta_y) {
       OR[
         AND[
@@ -323,7 +326,7 @@ KNIGHT_RULE = BASIC_CHECKS[
 ]
 
 PAWN_RULE = BASIC_CHECKS[
-  ->(state) {
+  ->(state, _) {
     WITH_BASIC_INFO[
       state,
       ->(board, from, to) {
@@ -456,24 +459,26 @@ PAWN_RULE = BASIC_CHECKS[
   }
 ]
 
-GET_RULE = ->(piece) {
-  ->(piece_value) {
-    IS_EQUAL[piece_value, PAWN_VALUE][
-      PAWN_RULE,
-    IS_EQUAL[piece_value, ROOK_VALUE][
-      ROOK_RULE,
-    IS_EQUAL[piece_value, KNIGHT_VALUE][
-      KNIGHT_RULE,
-    IS_EQUAL[piece_value, BISHOP_VALUE][
-      BISHOP_RULE,
-    IS_EQUAL[piece_value, QUEEN_VALUE][
-      QUEEN_RULE,
-    IS_EQUAL[piece_value, KING_VALUE][
-      KING_RULE,
-      ZERO
-    ]]]]]]
-  }[
-    # "piece_value"
-    GET_VALUE[piece]
-  ]
-}
+GET_RULE = Z[->(get_rule) {
+  ->(piece) {
+    ->(piece_value) {
+      IS_EQUAL[piece_value, PAWN_VALUE][
+        PAWN_RULE[get_rule],
+      IS_EQUAL[piece_value, ROOK_VALUE][
+        ROOK_RULE[get_rule],
+      IS_EQUAL[piece_value, KNIGHT_VALUE][
+        KNIGHT_RULE[get_rule],
+      IS_EQUAL[piece_value, BISHOP_VALUE][
+        BISHOP_RULE[get_rule],
+      IS_EQUAL[piece_value, QUEEN_VALUE][
+        QUEEN_RULE[get_rule],
+      IS_EQUAL[piece_value, KING_VALUE][
+        KING_RULE[get_rule],
+        ZERO
+      ]]]]]]
+    }[
+      # "piece_value"
+      GET_VALUE[piece]
+    ]
+  }
+}]

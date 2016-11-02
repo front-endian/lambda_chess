@@ -7,6 +7,13 @@
 require_relative './setup'
 
 group 'Piece Functions' do
+  REAL_ROOK_RULE   = ROOK_RULE[GET_RULE]
+  REAL_BISHOP_RULE = BISHOP_RULE[GET_RULE]
+  REAL_QUEEN_RULE  = QUEEN_RULE[GET_RULE]
+  REAL_KING_RULE   = KING_RULE[GET_RULE]
+  REAL_KNIGHT_RULE = KNIGHT_RULE[GET_RULE]
+  REAL_PAWN_RULE   = PAWN_RULE[GET_RULE]
+
   FROM_POSITION = position(4, 4)
 
   NOTHING_SURROUNDING_BLACK = [[0, 0, 0, 0, 0, 0, 0, 0],
@@ -295,42 +302,42 @@ group 'Piece Functions' do
   end
 
   group 'ROOK_RULE' do
-    capturing_basics    ROOK_RULE, 0, 1
-    cannot_cause_check  ROOK_RULE, 0, 1
-    horizontal_movement NOTHING_SURROUNDING_BLACK, 3, true,  ROOK_RULE
-    diagonal_movement   NOTHING_SURROUNDING_BLACK, 3, false, ROOK_RULE
+    capturing_basics    REAL_ROOK_RULE, 0, 1
+    cannot_cause_check  REAL_ROOK_RULE, 0, 1
+    horizontal_movement NOTHING_SURROUNDING_BLACK, 3, true,  REAL_ROOK_RULE
+    diagonal_movement   NOTHING_SURROUNDING_BLACK, 3, false, REAL_ROOK_RULE
 
     group 'if a piece is in the way' do
-      horizontal_movement SURROUNDED, 3, false, ROOK_RULE
+      horizontal_movement SURROUNDED, 3, false, REAL_ROOK_RULE
     end
   end
 
   group 'BISHOP_RULE' do
-    capturing_basics    BISHOP_RULE, 1, 1
-    cannot_cause_check  BISHOP_RULE, 1, 1
-    horizontal_movement NOTHING_SURROUNDING_BLACK, 3, false, BISHOP_RULE
-    diagonal_movement   NOTHING_SURROUNDING_BLACK, 3, true,  BISHOP_RULE
+    capturing_basics    REAL_BISHOP_RULE, 1, 1
+    cannot_cause_check  REAL_BISHOP_RULE, 1, 1
+    horizontal_movement NOTHING_SURROUNDING_BLACK, 3, false, REAL_BISHOP_RULE
+    diagonal_movement   NOTHING_SURROUNDING_BLACK, 3, true,  REAL_BISHOP_RULE
 
     group 'if a piece is in the way' do
-      diagonal_movement SURROUNDED, 3, false, BISHOP_RULE
+      diagonal_movement SURROUNDED, 3, false, REAL_BISHOP_RULE
     end
   end
 
   group 'QUEEN_RULE' do
-    capturing_basics    QUEEN_RULE, 1, 1
-    cannot_cause_check  QUEEN_RULE, 1, 1
-    horizontal_movement NOTHING_SURROUNDING_BLACK, 3, true, QUEEN_RULE
-    diagonal_movement   NOTHING_SURROUNDING_BLACK, 3, true,  QUEEN_RULE
+    capturing_basics    REAL_QUEEN_RULE, 1, 1
+    cannot_cause_check  REAL_QUEEN_RULE, 1, 1
+    horizontal_movement NOTHING_SURROUNDING_BLACK, 3, true, REAL_QUEEN_RULE
+    diagonal_movement   NOTHING_SURROUNDING_BLACK, 3, true,  REAL_QUEEN_RULE
 
     group 'if a piece is in the way' do
-      diagonal_movement   SURROUNDED, 3, false, QUEEN_RULE
-      horizontal_movement SURROUNDED, 3, false, QUEEN_RULE
+      diagonal_movement   SURROUNDED, 3, false, REAL_QUEEN_RULE
+      horizontal_movement SURROUNDED, 3, false, REAL_QUEEN_RULE
     end
 
     assert 'cannot move arbitrarily' do
       expect_invalid(
         run_rule(
-          QUEEN_RULE,
+          REAL_QUEEN_RULE,
           NOTHING_SURROUNDING_BLACK,
           FROM_POSITION,
           shift_position(FROM_POSITION, -1, 3),
@@ -343,7 +350,7 @@ group 'Piece Functions' do
 
   group 'IS_NOT_IN_CHECK' do
     check_check do |board, from, to|
-      IS_NOT_IN_CHECK[board, from, to]
+      IS_NOT_IN_CHECK[board, from, to, GET_RULE]
     end
 
     assert 'allows moving into same position with own pieces nearby' do
@@ -357,17 +364,17 @@ group 'Piece Functions' do
                [0, 0, 0, 0, 0, 0, 0, 0]]
               .to_board
 
-      expect_truthy IS_NOT_IN_CHECK[board, position(4, 2), position(4, 2)]
+      expect_truthy IS_NOT_IN_CHECK[board, position(4, 2), position(4, 2), GET_RULE]
     end
   end
 
   group 'KING_RULE' do
-    capturing_basics    KING_RULE, 1, 0
-    horizontal_movement NOTHING_SURROUNDING_BLACK, 1, true, KING_RULE
-    diagonal_movement   NOTHING_SURROUNDING_BLACK, 1, true, KING_RULE
+    capturing_basics    REAL_KING_RULE, 1, 0
+    horizontal_movement NOTHING_SURROUNDING_BLACK, 1, true, REAL_KING_RULE
+    diagonal_movement   NOTHING_SURROUNDING_BLACK, 1, true, REAL_KING_RULE
 
     check_check do |board, from, to|
-      run_rule(KING_RULE, board, from, to)[
+      run_rule(REAL_KING_RULE, board, from, to)[
         FIRST,
         SECOND,
         SECOND,
@@ -378,7 +385,7 @@ group 'Piece Functions' do
     assert 'cannot move more than one' do
       expect_invalid(
         run_rule(
-          KING_RULE,
+          REAL_KING_RULE,
           NOTHING_SURROUNDING_BLACK,
           FROM_POSITION,
           shift_position(FROM_POSITION, 2, 0)
@@ -389,7 +396,7 @@ group 'Piece Functions' do
     assert 'cannot move arbitrarily' do
       expect_invalid(
         run_rule(
-          KING_RULE,
+          REAL_KING_RULE,
           NOTHING_SURROUNDING_BLACK,
           FROM_POSITION,
           shift_position(FROM_POSITION, 2, 1)
@@ -410,7 +417,7 @@ group 'Piece Functions' do
 
       expect_invalid(
         run_rule(
-          KING_RULE,
+          REAL_KING_RULE,
           near_check,
           FROM_POSITION,
           shift_position(FROM_POSITION, -1, 0)
@@ -422,7 +429,7 @@ group 'Piece Functions' do
       castle_result  = proc { |result| result == CASTLE }
       invalid_result = proc { |result| result == INVALID }
       rule_proc      = proc { |board, from, to|
-                         run_rule(KING_RULE, board, from, to, NULL_POS, NULL_POS)
+                         run_rule(REAL_KING_RULE, board, from, to, NULL_POS, NULL_POS)
                        }
 
       group 'is valid' do
@@ -457,7 +464,7 @@ group 'Piece Functions' do
                          amount = LEFT[from].to_i > LEFT[to].to_i ? 1 : -1
 
                          run_rule(
-                           KING_RULE,
+                           REAL_KING_RULE,
                            board,
                            shift_position(from, amount, 0),
                            to
@@ -472,7 +479,7 @@ group 'Piece Functions' do
                          amount = IS_BLACK[GET_POSITION[board, from]][1, -1]
 
                          run_rule(
-                           KING_RULE,
+                           REAL_KING_RULE,
                            board,
                            shift_position(from, 0, amount),
                            to
@@ -593,7 +600,7 @@ group 'Piece Functions' do
         .all? do |valid_move|
           expect_valid(
             run_rule(
-              KNIGHT_RULE,
+              REAL_KNIGHT_RULE,
               board,
               FROM_POSITION,
               valid_move
@@ -603,8 +610,8 @@ group 'Piece Functions' do
       end
     end
 
-    capturing_basics   KNIGHT_RULE, 1, 2
-    cannot_cause_check KNIGHT_RULE, 1, 2
+    capturing_basics   REAL_KNIGHT_RULE, 1, 2
+    cannot_cause_check REAL_KNIGHT_RULE, 1, 2
     knights_moves      NOTHING_SURROUNDING_BLACK
 
     group 'if a piece is in the way' do
@@ -614,7 +621,7 @@ group 'Piece Functions' do
     assert 'cannot move arbitrarily' do
       expect_invalid(
         run_rule(
-          KNIGHT_RULE,
+          REAL_KNIGHT_RULE,
           NOTHING_SURROUNDING_BLACK,
           FROM_POSITION,
           shift_position(FROM_POSITION, -1, 1)
@@ -634,14 +641,14 @@ group 'Piece Functions' do
                       [0, 0, 0, 0, 0, 0, 0, 0]]
                      .to_board
 
-    capturing_basics   PAWN_RULE, 1, 1
-    cannot_cause_check PAWN_RULE, 0, 1
+    capturing_basics   REAL_PAWN_RULE, 1, 1
+    cannot_cause_check REAL_PAWN_RULE, 0, 1
 
     group 'can move forward by one' do
       assert 'white' do
         expect_valid(
           run_rule(
-            PAWN_RULE,
+            REAL_PAWN_RULE,
             starting_board,
             position(4, 6),
             position(4, 5)
@@ -652,7 +659,7 @@ group 'Piece Functions' do
       assert 'black' do
         expect_valid(
           run_rule(
-            PAWN_RULE,
+            REAL_PAWN_RULE,
             starting_board,
             position(1, 1),
             position(1, 2)
@@ -665,7 +672,7 @@ group 'Piece Functions' do
       assert 'white' do
         expect_valid(
           run_rule(
-            PAWN_RULE,
+            REAL_PAWN_RULE,
             starting_board,
             position(4, 6),
             position(4, 4)
@@ -676,7 +683,7 @@ group 'Piece Functions' do
       assert 'black' do
         expect_valid(
           run_rule(
-            PAWN_RULE,
+            REAL_PAWN_RULE,
             starting_board,
             position(1, 1),
             position(1, 3)
@@ -699,7 +706,7 @@ group 'Piece Functions' do
       assert 'white' do
         expect_invalid(
           run_rule(
-            PAWN_RULE,
+            REAL_PAWN_RULE,
             later_board,
             position(4, 5),
             position(4, 3)
@@ -710,7 +717,7 @@ group 'Piece Functions' do
       assert 'black' do
         expect_invalid(
           run_rule(
-            PAWN_RULE,
+            REAL_PAWN_RULE,
             later_board,
             position(1, 2),
             position(1, 4)
@@ -723,7 +730,7 @@ group 'Piece Functions' do
       assert 'white' do
         expect_invalid(
           run_rule(
-            PAWN_RULE,
+            REAL_PAWN_RULE,
             starting_board,
             position(4, 6),
             position(4, 7)
@@ -734,7 +741,7 @@ group 'Piece Functions' do
       assert 'black' do
         expect_invalid(
           run_rule(
-            PAWN_RULE,
+            REAL_PAWN_RULE,
             starting_board,
             position(1, 1),
             position(1, 0)
@@ -747,7 +754,7 @@ group 'Piece Functions' do
       assert 'white' do
         expect_invalid(
           run_rule(
-            PAWN_RULE,
+            REAL_PAWN_RULE,
             starting_board,
             position(4, 6),
             position(5, 5)
@@ -758,7 +765,7 @@ group 'Piece Functions' do
       assert 'black' do
         expect_invalid(
           run_rule(
-            PAWN_RULE,
+            REAL_PAWN_RULE,
             starting_board,
             position(1, 1),
             position(0, 2)
@@ -771,7 +778,7 @@ group 'Piece Functions' do
       assert 'white' do
         expect_invalid(
           run_rule(
-            PAWN_RULE,
+            REAL_PAWN_RULE,
             starting_board,
             position(4, 6),
             position(5, 6)
@@ -782,7 +789,7 @@ group 'Piece Functions' do
       assert 'black' do
         expect_invalid(
           run_rule(
-            PAWN_RULE,
+            REAL_PAWN_RULE,
             starting_board,
             position(1, 1),
             position(0, 1)
@@ -805,7 +812,7 @@ group 'Piece Functions' do
       assert 'white' do
         expect_invalid(
           run_rule(
-            PAWN_RULE,
+            REAL_PAWN_RULE,
             sideways_capture_board,
             position(4, 6),
             position(5, 6)
@@ -816,7 +823,7 @@ group 'Piece Functions' do
       assert 'black' do
         expect_invalid(
           run_rule(
-            PAWN_RULE,
+            REAL_PAWN_RULE,
             sideways_capture_board,
             position(1, 1),
             position(0, 1)
@@ -839,7 +846,7 @@ group 'Piece Functions' do
       assert 'white' do
         expect_valid(
           run_rule(
-            PAWN_RULE,
+            REAL_PAWN_RULE,
             capture_board,
             position(4, 5),
             position(5, 4)
@@ -850,7 +857,7 @@ group 'Piece Functions' do
       assert 'black' do
         expect_valid(
           run_rule(
-            PAWN_RULE,
+            REAL_PAWN_RULE,
             capture_board,
             position(1, 2),
             position(0, 3)
@@ -873,7 +880,7 @@ group 'Piece Functions' do
       assert 'white' do
         expect_invalid(
           run_rule(
-            PAWN_RULE,
+            REAL_PAWN_RULE,
             capture_board,
             position(4, 5),
             position(5, 6)
@@ -884,7 +891,7 @@ group 'Piece Functions' do
       assert 'black' do
         expect_invalid(
           run_rule(
-            PAWN_RULE,
+            REAL_PAWN_RULE,
             capture_board,
             position(1, 2),
             position(0, 1)
@@ -907,7 +914,7 @@ group 'Piece Functions' do
       assert 'white' do
         expect_en_passant(
           run_rule(
-            PAWN_RULE,
+            REAL_PAWN_RULE,
             en_passant_board,
             position(2, 3),
             position(1, 2),
@@ -920,7 +927,7 @@ group 'Piece Functions' do
       assert 'black' do
         expect_en_passant(
           run_rule(
-            PAWN_RULE,
+            REAL_PAWN_RULE,
             en_passant_board,
             position(3, 4),
             position(4, 5),
@@ -944,7 +951,7 @@ group 'Piece Functions' do
         assert 'white' do
           expect_invalid(
             run_rule(
-              PAWN_RULE,
+              REAL_PAWN_RULE,
               non_passant_board,
               position(2, 3),
               position(1, 2),
@@ -957,7 +964,7 @@ group 'Piece Functions' do
         assert 'black' do
           expect_invalid(
             run_rule(
-              PAWN_RULE,
+              REAL_PAWN_RULE,
               non_passant_board,
               position(3, 4),
               position(4, 5),
@@ -972,7 +979,7 @@ group 'Piece Functions' do
         assert 'white' do
           expect_invalid(
             run_rule(
-              PAWN_RULE,
+              REAL_PAWN_RULE,
               en_passant_board,
               position(2, 3),
               position(1, 2),
@@ -985,7 +992,7 @@ group 'Piece Functions' do
         assert 'black' do
           expect_invalid(
             run_rule(
-              PAWN_RULE,
+              REAL_PAWN_RULE,
               en_passant_board,
               position(3, 4),
               position(4, 5),

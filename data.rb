@@ -410,3 +410,7 @@ UPDATE_BOARD = ->(older, board) {
 WITH_BASIC_INFO = ->(state, func) {
   func[GET_BOARD[state], GET_FROM[state], GET_TO[state]]
 }
+
+# Z Combinator
+
+Z = ->(f) { ->(a) { a[a] }[ ->(x) { f[->(v) { x[x][v] }] } ] }

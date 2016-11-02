@@ -406,3 +406,7 @@ UPDATE_BOARD = ->(older, board) {
     GET_SEED[older]
   ]
 }
+
+WITH_BASIC_INFO = ->(state, func) {
+  func[GET_BOARD[state], GET_FROM[state], GET_TO[state]]
+}

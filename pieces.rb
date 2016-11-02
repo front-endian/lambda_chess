@@ -63,8 +63,8 @@ BASIC_CHECKS = ->(rule) {
     ][
       -> { INVALID },
       -> {
-        ->(validity) {
-          IF[validity[FIRST, SECOND, FIRST, FIRST]][
+        ->(move_func) {
+          IF[ISNT_INVALID[move_func]][
             -> {
               ->(moved_piece, after_move) {
                 ->(king_data) {
@@ -100,14 +100,14 @@ BASIC_CHECKS = ->(rule) {
                 # "after_move"
                 NORMAL_MOVE[board, from, to, ZERO]
               ][
-                validity,
+                move_func,
                 INVALID
               ]
             },
-            -> { validity },
+            -> { move_func },
           ]
         }[
-          # "validity"
+          # "move_func"
           rule[board, from, to, last_from, last_to]
         ]
       }

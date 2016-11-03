@@ -394,6 +394,19 @@ UPDATE_ALL_BUT_FROM_TO = ->(older, newer) {
   ]
 }
 
+UPDATE_LAST_FROM_TO = ->(older, newer) {
+  CREATE_STATE[
+    GET_FROM[older],
+    GET_TO[older],
+    GET_FROM[newer],
+    GET_TO[newer],
+    GET_BOARD[older],
+    GET_SCORE[older],
+    GET_PROMOTION[older],
+    GET_SEED[older]
+  ]
+}
+
 UPDATE_BOARD = ->(older, board) {
   CREATE_STATE[
     GET_FROM[older],

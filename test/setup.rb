@@ -9,6 +9,7 @@ require_relative './../data'
 require_relative './../board'
 require_relative './../pieces'
 require_relative './../ai'
+require_relative './../play'
 
 class Proc
   def to_i
@@ -29,6 +30,19 @@ class Proc
 
   def vector_to_a
     VECTOR_LIST[self].list_to_a(VECTOR_SIZE[self].to_i)
+  end
+
+  def board_to_a
+    self.list_to_a(8)
+        .map { |row|
+          row.list_to_a(8).map { |piece|
+            GET_VALUE[piece].to_i + IS_BLACK[piece][KING_VALUE.to_i, 0]
+          }
+        }.flatten
+  end
+
+  def position_to_a
+    [LEFT[self].to_i, RIGHT[self].to_i]
   end
 end
 

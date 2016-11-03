@@ -27,8 +27,7 @@ ADVANCE_STATE = ->(state) {
                 GET_TO[state],
                 GET_PROMOTION[state]
               ]
-            ],
-            RIGHT[maybe_func]
+            ]
           ]
         },
         -> { if_invalid[] }
@@ -139,6 +138,8 @@ STRAIGHT_LINE_RULE = ->(rule) {
 }
 
 # Piece Rules
+
+NULL_RULE = ->(_) { ->(_) { INVALID } }
 
 ROOK_RULE = STRAIGHT_LINE_RULE[
   ->(delta_x, delta_y) {
@@ -463,19 +464,19 @@ GET_RULE = Z[->(get_rule) {
   ->(piece) {
     ->(piece_value) {
       IS_EQUAL[piece_value, PAWN_VALUE][
-        PAWN_RULE[get_rule],
+        PAWN_RULE,
       IS_EQUAL[piece_value, ROOK_VALUE][
-        ROOK_RULE[get_rule],
+        ROOK_RULE,
       IS_EQUAL[piece_value, KNIGHT_VALUE][
-        KNIGHT_RULE[get_rule],
+        KNIGHT_RULE,
       IS_EQUAL[piece_value, BISHOP_VALUE][
-        BISHOP_RULE[get_rule],
+        BISHOP_RULE,
       IS_EQUAL[piece_value, QUEEN_VALUE][
-        QUEEN_RULE[get_rule],
+        QUEEN_RULE,
       IS_EQUAL[piece_value, KING_VALUE][
-        KING_RULE[get_rule],
-        ZERO
-      ]]]]]]
+        KING_RULE,
+        NULL_RULE
+      ]]]]]][get_rule]
     }[
       # "piece_value"
       GET_VALUE[piece]

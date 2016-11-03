@@ -73,7 +73,7 @@ POSSIBLE_MOVES = ->(state, color, possible_tos) {
             GET_SEED[state]
           ]
         ][
-          ->(new_state, _) { VECTOR_APPEND[possible_moves, new_state] },
+          ->(new_state) { VECTOR_APPEND[possible_moves, new_state] },
           -> { possible_moves }
         ]
       },

@@ -8,7 +8,7 @@ require 'tet'
 require_relative './../data'
 require_relative './../board'
 require_relative './../pieces'
-require_relative './../play'
+require_relative './../ai'
 
 class Proc
   def to_i

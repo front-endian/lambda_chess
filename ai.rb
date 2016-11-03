@@ -4,19 +4,7 @@
 # This software may be modified and distributed under the
 # terms of the three-clause BSD license. See LICENSE.txt
 
-PLAY = ->(state) {
-  ->(move_type) {
-    ADVANCE_STATE[state][
-      ->(new_state, _) { BLACK_AI[new_state] },
-      -> { state }
-    ]
-  }[
-    # "move_type"
-    -> {
-      GET_RULE[GET_POSITION[board, from]][board, from, to, from, to]
-    }
-  ]
-}
+# AI Functions
 
 MAX_PIECE_TOTAL = ADD[
   MULTIPLY[PAWN_VALUE, EIGHT],

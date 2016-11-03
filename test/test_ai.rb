@@ -6,7 +6,7 @@
 
 require_relative './setup'
 
-group 'Play Functions' do
+group 'AI Functions' do
   group 'MAX_PIECE_TOTAL' do
     assert 'has the correct value' do
       MAX_PIECE_TOTAL.to_i == (GET_VALUE[BP].to_i * 8) +

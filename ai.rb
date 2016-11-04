@@ -27,21 +27,37 @@ SCORE = ->(board) {
   BOARD_REDUCE[
     board,
     ->(memo, piece, position) {
-      IS_BLACK[piece][
-        ADD,
-        SUBTRACT
-      ][
-        memo,
-        GET_VALUE[piece]
+      ADD[
+        IS_BLACK[piece][
+          ADD,
+          SUBTRACT
+        ][
+          memo,
+          GET_VALUE[piece]
+        ],
+        IF[IS_WHITE[piece]][
+          -> {
+            IF[IS_EQUAL[KING_VALUE, GET_VALUE[piece]]][
+              -> {
+                IS_NOT_IN_CHECK[board, position, position, GET_RULE][
+                  ZERO,
+                  MAX_PIECE_TOTAL
+                ]
+              },
+              -> { ZERO }
+            ]
+          },
+          -> { ZERO }
+        ]
       ]
     },
     MAX_PIECE_TOTAL
   ]
 }
 
-FROM_TO_REDUCE = ->(from_vector, possible_tos, func, initial) {
+FROM_TO_REDUCE = ->(possible_froms, possible_tos, func, initial) {
   VECTOR_REDUCE[
-    from_vector,
+    possible_froms,
     ->(memo, from_position) {
       VECTOR_REDUCE[
         possible_tos,
@@ -89,7 +105,10 @@ POSSIBLE_BLACK_RESPONSES = ->(state) {
   POSSIBLE_MOVES[
     state,
     BLACK,
-    POSITION_SELECT[GET_BOARD[state], ALWAYS_FIRST]
+    POSITION_SELECT[
+      GET_BOARD[state],
+      ->(piece) { NOT[IS_BLACK[piece]] }
+    ]
   ]
 }
 

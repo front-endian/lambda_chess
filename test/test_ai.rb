@@ -199,5 +199,21 @@ group 'AI Functions' do
       expect_truthy(SAME_POSITION[GET_TO[result_1], position(6, 6)]) &&
       expect_truthy(SAME_POSITION[GET_TO[result_2], position(6, 6)])
     end
+
+    assert 'prefers putting white into check' do
+      board = [[WK,0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0],
+               [0, BP,0, 0, 0, 0, 0, 0],
+               [0, BR,0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0]]
+              .to_board
+
+      result = RIGHT[run_black_ai(board, 1.to_peano)]
+
+      expect_truthy SAME_POSITION[GET_TO[result], position(0, 5)]
+    end
   end
 end

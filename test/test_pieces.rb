@@ -350,10 +350,11 @@ group 'Piece Functions' do
 
   group 'IS_NOT_IN_CHECK' do
     check_check do |board, from, to|
-      IS_NOT_IN_CHECK[board, from, to, GET_RULE]
+      IS_NOT_IN_CHECK[NORMAL_MOVE[board, from, to, ZERO], to, GET_RULE]
     end
 
     assert 'allows moving into same position with own pieces nearby' do
+      to    = position(4, 2)
       board = [[0, 0, 0, 0, 0, 0, 0, 0],
                [0, 0, 0, 0, 0, 0, 0, 0],
                [BR,0, 0, 0, BK,0, 0, 0],
@@ -364,7 +365,7 @@ group 'Piece Functions' do
                [0, 0, 0, 0, 0, 0, 0, 0]]
               .to_board
 
-      expect_truthy IS_NOT_IN_CHECK[board, position(4, 2), position(4, 2), GET_RULE]
+      expect_truthy IS_NOT_IN_CHECK[NORMAL_MOVE[board, position(4, 2), to, ZERO], to, GET_RULE]
     end
   end
 

@@ -73,7 +73,6 @@ BASIC_CHECKS = ->(rule) {
                                 IS_NOT_IN_CHECK[
                                   after_move,
                                   king_position,
-                                  king_position,
                                   get_rule
                                 ][
                                   FIRST,
@@ -209,9 +208,9 @@ VALID_CASTLE = ->(state, get_rule) {
             ]
           ][
             -> {
-              IF[IS_NOT_IN_CHECK[board, from, from, get_rule]][
+              IF[IS_NOT_IN_CHECK[NORMAL_MOVE[board, from, from, ZERO], from, get_rule]][
                 -> {
-                  IF[IS_NOT_IN_CHECK[board, from, mid_to, get_rule]][
+                  IF[IS_NOT_IN_CHECK[NORMAL_MOVE[board, from, mid_to, ZERO], mid_to, get_rule]][
                     # Don't check IS_NOT_IN_CHECK[board, from, to] since
                     # BASIC_CHECKS does that.
                     -> { FIRST },
@@ -242,51 +241,33 @@ VALID_CASTLE = ->(state, get_rule) {
   ]
 }
 
-IS_NOT_IN_CHECK = ->(board, from, to, get_rule) {
-  ->(after_move) {
-    BOARD_REDUCE[
-      after_move,
-      ->(memo, piece, position) {
-        IF[
-          OR[
-            IS_EMPTY[piece],
-            SAME_POSITION[position, to]
-          ]
-        ][
-          # If this is the king under test or an empty space
-          -> { memo },
-          # If this is another piece
-          -> {
-            IF[memo][
-              -> {
-                get_rule[piece][
-                  CREATE_STATE[
-                    position,
-                    to,
-                    from,
-                    to,
-                    after_move,
-                    ZERO,
-                    ZERO,
-                    ZERO
-                  ]
-                ][
-                  SECOND,
-                  FIRST,
-                  SECOND,
-                  SECOND
-                ]
-              },
-              -> { SECOND }
-            ]
-          }
+IS_NOT_IN_CHECK = ->(board, to, get_rule) {
+  FROM_TO_REDUCE[
+    POSITION_SELECT[
+      board,
+      ->(piece) {
+        IS_BLACK[GET_POSITION[board, to]][
+          IS_WHITE[piece],
+          IS_BLACK[piece]
         ]
-      },
-      FIRST
-    ]
-  }[
-    # "after_move"
-    NORMAL_MOVE[board, from, to, ZERO]
+      }
+    ],
+    VECTOR_APPEND[EMPTY_VECTOR, to],
+    ->(memo, from, to) {
+      IF[memo][
+        -> {
+          NOT[
+            ISNT_INVALID[
+              get_rule[GET_POSITION[board, from]][
+                CREATE_STATE[from, to, from, to, board, ZERO, ZERO, ZERO]
+              ]
+            ]
+          ]
+        },
+        -> { SECOND }
+      ]
+    },
+    FIRST
   ]
 }
 

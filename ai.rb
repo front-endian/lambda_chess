@@ -39,7 +39,7 @@ SCORE = ->(board) {
           -> {
             IF[IS_EQUAL[KING_VALUE, GET_VALUE[piece]]][
               -> {
-                IS_NOT_IN_CHECK[board, position, position, GET_RULE][
+                IS_NOT_IN_CHECK[board, position, GET_RULE][
                   ZERO,
                   MAX_PIECE_TOTAL
                 ]

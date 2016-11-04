@@ -7,15 +7,6 @@
 require_relative './setup'
 
 group 'Play' do
-  def board_array board
-    board.list_to_a(8)
-         .map { |row|
-           row.list_to_a(8).map { |piece|
-             GET_VALUE[piece].to_i + IS_BLACK[piece][KING_VALUE.to_i, 0]
-           }
-         }.flatten
-  end
-
   def same_board board_a, board_b
     board_a.board_to_a == board_b.board_to_a
   end
@@ -45,12 +36,16 @@ group 'Play' do
     ]
   end
 
+  def perform_move board, from, to
+    NORMAL_MOVE[board, position(*from), position(*to), nil]
+  end
+
   def black_response board, from, to
     GET_BOARD[
       RIGHT[
         BLACK_AI[
           make_state(
-            NORMAL_MOVE[board, position(*from), position(*to), nil],
+            perform_move(board, from, to),
             [from, to],
             [from, to]
           )
@@ -73,28 +68,6 @@ group 'Play' do
     }[:state]
   end
 
-  def def_expect_unchanged type
-    define_method("expect_#{type}") do |initial_state|
-      result = perform_play(type, initial_state)
-
-      assert 'board is unchanged' do
-        same_board(GET_BOARD[initial_state], GET_BOARD[result])
-      end
-
-      assert '"last_from" is unchanged' do
-        same_position(GET_LAST_FROM[initial_state], GET_LAST_FROM[result])
-      end
-
-      assert '"last_to" is unchanged' do
-        same_position(GET_LAST_TO[initial_state], GET_LAST_TO[result])
-      end
-    end
-  end
-
-  def_expect_unchanged :reject
-  def_expect_unchanged :loss
-  def_expect_unchanged :forfit
-
   def expect_accept initial_state, result_board
     result = perform_play(:accept, initial_state)
 
@@ -108,6 +81,30 @@ group 'Play' do
 
     assert '"last_to" is set to "to"' do
       same_position(GET_TO[initial_state], GET_LAST_TO[result])
+    end
+  end
+
+  def expect_reject initial_state
+    result = perform_play(:reject, initial_state)
+
+    assert 'board is unchanged' do
+      same_board(GET_BOARD[initial_state], GET_BOARD[result])
+    end
+
+    assert '"last_from" is unchanged' do
+      same_position(GET_LAST_FROM[initial_state], GET_LAST_FROM[result])
+    end
+
+    assert '"last_to" is unchanged' do
+      same_position(GET_LAST_TO[initial_state], GET_LAST_TO[result])
+    end
+  end
+
+  def expect_end type, initial_state, result_board
+    result = perform_play(type, initial_state)
+
+    assert 'board is updated' do
+      same_board(result_board, GET_BOARD[result])
     end
   end
 
@@ -130,6 +127,52 @@ group 'Play' do
     expect_accept(
       make_state(INITIAL_BOARD, [from, to]),
       black_response(INITIAL_BOARD, from, to)
+    )
+  end
+
+  assert 'causing checkmate' do
+    from  = [5, 3]
+    to    = [6, 3]
+    board = [[0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, WR,0, 0],
+             [0, 0, 0, 0, 0, WN,0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             [WR,0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, BK]]
+            .to_board
+
+    expect_end(
+      :forfit,
+      make_state(board, [from, to]),
+      perform_move(board, from, to)
+    )
+  end
+
+  assert 'being forced into checkmate' do
+    from       = [6, 0]
+    to         = [7, 0]
+    black_from = [5, 2]
+    black_to   = [7, 2]
+    board      = [[0, 0, 0, 0, 0, 0, WK,0],
+                  [BR,0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, BR,0, 0],
+                  [0, 0, 0, 0, 0, 0, BR,0],
+                  [0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0]]
+                 .to_board
+
+    expect_end(
+      :loss,
+      make_state(board, [from, to]),
+      perform_move(
+        perform_move(board, from, to),
+        black_from,
+        black_to
+      )
     )
   end
 end

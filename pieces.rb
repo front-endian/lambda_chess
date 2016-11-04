@@ -60,25 +60,33 @@ BASIC_CHECKS = ->(rule) {
           ][
             -> { INVALID },
             -> {
-              ->(move_func) {
-                IF[ISNT_INVALID[move_func]][
+              ->(move_type) {
+                IF[ISNT_INVALID[move_type]][
                   -> {
                     ->(moved_piece, after_move) {
-                      ->(king_data) {
+                      ->(my_kings_data) {
                         VECTOR_REDUCE[
-                          king_data,
+                          my_kings_data,
                           ->(memo, king_position) {
-                            IS_NOT_IN_CHECK[
-                              after_move,
-                              king_position,
-                              king_position,
-                              get_rule
+                            IF[memo][
+                              -> {
+                                IS_NOT_IN_CHECK[
+                                  after_move,
+                                  king_position,
+                                  king_position,
+                                  get_rule
+                                ][
+                                  FIRST,
+                                  SECOND
+                                ]
+                              },
+                              -> { SECOND }
                             ]
                           },
                           FIRST
                         ]
                       }[
-                        # "king_data"
+                        # "my_kings_data"
                         POSITION_SELECT[
                           after_move,
                           ->(possible) {
@@ -98,14 +106,14 @@ BASIC_CHECKS = ->(rule) {
                       # "after_move"
                       NORMAL_MOVE[board, from, to, ZERO]
                     ][
-                      move_func,
+                      move_type,
                       INVALID
                     ]
                   },
-                  -> { move_func },
+                  -> { move_type }
                 ]
               }[
-                # "move_func"
+                # "move_type"
                 rule[state, get_rule]
               ]
             }

@@ -15,7 +15,7 @@ PLAY = ->(state, accept, reject, loss, forfit) {
               IF[LEFT[response]][
                 -> {
                   ->(response_state) {
-                    IF[ISNT_WHITE_CHECKMATE[response_state]][
+                    IF[ISNT_WHITE_CHECKMATE[GET_BOARD[response_state]]][
                       -> { accept[response_state] },
                       -> { loss[response_state] }
                     ]
@@ -46,40 +46,49 @@ PLAY = ->(state, accept, reject, loss, forfit) {
 ISNT_WHITE_CHECKMATE = ->(board) {
   ->(king_position_vector) {
     ->(king_position) {
-      FROM_TO_REDUCE[
-        king_position_vector,
-        BOARD_REDUCE[
-          board,
-          ->(memo, piece, position) {
-            AND[
-              NOT[IS_GREATER_OR_EQUAL[
-                TWO,
-                DELTA[position, king_position, RIGHT]
-              ]],
-              NOT[IS_GREATER_OR_EQUAL[
-                TWO,
-                DELTA[position, king_position, LEFT]
-              ]]
-            ][
-              VECTOR_APPEND[memo, position],
-              memo
+      IF[
+        FROM_TO_REDUCE[
+          king_position_vector,
+          BOARD_REDUCE[
+            board,
+            ->(memo, piece, position) {
+              AND[
+                NOT[IS_GREATER_OR_EQUAL[
+                  TWO,
+                  DELTA[position, king_position, RIGHT]
+                ]],
+                NOT[IS_GREATER_OR_EQUAL[
+                  TWO,
+                  DELTA[position, king_position, LEFT]
+                ]]
+              ][
+                VECTOR_APPEND[memo, position],
+                memo
+              ]
+            },
+            EMPTY_VECTOR
+          ],
+          ->(memo, from, to) {
+            IF[memo][
+              -> { FIRST },
+              -> {
+                ISNT_INVALID[
+                  KING_RULE[GET_RULE][
+                    CREATE_STATE[from, to, from, to, board, ZERO, WHITE_QUEEN, ZERO]
+                  ]
+                ]
+              }
             ]
           },
-          EMPTY_VECTOR
-        ],
-        ->(memo, from, to) {
-          IF[memo][
-            -> { FIRST },
-            -> {
-              ISNT_INVALID[
-                KING_RULE[
-                  CREATE_STATE[from, to, from, to, board, ZERO, WHITE_QUEEN, ZERO]
-                ]
-              ]
-            }
-          ]
-        },
-        SECOND
+          SECOND
+        ]
+      ][
+        # King can move
+        -> { FIRST },
+        # King can't move
+        -> {
+          IS_NOT_IN_CHECK[board, king_position, GET_RULE]
+        }
       ]
     }[
       # "king_position"

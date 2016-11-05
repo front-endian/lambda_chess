@@ -19,7 +19,7 @@ ADVANCE_STATE = ->(state) {
       IF[ISNT_INVALID[move_type]][
         -> {
           if_valid[
-            UPDATE_BOARD[
+            UPDATE_AFTER_MOVE[
               state,
               move_type[
                 NORMAL_MOVE,

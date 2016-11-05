@@ -8,36 +8,29 @@ PLAY = ->(state, accept, reject, loss, forfit, seed) {
   IF[IS_BLACK[GET_POSITION[GET_BOARD[state], GET_FROM[state]]]][
     -> { reject[state] },
     -> {
-      ->(move_type) {
-        ADVANCE_STATE[state][
-          ->(new_state) {
-            ->(response) {
-              IF[LEFT[response]][
-                -> {
-                  ->(response_state) {
-                    IF[ISNT_WHITE_CHECKMATE[GET_BOARD[response_state]]][
-                      -> { accept[response_state] },
-                      -> { loss[response_state] }
-                    ]
-                  }[
-                    # "response_state"
-                    UPDATE_LAST_FROM_TO[RIGHT[response], state]
+      ADVANCE_STATE[state][
+        ->(new_state) {
+          ->(response) {
+            IF[LEFT[response]][
+              -> {
+                ->(response_state) {
+                  IF[ISNT_WHITE_CHECKMATE[GET_BOARD[response_state]]][
+                    -> { accept[response_state] },
+                    -> { loss[response_state] }
                   ]
-                },
-                -> { forfit[new_state] }
-              ]
-            }[
-              # "response"
-              BLACK_AI[new_state, seed]
+                }[
+                  # "response_state"
+                  UPDATE_LAST_FROM_TO[RIGHT[response], state]
+                ]
+              },
+              -> { forfit[new_state] }
             ]
-          },
-          -> { reject[state] }
-        ]
-      }[
-        # "move_type"
-        -> {
-          GET_RULE[GET_POSITION[board, from]][board, from, to, from, to]
-        }
+          }[
+            # "response"
+            BLACK_AI[new_state, seed]
+          ]
+        },
+        -> { reject[state] }
       ]
     }
   ]

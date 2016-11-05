@@ -401,12 +401,12 @@ UPDATE_LAST_FROM_TO = ->(older, newer) {
   ]
 }
 
-UPDATE_BOARD = ->(older, board) {
+UPDATE_AFTER_MOVE = ->(older, board) {
   CREATE_STATE[
     GET_FROM[older],
     GET_TO[older],
-    GET_LAST_FROM[older],
-    GET_LAST_TO[older],
+    GET_FROM[older],
+    GET_TO[older],
     board,
     SCORE[board, GET_TO[older]],
     GET_PROMOTION[older]

@@ -23,7 +23,7 @@ group 'Play' do
     proc { |new_state| { state: new_state, type: type } }
   end
 
-  def make_state board, move, last_move = [[0, 0], [0, 0]], promotion: WHITE_QUEEN, seed: 1
+  def make_state board, move, last_move = [[0, 0], [0, 0]], promotion: WHITE_QUEEN
     CREATE_STATE[
       position(*move.first),
       position(*move.last),
@@ -31,8 +31,7 @@ group 'Play' do
       position(*last_move.last),
       board,
       ZERO,
-      promotion,
-      seed.to_peano
+      promotion
     ]
   end
 
@@ -40,7 +39,7 @@ group 'Play' do
     NORMAL_MOVE[board, position(*from), position(*to), nil]
   end
 
-  def black_response board, from, to
+  def black_response board, from, to, seed: 1
     GET_BOARD[
       RIGHT[
         BLACK_AI[
@@ -48,19 +47,21 @@ group 'Play' do
             perform_move(board, from, to),
             [from, to],
             [from, to]
-          )
+          ),
+          seed.to_peano
         ]
       ]
     ]
   end
 
-  def perform_play type, state
+  def perform_play type, state, seed
     PLAY[
       state,
       return_type(:accept),
       return_type(:reject),
       return_type(:loss),
-      return_type(:forfit)
+      return_type(:forfit),
+      seed.to_peano
     ].tap { |result|
       assert "#{type} proc is called" do
         result[:type] == type
@@ -68,10 +69,10 @@ group 'Play' do
     }[:state]
   end
 
-  def expect_accept initial_state, result_board
-    result = perform_play(:accept, initial_state)
+  def expect_accept initial_state, result_board, seed: 1
+    result = perform_play(:accept, initial_state, seed)
 
-    assert 'board updated' do
+    assert 'board updated correctly' do
       same_board(result_board, GET_BOARD[result])
     end
 
@@ -84,8 +85,8 @@ group 'Play' do
     end
   end
 
-  def expect_reject initial_state
-    result = perform_play(:reject, initial_state)
+  def expect_reject initial_state, seed: 1
+    result = perform_play(:reject, initial_state, seed)
 
     assert 'board is unchanged' do
       same_board(GET_BOARD[initial_state], GET_BOARD[result])
@@ -100,27 +101,27 @@ group 'Play' do
     end
   end
 
-  def expect_end type, initial_state, result_board
-    result = perform_play(type, initial_state)
+  def expect_end type, initial_state, result_board, seed: 1
+    result = perform_play(type, initial_state, seed)
 
     assert 'board is updated' do
       same_board(result_board, GET_BOARD[result])
     end
   end
 
-  assert 'moving an empty space' do
+  group 'moving an empty space' do
     expect_reject make_state(INITIAL_BOARD, [[0, 3], [1, 4]])
   end
 
-  assert 'moving a black piece' do
+  group 'moving a black piece' do
     expect_reject make_state(INITIAL_BOARD, [[1, 1], [1, 2]])
   end
 
-  assert 'capturing self' do
+  group 'capturing self' do
     expect_reject make_state(INITIAL_BOARD, [[2, 6], [2, 6]])
   end
 
-  assert 'valid move' do
+  group 'valid move' do
     from = [2, 6]
     to   = [2, 5]
 
@@ -130,7 +131,34 @@ group 'Play' do
     )
   end
 
-  assert 'causing checkmate' do
+  group 'both can castle' do
+    from = [4, 7]
+    to   = [6, 7]
+
+    board = [[BR,0, 0, 0, BK,0, 0, BR],
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             [BP,BP,BP,BP,BP,BP,BP,BP],
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             [WR,0, 0, 0, WK,0, 0, WR]]
+            .to_board
+
+    result = [[BR,0, 0, 0, 0, BR,BK,0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [BP,BP,BP,BP,BP,BP,BP,BP],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [WR,0, 0, 0, 0, WR,WK,0]]
+             .to_board
+
+    expect_accept make_state(board, [from, to]), result, seed: 8
+  end
+
+  group 'causing checkmate' do
     from  = [5, 3]
     to    = [6, 3]
     board = [[0, 0, 0, 0, 0, 0, 0, 0],
@@ -150,19 +178,19 @@ group 'Play' do
     )
   end
 
-  assert 'being forced into checkmate' do
-    from       = [6, 0]
-    to         = [7, 0]
-    black_from = [5, 2]
-    black_to   = [7, 2]
-    board      = [[0, 0, 0, 0, 0, 0, WK,0],
-                  [BR,0, 0, 0, 0, 0, 0, 0],
+  group 'being forced into checkmate' do
+    from       = [5, 7]
+    to         = [6, 7]
+    black_from = [5, 5]
+    black_to   = [6, 5]
+    board      = [[0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, BP,BR],
                   [0, 0, 0, 0, 0, BR,0, 0],
-                  [0, 0, 0, 0, 0, 0, BR,0],
+                  [0, 0, 0, 0, BN,BR,0, 0],
                   [0, 0, 0, 0, 0, 0, 0, 0],
-                  [0, 0, 0, 0, 0, 0, 0, 0],
-                  [0, 0, 0, 0, 0, 0, 0, 0],
-                  [0, 0, 0, 0, 0, 0, 0, 0]]
+                  [0, 0, 0, 0, 0, WK,0, 0]]
                  .to_board
 
     expect_end(

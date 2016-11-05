@@ -4,7 +4,7 @@
 # This software may be modified and distributed under the
 # terms of the three-clause BSD license. See LICENSE.txt
 
-PLAY = ->(state, accept, reject, loss, forfit) {
+PLAY = ->(state, accept, reject, loss, forfit, seed) {
   IF[IS_BLACK[GET_POSITION[GET_BOARD[state], GET_FROM[state]]]][
     -> { reject[state] },
     -> {
@@ -28,7 +28,7 @@ PLAY = ->(state, accept, reject, loss, forfit) {
               ]
             }[
               # "response"
-              BLACK_AI[new_state]
+              BLACK_AI[new_state, seed]
             ]
           },
           -> { reject[state] }
@@ -49,32 +49,14 @@ ISNT_WHITE_CHECKMATE = ->(board) {
       IF[
         FROM_TO_REDUCE[
           king_position_vector,
-          BOARD_REDUCE[
-            board,
-            ->(memo, piece, position) {
-              AND[
-                NOT[IS_GREATER_OR_EQUAL[
-                  TWO,
-                  DELTA[position, king_position, RIGHT]
-                ]],
-                NOT[IS_GREATER_OR_EQUAL[
-                  TWO,
-                  DELTA[position, king_position, LEFT]
-                ]]
-              ][
-                VECTOR_APPEND[memo, position],
-                memo
-              ]
-            },
-            EMPTY_VECTOR
-          ],
+          POSITION_SELECT[board, ALWAYS_FIRST],
           ->(memo, from, to) {
             IF[memo][
               -> { FIRST },
               -> {
                 ISNT_INVALID[
                   KING_RULE[GET_RULE][
-                    CREATE_STATE[from, to, from, to, board, ZERO, WHITE_QUEEN, ZERO]
+                    CREATE_STATE[from, to, from, to, board, ZERO, WHITE_QUEEN]
                   ]
                 ]
               }

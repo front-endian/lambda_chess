@@ -23,7 +23,7 @@ MAX_PIECE_TOTAL = ADD[
   ]
 ]
 
-SCORE = ->(board) {
+SCORE = ->(board, last_moved) {
   BOARD_REDUCE[
     board,
     ->(memo, piece, position) {
@@ -39,9 +39,21 @@ SCORE = ->(board) {
           -> {
             IF[IS_EQUAL[KING_VALUE, GET_VALUE[piece]]][
               -> {
-                IS_NOT_IN_CHECK[board, position, GET_RULE][
-                  ZERO,
-                  MAX_PIECE_TOTAL
+                ISNT_INVALID[
+                  GET_RULE[GET_POSITION[board, last_moved]][
+                    CREATE_STATE[
+                      last_moved,
+                      position,
+                      last_moved,
+                      last_moved,
+                      board,
+                      ZERO,
+                      BLACK_QUEEN
+                    ]
+                  ]
+                ][
+                  MAX_PIECE_TOTAL,
+                  ZERO
                 ]
               },
               -> { ZERO }
@@ -84,9 +96,8 @@ POSSIBLE_MOVES = ->(state, color, possible_tos) {
             GET_LAST_FROM[state],
             GET_LAST_TO[state],
             board,
-            SCORE[board],
-            color[BLACK_QUEEN, WHITE_QUEEN],
-            GET_SEED[state]
+            ZERO,
+            color[BLACK_QUEEN, WHITE_QUEEN]
           ]
         ][
           ->(new_state) { VECTOR_APPEND[possible_moves, new_state] },
@@ -164,7 +175,7 @@ BEST_SET_OF_STATES = ->(states) {
   ]
 }
 
-BEST_MOVE = ->(states) {
+BEST_MOVE = ->(states, seed) {
   IF[IS_ZERO[VECTOR_SIZE[states]]][
     -> { PAIR[SECOND, ZERO] },
     -> {
@@ -173,10 +184,7 @@ BEST_MOVE = ->(states) {
           FIRST,
           NTH[
             VECTOR_LIST[best_vector],
-            MODULUS[
-              GET_SEED[VECTOR_FIRST[best_vector]],
-              VECTOR_SIZE[best_vector]
-            ]
+            MODULUS[seed, VECTOR_SIZE[best_vector]]
           ]
         ]
       }[
@@ -187,14 +195,25 @@ BEST_MOVE = ->(states) {
   ]
 }
 
-BLACK_AI = ->(state) {
-  BEST_MOVE[
-    COUNTER_RESPONSES[
-      COUNTER_RESPONSES[
-        POSSIBLE_BLACK_RESPONSES[state],
-        WHITE
-      ],
-      BLACK
+BLACK_AI = ->(state, seed) {
+  ->(result) {
+    IF[LEFT[result]][
+      -> {
+        ADVANCE_STATE[UPDATE_ALL_BUT_FROM_TO[RIGHT[result], state]][
+          ->(new_state) { PAIR[FIRST, new_state] },
+          -> { PAIR[SECOND, ZERO] }
+        ]
+      },
+      -> { result }
+    ]
+  }[
+    # "result"
+    BEST_MOVE[
+        COUNTER_RESPONSES[
+          POSSIBLE_BLACK_RESPONSES[state],
+          WHITE
+        ],
+      seed
     ]
   ]
 }

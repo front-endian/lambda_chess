@@ -14,14 +14,19 @@ CASTLE     = ->(valid, invalid, en_passant, castle) { castle }
 ISNT_INVALID = ->(move_result) { move_result[FIRST, SECOND, FIRST, FIRST] }
 
 ADVANCE_STATE = ->(state) {
-  ->(maybe_func) {
+  ->(move_type) {
     ->(if_valid, if_invalid) {
-      IF[LEFT[maybe_func]][
+      IF[ISNT_INVALID[move_type]][
         -> {
           if_valid[
             UPDATE_BOARD[
               state,
-              RIGHT[maybe_func][
+              move_type[
+                NORMAL_MOVE,
+                ZERO,
+                EN_PASSANT_MOVE,
+                CASTLING_MOVE
+              ][
                 GET_BOARD[state],
                 GET_FROM[state],
                 GET_TO[state],
@@ -34,13 +39,8 @@ ADVANCE_STATE = ->(state) {
       ]
     }
   }[
-    # "maybe_func"
-    GET_RULE[GET_POSITION[GET_BOARD[state], GET_FROM[state]]][state][
-      PAIR[FIRST, NORMAL_MOVE],
-      PAIR[SECOND, ZERO],
-      PAIR[FIRST, EN_PASSANT_MOVE],
-      PAIR[FIRST, CASTLING_MOVE]
-    ]
+    # "move_type"
+    GET_RULE[GET_POSITION[GET_BOARD[state], GET_FROM[state]]][state]
   ]
 }
 
@@ -269,7 +269,7 @@ IS_NOT_IN_CHECK = ->(board, to, get_rule) {
           NOT[
             ISNT_INVALID[
               get_rule[GET_POSITION[board, from]][
-                CREATE_STATE[from, to, from, to, board, ZERO, ZERO, ZERO]
+                CREATE_STATE[from, to, from, to, board, ZERO, ZERO]
               ]
             ]
           ]

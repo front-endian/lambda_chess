@@ -70,7 +70,7 @@ group 'Piece Functions' do
   ALL_BLACK = Array.new(8, Array.new(8, MBQ)).to_board
 
   def run_rule rule, board, from, to, last_from = NULL_POS, last_to = NULL_POS
-    rule[CREATE_STATE[from, to, last_from, last_to, board, ZERO, ZERO, ZERO]]
+    rule[CREATE_STATE[from, to, last_from, last_to, board, ZERO, ZERO]]
   end
 
   def test_movement board, is_valid, rule, delta_x, delta_y

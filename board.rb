@@ -6,30 +6,14 @@
 
 # Board Functions
 
-BOARD_MAP = ->(board, func) {
-  LIST_MAP[
-    board,
-    SIDE_LENGTH,
-    ->(row, y) {
-      LIST_MAP[
-        row,
-        SIDE_LENGTH,
-        ->(piece, x) {
-          func[piece, PAIR[x, y]]
-        }
-      ]
-    }
-  ]
-}
-
 BOARD_REDUCE = ->(board, func, initial) {
   LIST_REDUCE[
     board,
-    SIDE_LENGTH,
+    EIGHT,
     ->(memo, row, y) {
       LIST_REDUCE[
         row,
-        SIDE_LENGTH,
+        EIGHT,
         ->(memo, piece, x) {
           func[memo, piece, PAIR[x, y]]
         },
@@ -138,44 +122,27 @@ NORMAL_MOVE = ->(board, from, to, new_piece) {
   CHANGE_MOVE[board, from, to, GET_POSITION[board, from]]
 }
 
-CASTLING_MOVE = ->(board, from, to, new_piece) {
-  ->(is_moving_left) {
-    NORMAL_MOVE[
-      NORMAL_MOVE[board, from, to, new_piece],
-      # Rook positions
-      PAIR[is_moving_left[ZERO, SEVEN], RIGHT[from]],
-      PAIR[is_moving_left[THREE, FIVE], RIGHT[from]],
-      new_piece
-    ]
-  }[
-    # "is_moving_left"
-    IS_GREATER_OR_EQUAL[LEFT[from], LEFT[to]]
-  ]
-}
-
 CHANGE_MOVE = ->(board, from, to, new_piece) {
-  BOARD_MAP[
+  LIST_MAP[
     board,
-    ->(old_piece, position) {
-      IF[SAME_POSITION[position, to]][
-        -> { TO_MOVED_PIECE[new_piece] },
-        -> { SAME_POSITION[position, from][EMPTY_SPACE, old_piece] }
+    EIGHT,
+    ->(row, y) {
+      LIST_MAP[
+        row,
+        EIGHT,
+        ->(piece, x) {
+          IF[SAME_POSITION[PAIR[x, y], to]][
+            -> {
+              PAIR[
+                PAIR[GET_COLOR[new_piece], GET_VALUE[new_piece]],
+                PAIR[GET_OCCUPIED[new_piece], MOVED]
+              ]
+            },
+            -> { SAME_POSITION[PAIR[x, y], from][EMPTY_SPACE, piece] }
+          ]
+        }
       ]
     }
-  ]
-}
-
-EN_PASSANT_MOVE = ->(board, from, to, new_piece) {
-  ->(captured) {
-    CHANGE_MOVE[
-      NORMAL_MOVE[board, from, to, new_piece],
-      captured,
-      captured,
-      EMPTY_SPACE
-    ]
-  }[
-    # "captured"
-    PAIR[LEFT[to], RIGHT[from]]
   ]
 }
 

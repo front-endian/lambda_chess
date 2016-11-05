@@ -42,7 +42,7 @@ ISNT_WHITE_CHECKMATE = ->(board) {
       IF[
         FROM_TO_REDUCE[
           king_position_vector,
-          POSITION_SELECT[board, ALWAYS_FIRST],
+          POSITION_SELECT[board, ->(_) { FIRST }],
           ->(memo, from, to) {
             IF[memo][
               -> { FIRST },
@@ -76,7 +76,7 @@ ISNT_WHITE_CHECKMATE = ->(board) {
       ->(piece) {
         AND[
           IS_WHITE[piece],
-          IS_EQUAL[KING_VALUE, GET_VALUE[piece]]
+          HAS_VALUE[piece, KING_VALUE]
         ]
       }
     ]

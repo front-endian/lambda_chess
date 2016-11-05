@@ -45,8 +45,6 @@ IF = ->(condition) {
   }
 }
 
-ALWAYS_FIRST = ->(condition) { FIRST }
-
 # Math Functions
 
 IDENTITY = ->(x) { x }
@@ -226,14 +224,6 @@ VECTOR_REDUCE = ->(vector, func, initial) {
 
 # Magic Numbers
 
-SIDE_LENGTH = EIGHT
-
-BLACK_PAWN_ROW = ONE
-WHITE_PAWN_ROW = SIX
-BLACK_HOME_ROW = ZERO
-WHITE_HOME_ROW = SEVEN
-KING_COLUMN    = FOUR
-
 PAWN_VALUE   = ONE
 KNIGHT_VALUE = TWO
 BISHOP_VALUE = THREE
@@ -305,14 +295,6 @@ COLOR_SWITCH = ->(piece) {
   }
 }
 
-TO_MOVED_PIECE = ->(piece) {
-  MAKE_PIECE[GET_COLOR[piece], GET_VALUE[piece], GET_OCCUPIED[piece], MOVED]
-}
-
-IS_MOVED = ->(piece) {
-  GET_MOVED[piece]
-}
-
 HAS_VALUE = ->(piece, value) {
   IS_EQUAL[value, GET_VALUE[piece]]
 }
@@ -354,27 +336,27 @@ GET_PROMOTION = ->(state) {
 }
 
 GET_LAST_FROM = ->(state) {
-  LEFT[RIGHT[RIGHT[state]]]
+  LEFT[GET_MOVED[state]]
 }
 
 GET_LAST_TO = ->(state) {
-  RIGHT[RIGHT[RIGHT[state]]]
+  RIGHT[GET_MOVED[state]]
 }
 
 GET_FROM = ->(state) {
-  LEFT[LEFT[LEFT[state]]]
+  LEFT[GET_COLOR[state]]
 }
 
 GET_TO = ->(state) {
-  RIGHT[LEFT[LEFT[state]]]
+  RIGHT[GET_COLOR[state]]
 }
 
 GET_BOARD = ->(state) {
-  LEFT[RIGHT[LEFT[state]]]
+  GET_OCCUPIED[LEFT[state]]
 }
 
 GET_SCORE = ->(state) {
-  RIGHT[RIGHT[LEFT[state]]]
+  GET_MOVED[LEFT[state]]
 }
 
 UPDATE_ALL_BUT_FROM_TO_PROMOTION = ->(older, newer) {
@@ -408,7 +390,49 @@ UPDATE_AFTER_MOVE = ->(older, board) {
     GET_FROM[older],
     GET_TO[older],
     board,
-    SCORE[board, GET_TO[older]],
+    ->(last_moved) {
+      BOARD_REDUCE[
+        board,
+        ->(memo, piece, position) {
+          ADD[
+            IS_BLACK[piece][
+              ADD,
+              SUBTRACT
+            ][
+              memo,
+              GET_VALUE[piece]
+            ],
+            IF[IS_WHITE[piece]][
+              -> {
+                IF[HAS_VALUE[piece, KING_VALUE]][
+                  -> {
+                    ISNT_INVALID[
+                      GET_RULE[GET_POSITION[board, last_moved]][
+                        CREATE_STATE[
+                          last_moved,
+                          position,
+                          last_moved,
+                          last_moved,
+                          board,
+                          ZERO,
+                          BLACK_QUEEN
+                        ]
+                      ]
+                    ][
+                      MAX_PIECE_TOTAL,
+                      ZERO
+                    ]
+                  },
+                  -> { ZERO }
+                ]
+              },
+              -> { ZERO }
+            ]
+          ]
+        },
+        MAX_PIECE_TOTAL
+      ]
+    }[GET_TO[older]],
     GET_PROMOTION[older]
   ]
 }

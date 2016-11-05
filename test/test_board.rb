@@ -9,7 +9,7 @@ require_relative './setup'
 group 'Board Functions' do
   group 'GET_POSITION' do
     assert 'gets data at the given position' do
-      piece = GET_POSITION[INITIAL_BOARD, PAIR[KING_COLUMN, BLACK_HOME_ROW]]
+      piece = GET_POSITION[INITIAL_BOARD, PAIR[FOUR, ZERO]]
 
       GET_VALUE[piece].to_i == KING_VALUE.to_i
     end
@@ -146,7 +146,7 @@ group 'Board Functions' do
               example_board,
               center,
               shift_position(center, -3, 0),
-              IDENTITY
+              ->(x) { x }
             ]
           )
         end
@@ -167,7 +167,7 @@ group 'Board Functions' do
               example_board,
               center,
               shift_position(center, 0, 4),
-              IDENTITY
+              ->(x) { x }
             ]
           )
         end
@@ -188,7 +188,7 @@ group 'Board Functions' do
               example_board,
               center,
               shift_position(center, 3, -3),
-              IDENTITY
+              ->(x) { x }
             ]
           )
         end
@@ -321,77 +321,6 @@ group 'Board Functions' do
       expected = GET_VALUE[new_piece].to_i
 
       expected == GET_VALUE[GET_POSITION[null_move, from]].to_i
-    end
-  end
-
-  group 'CASTLING_MOVE' do
-    board = [[BR,0, 0, 0, BK,0, 0, BR],
-             [0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0],
-             [WR,0, 0, 0, WK,0, 0, WR]]
-            .to_board
-
-    test_castling board, board,
-      perform: proc { |board, from, to| CASTLING_MOVE[board, from, to, nil] },
-      expect:  proc { |result, king_to, rook_to, rook_from|
-        assert "king was moved" do
-         piece_in_position = KING_VALUE == GET_VALUE[GET_POSITION[result, king_to]]
-
-         piece_in_position
-        end
-
-        assert "rook was moved" do
-          piece_in_position = ROOK_VALUE == GET_VALUE[GET_POSITION[result, rook_to]]
-
-          piece_in_position
-        end
-
-        assert "correct rook was moved" do
-          piece_in_position = EMPTY_SPACE == GET_POSITION[result, rook_from]
-
-          piece_in_position
-        end
-      }
-  end
-
-  group 'EN_PASSANT_MOVE' do
-    example_board = [[0, 0, 0, 0, 0,  0, 0, 0],
-                     [0, 0, 0, 0, 0,  0, 0, 0],
-                     [0, 0, 0, 0, 0,  0, 0, 0],
-                     [0, 0, 0, 0, 0,  0, 0, 0],
-                     [0, 0, 0, BP,MWP,0, 0, 0],
-                     [0, 0, 0, 0, 0,  0, 0, 0],
-                     [0, 0, 0, 0, 0,  0, 0, 0],
-                     [0, 0, 0, 0, 0,  0, 0, 0]]
-                    .to_board
-
-    from  = position(3, 4)
-    to    = position(4, 5)
-    moved = EN_PASSANT_MOVE[example_board, from, to, nil]
-
-    assert 'moves the piece at the "from" position to the "to" position' do
-      expected = GET_VALUE[GET_POSITION[example_board, from]].to_i
-
-      expected == GET_VALUE[GET_POSITION[moved, to]].to_i
-    end
-
-    assert 'marks the moved piece as moved' do
-      expect_falsy(GET_MOVED[GET_POSITION[moved, from]]) &&
-      expect_truthy(GET_MOVED[GET_POSITION[moved, to]])
-    end
-
-    group 'puts an empty piece' do
-      assert 'in the "from" position' do
-        expect_truthy IS_EMPTY[GET_POSITION[moved, from]]
-      end
-
-      assert 'in space behind "to"' do
-        expect_truthy IS_EMPTY[GET_POSITION[moved, position(4, 4)]]
-      end
     end
   end
 end

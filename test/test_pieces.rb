@@ -583,6 +583,20 @@ group 'Piece Functions' do
 
           test_castling board, board, perform: rule_proc, expect: invalid_result
         end
+
+        assert 'moving wildly' do
+          board = [[BR,0, 0, 0, BK,0, 0, BR],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [BP,BP,BP,BP,BP,BP,BP,BP],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [WR,0, 0, 0, 0, 0, WK, WR]]
+                  .to_board
+
+          expect_invalid run_rule(REAL_KING_RULE, board, position(4, 0), position(0, 7))
+        end
       end
     end
   end

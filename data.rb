@@ -251,8 +251,8 @@ GET_MOVED    = ->(piece) { RIGHT[RIGHT[piece]] }
 OCCUPIED = FIRST
 EMPTY    = SECOND
 
-UNMOVED  = SECOND
-MOVED    = FIRST
+UNMOVED = SECOND
+MOVED   = FIRST
 
 BLACK = FIRST
 WHITE = SECOND
@@ -377,7 +377,7 @@ GET_SCORE = ->(state) {
   RIGHT[RIGHT[LEFT[state]]]
 }
 
-UPDATE_ALL_BUT_FROM_TO = ->(older, newer) {
+UPDATE_ALL_BUT_FROM_TO_PROMOTION = ->(older, newer) {
   CREATE_STATE[
     GET_FROM[older],
     GET_TO[older],
@@ -385,7 +385,7 @@ UPDATE_ALL_BUT_FROM_TO = ->(older, newer) {
     GET_TO[newer],
     GET_BOARD[newer],
     GET_SCORE[newer],
-    GET_PROMOTION[newer]
+    GET_PROMOTION[older]
   ]
 }
 

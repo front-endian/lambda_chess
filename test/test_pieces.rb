@@ -379,6 +379,7 @@ group 'Piece Functions' do
         FIRST,
         SECOND,
         SECOND,
+        SECOND,
         SECOND
       ]
     end

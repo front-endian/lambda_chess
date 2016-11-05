@@ -139,8 +139,8 @@ COUNTER_RESPONSES = ->(reponses, color) {
           ],
           ->(memo, new_state) {
             IS_GREATER_OR_EQUAL[GET_SCORE[new_state], GET_SCORE[memo]][
-              color[UPDATE_ALL_BUT_FROM_TO[memo, new_state], memo],
-              color[memo, UPDATE_ALL_BUT_FROM_TO[memo, new_state]]
+              color[UPDATE_ALL_BUT_FROM_TO_PROMOTION[memo, new_state], memo],
+              color[memo, UPDATE_ALL_BUT_FROM_TO_PROMOTION[memo, new_state]]
             ]
           },
           old_state
@@ -199,7 +199,7 @@ BLACK_AI = ->(state, seed) {
   ->(result) {
     IF[LEFT[result]][
       -> {
-        ADVANCE_STATE[UPDATE_ALL_BUT_FROM_TO[RIGHT[result], state]][
+        ADVANCE_STATE[UPDATE_ALL_BUT_FROM_TO_PROMOTION[RIGHT[result], state]][
           ->(new_state) { PAIR[FIRST, new_state] },
           -> { PAIR[SECOND, ZERO] }
         ]

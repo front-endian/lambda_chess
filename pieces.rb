@@ -6,12 +6,13 @@
 
 # Piece Helper Functions
 
-VALID      = ->(valid, invalid, en_passant, castle) { valid }
-INVALID    = ->(valid, invalid, en_passant, castle) { invalid }
-EN_PASSANT = ->(valid, invalid, en_passant, castle) { en_passant }
-CASTLE     = ->(valid, invalid, en_passant, castle) { castle }
+VALID      = ->(valid, invalid, en_passant, castle, promotion) { valid }
+INVALID    = ->(valid, invalid, en_passant, castle, promotion) { invalid }
+EN_PASSANT = ->(valid, invalid, en_passant, castle, promotion) { en_passant }
+CASTLE     = ->(valid, invalid, en_passant, castle, promotion) { castle }
+PROMOTION  = ->(valid, invalid, en_passant, castle, promotion) { promotion }
 
-ISNT_INVALID = ->(move_result) { move_result[FIRST, SECOND, FIRST, FIRST] }
+ISNT_INVALID = ->(move_result) { move_result[FIRST, SECOND, FIRST, FIRST, FIRST] }
 
 ADVANCE_STATE = ->(state) {
   ->(move_type) {
@@ -25,7 +26,8 @@ ADVANCE_STATE = ->(state) {
                 NORMAL_MOVE,
                 ZERO,
                 EN_PASSANT_MOVE,
-                CASTLING_MOVE
+                CASTLING_MOVE,
+                CHANGE_MOVE
               ][
                 GET_BOARD[state],
                 GET_FROM[state],
@@ -348,7 +350,16 @@ PAWN_RULE = BASIC_CHECKS[
                         # If not moving horizontally
                         -> {
                           # Performing a normal move
-                          IS_EMPTY[GET_POSITION[board, to]][VALID, INVALID]
+                          IS_EMPTY[GET_POSITION[board, to]][
+                            IS_EQUAL[
+                              to_y,
+                              pawn_is_black[WHITE_HOME_ROW, BLACK_HOME_ROW]
+                            ][
+                              PROMOTION,
+                              VALID
+                            ],
+                            INVALID
+                          ]
                         },
                         # If moving horizontally
                         -> {

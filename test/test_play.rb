@@ -204,6 +204,22 @@ group 'Play' do
     )
   end
 
+  group 'already in checkmate' do
+    from       = [5, 7]
+    to         = [6, 7]
+    board      = [[0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, BR,BR,BR,0],
+                  [0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, WK,0, 0]]
+                 .to_board
+
+    expect_reject make_state(board, [from, to])
+  end
+
   group 'white en passant' do
     from      = [4, 3]
     to        = [3, 2]
@@ -256,5 +272,84 @@ group 'Play' do
              .to_board
 
     expect_accept make_state(board, [from, to]), result
+  end
+
+  group 'black en passant' do
+    from      = [3, 6]
+    to        = [3, 4]
+    board     = [[0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, BP,0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, WP,0, 0, WK,0],
+                 [0, BK,0, 0, 0, 0, 0, 0]]
+                .to_board
+
+    result = [[0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, BP,0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, WK,0],
+              [0, BK,0, 0, 0, 0, 0, 0]]
+             .to_board
+
+    expect_accept make_state(board, [from, to]), result
+  end
+
+  group 'white promotion' do
+    from      = [2, 1]
+    to        = [2, 0]
+    board     = [[0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, WP,0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0],
+                 [WK,0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, WR],
+                 [0, 0, 0, WR,0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, BK]]
+                .to_board
+
+    result = [[0, 0, WN,0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [WK,0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, WR],
+              [0, 0, 0, WR,0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, BK,0]]
+             .to_board
+
+    expect_accept make_state(board, [from, to], promotion: WHITE_KNIGHT), result
+  end
+
+  group 'black promotion' do
+    from      = [6, 5]
+    to        = [6, 4]
+    board     = [[0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, WK,0],
+                 [0, 0, 0, BP,0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, BK,0]]
+                .to_board
+
+    result = [[0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, WK,0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, BQ,0, 0, BK,0]]
+             .to_board
+
+    # Add promotion argument to make sure it isn't accepted
+    expect_accept make_state(board, [from, to], promotion: WHITE_KNIGHT), result
   end
 end

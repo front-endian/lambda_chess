@@ -170,19 +170,19 @@ def expect_falsy func
 end
 
 def expect_valid result
-  result[true, false, false, false]
+  result[true, false, false, false, false]
 end
 
 def expect_invalid result
-  result[false, true, false, false]
+  result[false, true, false, false, false]
 end
 
 def expect_en_passant result
-  result[false, false, true, false]
+  result[false, false, true, false, false]
 end
 
 def expect_castle result
-  result[false, false, false, true]
+  result[false, false, false, true, false]
 end
 
 NULL_POS = PAIR[ZERO, ZERO]

@@ -37,21 +37,21 @@ group 'Choice Functions' do
 end
 
 group 'List Functions' do
-  group 'NTH' do
+  group '$NTH' do
     example = [:A, :B, :C].to_linked_list
 
     assert 'gets the first element when given 0' do
-      :A == NTH[example, 0.to_peano]
+      :A == $NTH[example, 0.to_peano]
     end
 
     assert 'gets the third element when given 2' do
-      :C == NTH[example, 2.to_peano]
+      :C == $NTH[example, 2.to_peano]
     end
   end
 
-  group 'LIST_MAP' do
+  group '$LIST_MAP' do
     assert 'maps function across list and returns a new list' do
-      incremented = LIST_MAP[
+      incremented = $LIST_MAP[
                       INDEX_ARRAY.to_linked_list,
                       64.to_peano,
                       ->(x, _) { x + 1 }
@@ -62,7 +62,7 @@ group 'List Functions' do
 
     assert 'second argument gives current position index' do
       empty_board   = ([nil] * 64).to_linked_list
-      given_indexes = LIST_MAP[
+      given_indexes = $LIST_MAP[
                         empty_board,
                         64.to_peano,
                         ->(_, i) { i.to_i }
@@ -72,9 +72,9 @@ group 'List Functions' do
     end
   end
 
-  group 'LIST_REDUCE' do
+  group '$LIST_REDUCE' do
     assert 'passes memo between iterations' do
-      reduction = LIST_REDUCE[
+      reduction = $LIST_REDUCE[
                     INDEX_ARRAY.to_linked_list,
                     64.to_peano,
                     ->(x, _, _) { x + 1 },
@@ -86,7 +86,7 @@ group 'List Functions' do
 
     assert 'third argument gives current index' do
       empty_board = ([nil] * 64).to_linked_list
-      reduction   = LIST_REDUCE[
+      reduction   = $LIST_REDUCE[
                       empty_board,
                       64.to_peano,
                       ->(memo, _, i) { memo << i.to_i },
@@ -97,7 +97,7 @@ group 'List Functions' do
     end
 
     assert 'second argument gives current value' do
-      reduction = LIST_REDUCE[
+      reduction = $LIST_REDUCE[
                     INDEX_ARRAY.map(&:succ).to_linked_list,
                     64.to_peano,
                     ->(memo, value, _) { memo << value },
@@ -110,43 +110,43 @@ group 'List Functions' do
 end
 
 group 'Math Functions' do
-  group 'ADD' do
+  group '$ADD' do
     assert 'adds two numbers together' do
-      11 == ADD[8.to_peano, 3.to_peano].to_i
+      11 == $ADD[8.to_peano, 3.to_peano].to_i
     end
 
     assert 'works with zero' do
-      36 == ADD[0.to_peano, 36.to_peano].to_i
+      36 == $ADD[0.to_peano, 36.to_peano].to_i
     end
   end
 
-  group 'DECREMENT' do
+  group '$DECREMENT' do
     assert 'subtracts one from the given number' do
-      99 == DECREMENT[100.to_peano].to_i
+      99 == $DECREMENT[100.to_peano].to_i
     end
 
     assert 'given zero returns zero' do
-      0 == DECREMENT[0.to_peano].to_i
+      0 == $DECREMENT[0.to_peano].to_i
     end
   end
 
-  group 'SUBTRACT' do
+  group '$SUBTRACT' do
     assert 'subtracts the second number from the first number' do
-      10 == SUBTRACT[20.to_peano, 10.to_peano].to_i
+      10 == $SUBTRACT[20.to_peano, 10.to_peano].to_i
     end
 
     assert 'floors at zero' do
-      0 == SUBTRACT[3.to_peano, 5.to_peano].to_i
+      0 == $SUBTRACT[3.to_peano, 5.to_peano].to_i
     end
   end
 
-  group 'MULTIPLY' do
+  group '$MULTIPLY' do
     assert 'multiplies two numbers together' do
-      8 == MULTIPLY[2.to_peano, 4.to_peano].to_i
+      8 == $MULTIPLY[2.to_peano, 4.to_peano].to_i
     end
 
     assert 'works with zero' do
-      0 == MULTIPLY[0.to_peano, 23.to_peano].to_i
+      0 == $MULTIPLY[0.to_peano, 23.to_peano].to_i
     end
   end
 end

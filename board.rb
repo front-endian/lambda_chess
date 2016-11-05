@@ -6,14 +6,14 @@
 
 # Board Functions
 
-BOARD_REDUCE = ->(board, func, initial) {
-  LIST_REDUCE[
+$BOARD_REDUCE = ->(board, func, initial) {
+  $LIST_REDUCE[
     board,
-    EIGHT,
+    $EIGHT,
     ->(memo, row, y) {
-      LIST_REDUCE[
+      $LIST_REDUCE[
         row,
-        EIGHT,
+        $EIGHT,
         ->(memo, piece, x) {
           func[memo, piece, PAIR[x, y]]
         },
@@ -24,25 +24,25 @@ BOARD_REDUCE = ->(board, func, initial) {
   ]
 }
 
-SAME_POSITION = ->(a, b) {
+$SAME_POSITION = ->(a, b) {
   AND[
     IS_EQUAL[LEFT[a], LEFT[b]],
     IS_EQUAL[RIGHT[a], RIGHT[b]]
   ]
 }
 
-GET_POSITION = ->(board, position) {
-  NTH[NTH[board, RIGHT[position]], LEFT[position]]
+$GET_POSITION = ->(board, position) {
+  $NTH[$NTH[board, RIGHT[position]], LEFT[position]]
 }
 
-CHANGE_FUNC = ->(from, to, coordinate) {
+$CHANGE_FUNC = ->(from, to, coordinate) {
   ->(a, b) {
     IS_GREATER_OR_EQUAL[a, b][
       IS_EQUAL[a, b][
-        IDENTITY,
-        DECREMENT
+        $IDENTITY,
+        $DECREMENT
       ],
-      INCREMENT
+      $INCREMENT
     ]
   }[
     coordinate[from],
@@ -50,7 +50,7 @@ CHANGE_FUNC = ->(from, to, coordinate) {
   ]
 }
 
-FREE_PATH = ->(board, from, to, alter_length) {
+$FREE_PATH = ->(board, from, to, alter_length) {
   ->(delta_x, delta_y) {
     IF[
       OR[
@@ -66,7 +66,7 @@ FREE_PATH = ->(board, from, to, alter_length) {
           # Get the number of positions that have to be checked
           alter_length[
             IS_ZERO[delta_x][
-              DELTA[from, to, RIGHT],
+              $DELTA[from, to, RIGHT],
               delta_x
             ]
           ][
@@ -77,15 +77,15 @@ FREE_PATH = ->(board, from, to, alter_length) {
                   new_postion,
                   # If a filled position hasn't been found, check for a piece
                   RIGHT[memo][
-                    IS_EMPTY[GET_POSITION[board, new_postion]],
+                    $IS_EMPTY[$GET_POSITION[board, new_postion]],
                     SECOND
                   ]
                 ]
               }[
                 # Calculate next postion to check
                 PAIR[
-                  CHANGE_FUNC[from, to, LEFT][LEFT[LEFT[memo]]],
-                  CHANGE_FUNC[from, to, RIGHT][RIGHT[LEFT[memo]]]
+                  $CHANGE_FUNC[from, to, LEFT][LEFT[LEFT[memo]]],
+                  $CHANGE_FUNC[from, to, RIGHT][RIGHT[LEFT[memo]]]
                 ]
               ]
             },
@@ -97,48 +97,48 @@ FREE_PATH = ->(board, from, to, alter_length) {
     ]
   }[
     # "delta_x"
-    DELTA[from, to, LEFT],
+    $DELTA[from, to, LEFT],
     # "delta_y"
-    DELTA[from, to, RIGHT]
+    $DELTA[from, to, RIGHT]
   ]
 }
 
-POSITION_SELECT = ->(board, condition) {
-  BOARD_REDUCE[
+$POSITION_SELECT = ->(board, condition) {
+  $BOARD_REDUCE[
     board,
     ->(memo, piece, position) {
       condition[piece][
-        VECTOR_APPEND[memo, position],
+        $VECTOR_APPEND[memo, position],
         memo
       ]
     },
-    EMPTY_VECTOR
+    $EMPTY_VECTOR
   ]
 }
 
 # Move Functions
 
-NORMAL_MOVE = ->(board, from, to, new_piece) {
-  CHANGE_MOVE[board, from, to, GET_POSITION[board, from]]
+$NORMAL_MOVE = ->(board, from, to, new_piece) {
+  $CHANGE_MOVE[board, from, to, $GET_POSITION[board, from]]
 }
 
-CHANGE_MOVE = ->(board, from, to, new_piece) {
-  LIST_MAP[
+$CHANGE_MOVE = ->(board, from, to, new_piece) {
+  $LIST_MAP[
     board,
-    EIGHT,
+    $EIGHT,
     ->(row, y) {
-      LIST_MAP[
+      $LIST_MAP[
         row,
-        EIGHT,
+        $EIGHT,
         ->(piece, x) {
-          IF[SAME_POSITION[PAIR[x, y], to]][
+          IF[$SAME_POSITION[PAIR[x, y], to]][
             -> {
               PAIR[
-                PAIR[GET_COLOR[new_piece], GET_VALUE[new_piece]],
-                PAIR[GET_OCCUPIED[new_piece], MOVED]
+                PAIR[$GET_COLOR[new_piece], $GET_VALUE[new_piece]],
+                PAIR[$GET_OCCUPIED[new_piece], $MOVED]
               ]
             },
-            -> { SAME_POSITION[PAIR[x, y], from][EMPTY_SPACE, piece] }
+            -> { $SAME_POSITION[PAIR[x, y], from][$EMPTY_SPACE, piece] }
           ]
         }
       ]
@@ -151,12 +151,12 @@ CHANGE_MOVE = ->(board, from, to, new_piece) {
 P = PAIR
 
 INITIAL_BOARD =
-  P[P[BLACK_ROOK,  P[BLACK_KNIGHT, P[BLACK_BISHOP, P[BLACK_QUEEN, P[BLACK_KING,  P[BLACK_BISHOP, P[BLACK_KNIGHT, P[BLACK_ROOK,  ZERO]]]]]]]],
-  P[P[BLACK_PAWN,  P[BLACK_PAWN,   P[BLACK_PAWN,   P[BLACK_PAWN,  P[BLACK_PAWN,  P[BLACK_PAWN,   P[BLACK_PAWN,   P[BLACK_PAWN,  ZERO]]]]]]]],
-  P[P[EMPTY_SPACE, P[EMPTY_SPACE,  P[EMPTY_SPACE,  P[EMPTY_SPACE, P[EMPTY_SPACE, P[EMPTY_SPACE,  P[EMPTY_SPACE,  P[EMPTY_SPACE, ZERO]]]]]]]],
-  P[P[EMPTY_SPACE, P[EMPTY_SPACE,  P[EMPTY_SPACE,  P[EMPTY_SPACE, P[EMPTY_SPACE, P[EMPTY_SPACE,  P[EMPTY_SPACE,  P[EMPTY_SPACE, ZERO]]]]]]]],
-  P[P[EMPTY_SPACE, P[EMPTY_SPACE,  P[EMPTY_SPACE,  P[EMPTY_SPACE, P[EMPTY_SPACE, P[EMPTY_SPACE,  P[EMPTY_SPACE,  P[EMPTY_SPACE, ZERO]]]]]]]],
-  P[P[EMPTY_SPACE, P[EMPTY_SPACE,  P[EMPTY_SPACE,  P[EMPTY_SPACE, P[EMPTY_SPACE, P[EMPTY_SPACE,  P[EMPTY_SPACE,  P[EMPTY_SPACE, ZERO]]]]]]]],
-  P[P[WHITE_PAWN,  P[WHITE_PAWN,   P[WHITE_PAWN,   P[WHITE_PAWN,  P[WHITE_PAWN,  P[WHITE_PAWN,   P[WHITE_PAWN,   P[WHITE_PAWN,  ZERO]]]]]]]],
-  P[P[WHITE_ROOK,  P[WHITE_KNIGHT, P[WHITE_BISHOP, P[WHITE_QUEEN, P[WHITE_KING,  P[WHITE_BISHOP, P[WHITE_KNIGHT, P[WHITE_ROOK,  ZERO]]]]]]]],
+  P[P[$BLACK_ROOK,  P[$BLACK_KNIGHT, P[$BLACK_BISHOP, P[$BLACK_QUEEN, P[$BLACK_KING,  P[$BLACK_BISHOP, P[$BLACK_KNIGHT, P[$BLACK_ROOK,  ZERO]]]]]]]],
+  P[P[$BLACK_PAWN,  P[$BLACK_PAWN,   P[$BLACK_PAWN,   P[$BLACK_PAWN,  P[$BLACK_PAWN,  P[$BLACK_PAWN,   P[$BLACK_PAWN,   P[$BLACK_PAWN,  ZERO]]]]]]]],
+  P[P[$EMPTY_SPACE, P[$EMPTY_SPACE,  P[$EMPTY_SPACE,  P[$EMPTY_SPACE, P[$EMPTY_SPACE, P[$EMPTY_SPACE,  P[$EMPTY_SPACE,  P[$EMPTY_SPACE, ZERO]]]]]]]],
+  P[P[$EMPTY_SPACE, P[$EMPTY_SPACE,  P[$EMPTY_SPACE,  P[$EMPTY_SPACE, P[$EMPTY_SPACE, P[$EMPTY_SPACE,  P[$EMPTY_SPACE,  P[$EMPTY_SPACE, ZERO]]]]]]]],
+  P[P[$EMPTY_SPACE, P[$EMPTY_SPACE,  P[$EMPTY_SPACE,  P[$EMPTY_SPACE, P[$EMPTY_SPACE, P[$EMPTY_SPACE,  P[$EMPTY_SPACE,  P[$EMPTY_SPACE, ZERO]]]]]]]],
+  P[P[$EMPTY_SPACE, P[$EMPTY_SPACE,  P[$EMPTY_SPACE,  P[$EMPTY_SPACE, P[$EMPTY_SPACE, P[$EMPTY_SPACE,  P[$EMPTY_SPACE,  P[$EMPTY_SPACE, ZERO]]]]]]]],
+  P[P[$WHITE_PAWN,  P[$WHITE_PAWN,   P[$WHITE_PAWN,   P[$WHITE_PAWN,  P[$WHITE_PAWN,  P[$WHITE_PAWN,   P[$WHITE_PAWN,   P[$WHITE_PAWN,  ZERO]]]]]]]],
+  P[P[$WHITE_ROOK,  P[$WHITE_KNIGHT, P[$WHITE_BISHOP, P[$WHITE_QUEEN, P[$WHITE_KING,  P[$WHITE_BISHOP, P[$WHITE_KNIGHT, P[$WHITE_ROOK,  ZERO]]]]]]]],
   ZERO]]]]]]]]

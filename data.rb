@@ -47,22 +47,22 @@ IF = ->(condition) {
 
 # Math Functions
 
-IDENTITY = ->(x) { x }
+$IDENTITY = ->(x) { x }
 
-INCREMENT = ->(a) { ADD[ONE, a] }
+$INCREMENT = ->(a) { $ADD[ONE, a] }
 
-ADD = ->(a, b) {
+$ADD = ->(a, b) {
   ->(func, zero) {
     b[func, a[func, zero]]
   }
 }
 
-DECREMENT = ->(a) {
+$DECREMENT = ->(a) {
   RIGHT[
     a[
       ->(memo) {
         PAIR[
-          INCREMENT[LEFT[memo]],
+          $INCREMENT[LEFT[memo]],
           LEFT[memo]
         ]
       },
@@ -71,13 +71,13 @@ DECREMENT = ->(a) {
   ]
 }
 
-SUBTRACT = ->(a, b) {
+$SUBTRACT = ->(a, b) {
   ->(func, zero) {
-    b[DECREMENT, a][func, zero]
+    b[$DECREMENT, a][func, zero]
   }
 }
 
-MULTIPLY = ->(a, b) {
+$MULTIPLY = ->(a, b) {
   ->(func, zero) {
     a[
       ->(value) { b[func, value] },
@@ -86,11 +86,11 @@ MULTIPLY = ->(a, b) {
   }
 }
 
-DELTA = ->(position_1, position_2, coordinate) {
+$DELTA = ->(position_1, position_2, coordinate) {
   ->(a, b) {
     IS_GREATER_OR_EQUAL[a, b][
-      SUBTRACT[a, b],
-      SUBTRACT[b, a]
+      $SUBTRACT[a, b],
+      $SUBTRACT[b, a]
     ]
   }[
     coordinate[position_1],
@@ -98,13 +98,13 @@ DELTA = ->(position_1, position_2, coordinate) {
   ]
 }
 
-MODULUS = ->(a, b) {
+$MODULUS = ->(a, b) {
   RIGHT[
     a[
       ->(memo) {
         IS_GREATER_OR_EQUAL[LEFT[memo], b][
           PAIR[
-            SUBTRACT[LEFT[memo], b],
+            $SUBTRACT[LEFT[memo], b],
             ZERO
           ],
           PAIR[
@@ -125,10 +125,10 @@ ONE        = ->(succ, zero) { succ[zero] }
 TWO        = ->(succ, zero) { succ[succ[zero]] }
 THREE      = ->(succ, zero) { succ[succ[succ[zero]]] }
 FOUR       = ->(succ, zero) { succ[succ[succ[succ[zero]]]] }
-FIVE       = ADD[TWO, THREE]
-SIX        = MULTIPLY[TWO, THREE]
-SEVEN      = ADD[THREE, FOUR]
-EIGHT      = MULTIPLY[TWO, FOUR]
+$FIVE       = $ADD[TWO, THREE]
+$SIX        = $MULTIPLY[TWO, THREE]
+$SEVEN      = $ADD[THREE, FOUR]
+$EIGHT      = $MULTIPLY[TWO, FOUR]
 
 # Pair Functions
 
@@ -141,29 +141,29 @@ RIGHT = ->(pair) { pair[SECOND] }
 
 # Lists Functions
 
-NTH = ->(list, index) { LEFT[index[RIGHT, list]] }
+$NTH = ->(list, index) { LEFT[index[RIGHT, list]] }
 
-LIST_MAP = ->(list, size, func) {
+$LIST_MAP = ->(list, size, func) {
   LEFT[
     size[
       ->(memo) {
         PAIR[
          PAIR[
            func[
-             NTH[list, RIGHT[memo]],
+             $NTH[list, RIGHT[memo]],
              RIGHT[memo]
            ],
            LEFT[memo]
           ],
-          DECREMENT[RIGHT[memo]]
+          $DECREMENT[RIGHT[memo]]
         ]
       },
-      PAIR[ZERO, DECREMENT[size]]
+      PAIR[ZERO, $DECREMENT[size]]
     ]
   ]
 }
 
-LIST_REDUCE = ->(list, size, func, initial) {
+$LIST_REDUCE = ->(list, size, func, initial) {
   LEFT[
     size[
       ->(memo) {
@@ -172,11 +172,11 @@ LIST_REDUCE = ->(list, size, func, initial) {
             # previous
             LEFT[memo],
             # next
-            NTH[list, RIGHT[memo]],
+            $NTH[list, RIGHT[memo]],
             # index
             RIGHT[memo],
           ],
-          INCREMENT[RIGHT[memo]]
+          $INCREMENT[RIGHT[memo]]
         ]
       },
       PAIR[initial, ZERO]
@@ -186,37 +186,26 @@ LIST_REDUCE = ->(list, size, func, initial) {
 
 # Vector Functions
 
-EMPTY_VECTOR = PAIR[ZERO, ZERO]
+$EMPTY_VECTOR = PAIR[ZERO, ZERO]
 
-VECTOR_SIZE = RIGHT
-VECTOR_LIST = LEFT
+$VECTOR_SIZE = RIGHT
+$VECTOR_LIST = LEFT
 
-VECTOR_APPEND = ->(vector, item) {
+$VECTOR_APPEND = ->(vector, item) {
   PAIR[
-    PAIR[item, VECTOR_LIST[vector]],
-    INCREMENT[VECTOR_SIZE[vector]]
+    PAIR[item, $VECTOR_LIST[vector]],
+    $INCREMENT[$VECTOR_SIZE[vector]]
   ]
 }
 
-VECTOR_FIRST = ->(vector) {
-  NTH[VECTOR_LIST[vector], ZERO]
+$VECTOR_FIRST = ->(vector) {
+  $NTH[$VECTOR_LIST[vector], ZERO]
 }
 
-VECTOR_MAP = ->(vector, func) {
-  PAIR[
-    LIST_MAP[
-      VECTOR_LIST[vector],
-      VECTOR_SIZE[vector],
-      ->(item, index) { func[item] }
-    ],
-    VECTOR_SIZE[vector]
-  ]
-}
-
-VECTOR_REDUCE = ->(vector, func, initial) {
-  LIST_REDUCE[
-    VECTOR_LIST[vector],
-    VECTOR_SIZE[vector],
+$VECTOR_REDUCE = ->(vector, func, initial) {
+  $LIST_REDUCE[
+    $VECTOR_LIST[vector],
+    $VECTOR_SIZE[vector],
     ->(memo, item, index) { func[memo, item] },
     initial
   ]
@@ -224,69 +213,69 @@ VECTOR_REDUCE = ->(vector, func, initial) {
 
 # Magic Numbers
 
-PAWN_VALUE   = ONE
-KNIGHT_VALUE = TWO
-BISHOP_VALUE = THREE
-ROOK_VALUE   = FOUR
-QUEEN_VALUE  = FIVE
-KING_VALUE   = SIX
+$PAWN_VALUE   = ONE
+$KNIGHT_VALUE = TWO
+$BISHOP_VALUE = THREE
+$ROOK_VALUE   = FOUR
+$QUEEN_VALUE  = $FIVE
+$KING_VALUE   = $SIX
 
 # Piece data
 
-GET_COLOR    = ->(piece) { LEFT[LEFT[piece]] }
-GET_VALUE    = ->(piece) { RIGHT[LEFT[piece]] }
-GET_OCCUPIED = ->(piece) { LEFT[RIGHT[piece]] }
-GET_MOVED    = ->(piece) { RIGHT[RIGHT[piece]] }
+$GET_COLOR    = ->(piece) { LEFT[LEFT[piece]] }
+$GET_VALUE    = ->(piece) { RIGHT[LEFT[piece]] }
+$GET_OCCUPIED = ->(piece) { LEFT[RIGHT[piece]] }
+$GET_MOVED    = ->(piece) { RIGHT[RIGHT[piece]] }
 
-OCCUPIED = FIRST
-EMPTY    = SECOND
+$OCCUPIED = FIRST
+$EMPTY    = SECOND
 
-UNMOVED = SECOND
-MOVED   = FIRST
+$UNMOVED = SECOND
+$MOVED   = FIRST
 
-BLACK = FIRST
-WHITE = SECOND
+$BLACK = FIRST
+$WHITE = SECOND
 
-MAKE_PIECE = ->(color, value, occupied, moved) {
+$MAKE_PIECE = ->(color, value, occupied, moved) {
   PAIR[PAIR[color, value], PAIR[occupied, moved]]
 }
 
-INITIAL_PIECE = ->(color, value) {
-  MAKE_PIECE[color, value, OCCUPIED, UNMOVED]
+$INITIAL_PIECE = ->(color, value) {
+  $MAKE_PIECE[color, value, $OCCUPIED, $UNMOVED]
 }
 
-EMPTY_SPACE = MAKE_PIECE[BLACK, ZERO, EMPTY, UNMOVED]
+$EMPTY_SPACE = $MAKE_PIECE[$BLACK, ZERO, $EMPTY, $UNMOVED]
 
-BLACK_PAWN   = INITIAL_PIECE[BLACK, PAWN_VALUE]
-BLACK_KNIGHT = INITIAL_PIECE[BLACK, KNIGHT_VALUE]
-BLACK_BISHOP = INITIAL_PIECE[BLACK, BISHOP_VALUE]
-BLACK_ROOK   = INITIAL_PIECE[BLACK, ROOK_VALUE]
-BLACK_QUEEN  = INITIAL_PIECE[BLACK, QUEEN_VALUE]
-BLACK_KING   = INITIAL_PIECE[BLACK, KING_VALUE]
+$BLACK_PAWN   = $INITIAL_PIECE[$BLACK, $PAWN_VALUE]
+$BLACK_KNIGHT = $INITIAL_PIECE[$BLACK, $KNIGHT_VALUE]
+$BLACK_BISHOP = $INITIAL_PIECE[$BLACK, $BISHOP_VALUE]
+$BLACK_ROOK   = $INITIAL_PIECE[$BLACK, $ROOK_VALUE]
+$BLACK_QUEEN  = $INITIAL_PIECE[$BLACK, $QUEEN_VALUE]
+$BLACK_KING   = $INITIAL_PIECE[$BLACK, $KING_VALUE]
 
-WHITE_PAWN   = INITIAL_PIECE[WHITE, PAWN_VALUE]
-WHITE_ROOK   = INITIAL_PIECE[WHITE, ROOK_VALUE]
-WHITE_KNIGHT = INITIAL_PIECE[WHITE, KNIGHT_VALUE]
-WHITE_BISHOP = INITIAL_PIECE[WHITE, BISHOP_VALUE]
-WHITE_QUEEN  = INITIAL_PIECE[WHITE, QUEEN_VALUE]
-WHITE_KING   = INITIAL_PIECE[WHITE, KING_VALUE]
+$WHITE_PAWN   = $INITIAL_PIECE[$WHITE, $PAWN_VALUE]
+$WHITE_ROOK   = $INITIAL_PIECE[$WHITE, $ROOK_VALUE]
+$WHITE_KNIGHT = $INITIAL_PIECE[$WHITE, $KNIGHT_VALUE]
+$WHITE_BISHOP = $INITIAL_PIECE[$WHITE, $BISHOP_VALUE]
+$WHITE_QUEEN  = $INITIAL_PIECE[$WHITE, $QUEEN_VALUE]
+$WHITE_KING   = $INITIAL_PIECE[$WHITE, $KING_VALUE]
 
-IS_EMPTY = ->(piece) {
-  NOT[GET_OCCUPIED[piece]]
+$IS_EMPTY = ->(piece) {
+  NOT[$GET_OCCUPIED[piece]]
 }
 
-IS_BLACK = ->(piece) {
-  COLOR_SWITCH[piece][FIRST, SECOND, SECOND]
+$IS_BLACK = ->(piece) {
+  $COLOR_SWITCH[piece][FIRST, SECOND, SECOND]
 }
 
-IS_WHITE = ->(piece) {
-  COLOR_SWITCH[piece][SECOND, FIRST, SECOND]
+$IS_WHITE = ->(piece) {
+  $COLOR_SWITCH[piece][SECOND, FIRST, SECOND]
 }
 
-COLOR_SWITCH = ->(piece) {
+$COLOR_SWITCH = ->(piece) {
   ->(black, white, empty) {
-    GET_OCCUPIED[piece][
-      GET_COLOR[piece][
+    $GET_OCCUPIED[piece][
+      $GET_COLOR[piece][
         black,
         white
       ],
@@ -295,8 +284,8 @@ COLOR_SWITCH = ->(piece) {
   }
 }
 
-HAS_VALUE = ->(piece, value) {
-  IS_EQUAL[value, GET_VALUE[piece]]
+$HAS_VALUE = ->(piece, value) {
+  IS_EQUAL[value, $GET_VALUE[piece]]
 }
 
 # Comparisons
@@ -306,7 +295,7 @@ IS_ZERO = ->(number) {
 }
 
 IS_GREATER_OR_EQUAL = ->(a, b) {
-  IS_ZERO[SUBTRACT[b, a]]
+  IS_ZERO[$SUBTRACT[b, a]]
 }
 
 IS_EQUAL = ->(a, b) {
@@ -318,7 +307,7 @@ IS_EQUAL = ->(a, b) {
 
 # Board State
 
-CREATE_STATE = ->(from, to, last_from, last_to, board, score, promotion) {
+$CREATE_STATE = ->(from, to, last_from, last_to, board, score, promotion) {
   PAIR[
     PAIR[
       PAIR[from, to],
@@ -331,95 +320,83 @@ CREATE_STATE = ->(from, to, last_from, last_to, board, score, promotion) {
   ]
 }
 
-GET_PROMOTION = ->(state) {
+$GET_PROMOTION = ->(state) {
   LEFT[RIGHT[state]]
 }
 
-GET_LAST_FROM = ->(state) {
-  LEFT[GET_MOVED[state]]
+$GET_LAST_FROM = ->(state) {
+  LEFT[$GET_MOVED[state]]
 }
 
-GET_LAST_TO = ->(state) {
-  RIGHT[GET_MOVED[state]]
+$GET_LAST_TO = ->(state) {
+  RIGHT[$GET_MOVED[state]]
 }
 
-GET_FROM = ->(state) {
-  LEFT[GET_COLOR[state]]
+$GET_FROM = ->(state) {
+  LEFT[$GET_COLOR[state]]
 }
 
-GET_TO = ->(state) {
-  RIGHT[GET_COLOR[state]]
+$GET_TO = ->(state) {
+  RIGHT[$GET_COLOR[state]]
 }
 
-GET_BOARD = ->(state) {
-  GET_OCCUPIED[LEFT[state]]
+$GET_BOARD = ->(state) {
+  $GET_OCCUPIED[LEFT[state]]
 }
 
-GET_SCORE = ->(state) {
-  GET_MOVED[LEFT[state]]
+$GET_SCORE = ->(state) {
+  $GET_MOVED[LEFT[state]]
 }
 
-UPDATE_ALL_BUT_FROM_TO_PROMOTION = ->(older, newer) {
-  CREATE_STATE[
-    GET_FROM[older],
-    GET_TO[older],
-    GET_FROM[newer],
-    GET_TO[newer],
-    GET_BOARD[newer],
-    GET_SCORE[newer],
-    GET_PROMOTION[older]
+$UPDATE_ALL_BUT_FROM_TO_PROMOTION = ->(older, newer) {
+  $CREATE_STATE[
+    $GET_FROM[older],
+    $GET_TO[older],
+    $GET_FROM[newer],
+    $GET_TO[newer],
+    $GET_BOARD[newer],
+    $GET_SCORE[newer],
+    $GET_PROMOTION[older]
   ]
 }
 
-UPDATE_LAST_FROM_TO = ->(older, newer) {
-  CREATE_STATE[
-    GET_FROM[older],
-    GET_TO[older],
-    GET_FROM[newer],
-    GET_TO[newer],
-    GET_BOARD[older],
-    GET_SCORE[older],
-    GET_PROMOTION[older]
-  ]
-}
-
-UPDATE_AFTER_MOVE = ->(older, board) {
-  CREATE_STATE[
-    GET_FROM[older],
-    GET_TO[older],
-    GET_FROM[older],
-    GET_TO[older],
+$UPDATE_AFTER_MOVE = ->(older, board) {
+  $CREATE_STATE[
+    $GET_FROM[older],
+    $GET_TO[older],
+    $GET_FROM[older],
+    $GET_TO[older],
     board,
     ->(last_moved) {
-      BOARD_REDUCE[
+      $BOARD_REDUCE[
         board,
         ->(memo, piece, position) {
-          ADD[
-            IS_BLACK[piece][
-              ADD,
-              SUBTRACT
+          $ADD[
+            $IS_BLACK[piece][
+              $ADD,
+              $SUBTRACT
             ][
               memo,
-              GET_VALUE[piece]
+              $GET_VALUE[piece]
             ],
-            IF[IS_WHITE[piece]][
+            IF[$IS_WHITE[piece]][
               -> {
-                IF[HAS_VALUE[piece, KING_VALUE]][
+                IF[$HAS_VALUE[piece, $KING_VALUE]][
                   -> {
-                    ISNT_INVALID[
-                      GET_RULE[GET_POSITION[board, last_moved]][
-                        CREATE_STATE[
+                    $ISNT_INVALID[
+                      $GET_RULE[$GET_POSITION[board, last_moved]][
+                        $CREATE_STATE[
                           last_moved,
                           position,
                           last_moved,
                           last_moved,
                           board,
                           ZERO,
-                          BLACK_QUEEN
+                          $BLACK_QUEEN
                         ]
                       ]
                     ][
-                      MAX_PIECE_TOTAL,
+                      $MULTIPLY[$EIGHT, $FIVE],
                       ZERO
                     ]
                   },
@@ -430,17 +407,17 @@ UPDATE_AFTER_MOVE = ->(older, board) {
             ]
           ]
         },
-        MAX_PIECE_TOTAL
+        $MULTIPLY[$EIGHT, $FIVE]
       ]
-    }[GET_TO[older]],
-    GET_PROMOTION[older]
+    }[$GET_TO[older]],
+    $GET_PROMOTION[older]
   ]
 }
 
-WITH_BASIC_INFO = ->(state, func) {
-  func[GET_BOARD[state], GET_FROM[state], GET_TO[state]]
+$WITH_BASIC_INFO = ->(state, func) {
+  func[$GET_BOARD[state], $GET_FROM[state], $GET_TO[state]]
 }
 
 # Z Combinator
 
-Z = ->(f) { ->(a) { a[a] }[ ->(x) { f[->(v) { x[x][v] }] } ] }
+$Z = ->(f) { ->(a) { a[a] }[ ->(x) { f[->(v) { x[x][v] }] } ] }

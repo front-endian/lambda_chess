@@ -7,5 +7,4 @@
 require_relative './test_data'
 require_relative './test_board'
 require_relative './test_pieces'
-require_relative './test_ai'
 require_relative './test_play'

@@ -29,14 +29,14 @@ class Proc
   end
 
   def vector_to_a
-    VECTOR_LIST[self].list_to_a(VECTOR_SIZE[self].to_i)
+    $VECTOR_LIST[self].list_to_a($VECTOR_SIZE[self].to_i)
   end
 
   def board_to_a
     self.list_to_a(8)
         .map { |row|
           row.list_to_a(8).map { |piece|
-            GET_VALUE[piece].to_i + IS_BLACK[piece][KING_VALUE.to_i, 0]
+            $GET_VALUE[piece].to_i + $IS_BLACK[piece][$KING_VALUE.to_i, 0]
           }
         }.flatten
   end
@@ -63,15 +63,15 @@ class Array
   end
 
   def to_vector
-    reverse.inject(EMPTY_VECTOR) do |previous, element|
-      VECTOR_APPEND[previous, element]
+    reverse.inject($EMPTY_VECTOR) do |previous, element|
+      $VECTOR_APPEND[previous, element]
     end
   end
 
   def to_board
     map do |row|
       row.map do |piece|
-        piece.is_a?(Proc) ? piece : EMPTY_SPACE
+        piece.is_a?(Proc) ? piece : PAIR[PAIR[FIRST, ZERO], PAIR[SECOND, SECOND]]
       end.to_linked_list
     end.to_linked_list
   end
@@ -100,7 +100,7 @@ def test_castling_to_one_side board:,
   king_from     = PAIR[FOUR, home_row]
   king_to       = PAIR[king_to_column, home_row]
   rook_from     = PAIR[
-                    (rook_to_column == THREE) ? ZERO : SEVEN,
+                    (rook_to_column == THREE) ? ZERO : $SEVEN,
                     home_row
                   ]
   rook_to       = PAIR[rook_to_column, home_row]
@@ -115,9 +115,9 @@ def test_castling black_board, white_board, perform:, expect:
   group 'with a white king' do
     assert 'castling to the left' do
       test_castling_to_one_side board:          white_board,
-                                home_row:       SEVEN,
-                                king:           WHITE_KING,
-                                rook:           WHITE_ROOK,
+                                home_row:       $SEVEN,
+                                king:           $WHITE_KING,
+                                rook:           $WHITE_ROOK,
                                 king_to_column: TWO,
                                 rook_to_column: THREE,
                                 perform:        perform,
@@ -126,11 +126,11 @@ def test_castling black_board, white_board, perform:, expect:
 
     assert 'castling to the right' do
       test_castling_to_one_side board:          white_board,
-                                home_row:       SEVEN,
-                                king:           WHITE_KING,
-                                rook:           WHITE_ROOK,
-                                king_to_column: SIX,
-                                rook_to_column: FIVE,
+                                home_row:       $SEVEN,
+                                king:           $WHITE_KING,
+                                rook:           $WHITE_ROOK,
+                                king_to_column: $SIX,
+                                rook_to_column: $FIVE,
                                 perform:        perform,
                                 expect:         expect
     end
@@ -140,8 +140,8 @@ def test_castling black_board, white_board, perform:, expect:
     assert 'can castle to the left' do
       test_castling_to_one_side board:          black_board,
                                 home_row:       ZERO,
-                                king:           BLACK_KING,
-                                rook:           BLACK_ROOK,
+                                king:           $BLACK_KING,
+                                rook:           $BLACK_ROOK,
                                 king_to_column: TWO,
                                 rook_to_column: THREE,
                                 perform:        perform,
@@ -151,10 +151,10 @@ def test_castling black_board, white_board, perform:, expect:
     assert 'can castle to the right' do
       test_castling_to_one_side board:          black_board,
                                 home_row:       ZERO,
-                                king:           BLACK_KING,
-                                rook:           BLACK_ROOK,
-                                king_to_column: SIX,
-                                rook_to_column: FIVE,
+                                king:           $BLACK_KING,
+                                rook:           $BLACK_ROOK,
+                                king_to_column: $SIX,
+                                rook_to_column: $FIVE,
                                 perform:        perform,
                                 expect:         expect
     end
@@ -196,40 +196,40 @@ INDEX_ARRAY = [0,  1,  2,  3,  4,  5,  6,  7,
                48, 49, 50, 51, 52, 53, 54, 55,
                56, 57, 58, 59, 60, 61, 62, 63]
 
- BP = BLACK_PAWN
- BR = BLACK_ROOK
- BN = BLACK_KNIGHT
- BB = BLACK_BISHOP
- BQ = BLACK_QUEEN
- BK = BLACK_KING
+ BP = $BLACK_PAWN
+ BR = $BLACK_ROOK
+ BN = $BLACK_KNIGHT
+ BB = $BLACK_BISHOP
+ BQ = $BLACK_QUEEN
+ BK = $BLACK_KING
 MBP = ->(piece) {
-  MAKE_PIECE[GET_COLOR[piece], GET_VALUE[piece], GET_OCCUPIED[piece], MOVED]
-}[BLACK_PAWN]
+  $MAKE_PIECE[$GET_COLOR[piece], $GET_VALUE[piece], $GET_OCCUPIED[piece], $MOVED]
+}[$BLACK_PAWN]
 MBR = ->(piece) {
-  MAKE_PIECE[GET_COLOR[piece], GET_VALUE[piece], GET_OCCUPIED[piece], MOVED]
-}[BLACK_ROOK]
+  $MAKE_PIECE[$GET_COLOR[piece], $GET_VALUE[piece], $GET_OCCUPIED[piece], $MOVED]
+}[$BLACK_ROOK]
 MBN = ->(piece) {
-  MAKE_PIECE[GET_COLOR[piece], GET_VALUE[piece], GET_OCCUPIED[piece], MOVED]
-}[BLACK_KNIGHT]
+  $MAKE_PIECE[$GET_COLOR[piece], $GET_VALUE[piece], $GET_OCCUPIED[piece], $MOVED]
+}[$BLACK_KNIGHT]
 MBB = ->(piece) {
-  MAKE_PIECE[GET_COLOR[piece], GET_VALUE[piece], GET_OCCUPIED[piece], MOVED]
-}[BLACK_BISHOP]
+  $MAKE_PIECE[$GET_COLOR[piece], $GET_VALUE[piece], $GET_OCCUPIED[piece], $MOVED]
+}[$BLACK_BISHOP]
 MBQ = ->(piece) {
-  MAKE_PIECE[GET_COLOR[piece], GET_VALUE[piece], GET_OCCUPIED[piece], MOVED]
-}[BLACK_QUEEN]
+  $MAKE_PIECE[$GET_COLOR[piece], $GET_VALUE[piece], $GET_OCCUPIED[piece], $MOVED]
+}[$BLACK_QUEEN]
 MBK = ->(piece) {
-  MAKE_PIECE[GET_COLOR[piece], GET_VALUE[piece], GET_OCCUPIED[piece], MOVED]
-}[BLACK_KING]
+  $MAKE_PIECE[$GET_COLOR[piece], $GET_VALUE[piece], $GET_OCCUPIED[piece], $MOVED]
+}[$BLACK_KING]
 
- WP = WHITE_PAWN
- WR = WHITE_ROOK
- WN = WHITE_KNIGHT
- WB = WHITE_BISHOP
- WQ = WHITE_QUEEN
- WK = WHITE_KING
-MWP = MAKE_PIECE[GET_COLOR[WHITE_PAWN], GET_VALUE[WHITE_PAWN], GET_OCCUPIED[WHITE_PAWN], MOVED]
-MWR = MAKE_PIECE[GET_COLOR[WHITE_ROOK], GET_VALUE[WHITE_ROOK], GET_OCCUPIED[WHITE_ROOK], MOVED]
-MWN = MAKE_PIECE[GET_COLOR[WHITE_KNIGHT], GET_VALUE[WHITE_KNIGHT], GET_OCCUPIED[WHITE_KNIGHT], MOVED]
-MWB = MAKE_PIECE[GET_COLOR[WHITE_BISHOP], GET_VALUE[WHITE_BISHOP], GET_OCCUPIED[WHITE_BISHOP], MOVED]
-MWQ = MAKE_PIECE[GET_COLOR[WHITE_QUEEN], GET_VALUE[WHITE_QUEEN], GET_OCCUPIED[WHITE_QUEEN], MOVED]
-MWK = MAKE_PIECE[GET_COLOR[WHITE_KING], GET_VALUE[WHITE_KING], GET_OCCUPIED[WHITE_KING], MOVED]
+ WP = $WHITE_PAWN
+ WR = $WHITE_ROOK
+ WN = $WHITE_KNIGHT
+ WB = $WHITE_BISHOP
+ WQ = $WHITE_QUEEN
+ WK = $WHITE_KING
+MWP = $MAKE_PIECE[$GET_COLOR[$WHITE_PAWN], $GET_VALUE[$WHITE_PAWN], $GET_OCCUPIED[$WHITE_PAWN], $MOVED]
+MWR = $MAKE_PIECE[$GET_COLOR[$WHITE_ROOK], $GET_VALUE[$WHITE_ROOK], $GET_OCCUPIED[$WHITE_ROOK], $MOVED]
+MWN = $MAKE_PIECE[$GET_COLOR[$WHITE_KNIGHT], $GET_VALUE[$WHITE_KNIGHT], $GET_OCCUPIED[$WHITE_KNIGHT], $MOVED]
+MWB = $MAKE_PIECE[$GET_COLOR[$WHITE_BISHOP], $GET_VALUE[$WHITE_BISHOP], $GET_OCCUPIED[$WHITE_BISHOP], $MOVED]
+MWQ = $MAKE_PIECE[$GET_COLOR[$WHITE_QUEEN], $GET_VALUE[$WHITE_QUEEN], $GET_OCCUPIED[$WHITE_QUEEN], $MOVED]
+MWK = $MAKE_PIECE[$GET_COLOR[$WHITE_KING], $GET_VALUE[$WHITE_KING], $GET_OCCUPIED[$WHITE_KING], $MOVED]

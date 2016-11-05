@@ -7,15 +7,15 @@
 require_relative './setup'
 
 group 'Board Functions' do
-  group 'GET_POSITION' do
+  group '$GET_POSITION' do
     assert 'gets data at the given position' do
-      piece = GET_POSITION[INITIAL_BOARD, PAIR[FOUR, ZERO]]
+      piece = $GET_POSITION[INITIAL_BOARD, PAIR[FOUR, ZERO]]
 
-      GET_VALUE[piece].to_i == KING_VALUE.to_i
+      $GET_VALUE[piece].to_i == $KING_VALUE.to_i
     end
   end
 
-  group 'FREE_PATH' do
+  group '$FREE_PATH' do
     center = position(3, 3)
 
     group 'returns FIRST if there are no pieces in the way' do
@@ -31,40 +31,40 @@ group 'Board Functions' do
 
       assert 'horizontally' do
         expect_truthy(
-          FREE_PATH[
+          $FREE_PATH[
             example_board,
             center,
             shift_position(center, 3, 0),
-            DECREMENT
+            $DECREMENT
           ]
         )
       end
 
       assert 'vertically' do
         expect_truthy(
-          FREE_PATH[
+          $FREE_PATH[
             example_board,
             center,
             shift_position(center, 0, -3),
-            DECREMENT
+            $DECREMENT
           ]
         )
       end
 
       assert 'diagonally' do
         expect_truthy(
-          FREE_PATH[
+          $FREE_PATH[
             example_board,
             center,
             shift_position(center, -3, 3),
-            DECREMENT
+            $DECREMENT
           ]
         )
       end
     end
 
     group 'if the only piece in the way is at the TO location' do
-      group 'returns FIRST if told to DECREMENT length' do
+      group 'returns FIRST if told to $DECREMENT length' do
         assert 'horizontally' do
           example_board = [[0, 0, 0, 0, 0, 0, 0, 0],
                            [0, 0, 0, 0, 0, 0, 0, 0],
@@ -77,11 +77,11 @@ group 'Board Functions' do
                           .to_board
 
           expect_truthy(
-            FREE_PATH[
+            $FREE_PATH[
               example_board,
               center,
               shift_position(center, -3, 0),
-              DECREMENT
+              $DECREMENT
             ]
           )
         end
@@ -98,11 +98,11 @@ group 'Board Functions' do
                           .to_board
 
           expect_truthy(
-            FREE_PATH[
+            $FREE_PATH[
               example_board,
               center,
               shift_position(center, 0, 4),
-              DECREMENT
+              $DECREMENT
             ]
           )
         end
@@ -119,11 +119,11 @@ group 'Board Functions' do
                           .to_board
 
           expect_truthy(
-            FREE_PATH[
+            $FREE_PATH[
               example_board,
               center,
               shift_position(center, 3, -3),
-              DECREMENT
+              $DECREMENT
             ]
           )
         end
@@ -142,7 +142,7 @@ group 'Board Functions' do
                           .to_board
 
           expect_falsy(
-            FREE_PATH[
+            $FREE_PATH[
               example_board,
               center,
               shift_position(center, -3, 0),
@@ -163,7 +163,7 @@ group 'Board Functions' do
                           .to_board
 
           expect_falsy(
-            FREE_PATH[
+            $FREE_PATH[
               example_board,
               center,
               shift_position(center, 0, 4),
@@ -184,7 +184,7 @@ group 'Board Functions' do
                           .to_board
 
           expect_falsy(
-            FREE_PATH[
+            $FREE_PATH[
               example_board,
               center,
               shift_position(center, 3, -3),
@@ -208,11 +208,11 @@ group 'Board Functions' do
                         .to_board
 
         expect_falsy(
-          FREE_PATH[
+          $FREE_PATH[
             example_board,
             center,
             shift_position(center, 4, 0),
-            DECREMENT
+            $DECREMENT
           ]
         )
       end
@@ -229,11 +229,11 @@ group 'Board Functions' do
                         .to_board
 
         expect_falsy(
-          FREE_PATH[
+          $FREE_PATH[
             example_board,
             center,
             shift_position(center, 0, -3),
-            DECREMENT
+            $DECREMENT
           ]
         )
       end
@@ -250,77 +250,77 @@ group 'Board Functions' do
                         .to_board
 
         expect_falsy(
-          FREE_PATH[
+          $FREE_PATH[
             example_board,
             center,
             shift_position(center, -3, 3),
-            DECREMENT
+            $DECREMENT
           ]
         )
       end
     end
   end
 
-  group 'NORMAL_MOVE' do
+  group '$NORMAL_MOVE' do
     example_board = INITIAL_BOARD
 
     from  = position(0, 0)
     to    = position(2, 2)
-    moved = NORMAL_MOVE[example_board, from, to, nil]
+    moved = $NORMAL_MOVE[example_board, from, to, nil]
 
     assert 'moves the piece at the "from" position to the "to" position' do
-      expected = GET_VALUE[GET_POSITION[example_board, from]].to_i
+      expected = $GET_VALUE[$GET_POSITION[example_board, from]].to_i
 
-      expected == GET_VALUE[GET_POSITION[moved, to]].to_i
+      expected == $GET_VALUE[$GET_POSITION[moved, to]].to_i
     end
 
     assert 'marks the moved piece as moved' do
-      expect_falsy(GET_MOVED[GET_POSITION[moved, from]]) &&
-      expect_truthy(GET_MOVED[GET_POSITION[moved, to]])
+      expect_falsy($GET_MOVED[$GET_POSITION[moved, from]]) &&
+      expect_truthy($GET_MOVED[$GET_POSITION[moved, to]])
     end
 
     assert 'puts an empty piece in the "from" position' do
-      EMPTY_SPACE == GET_POSITION[moved, from]
+      $EMPTY_SPACE == $GET_POSITION[moved, from]
     end
 
     assert 'works when moving to same position' do
-      null_move = NORMAL_MOVE[example_board, from, from, nil]
+      null_move = $NORMAL_MOVE[example_board, from, from, nil]
 
-      expected = GET_VALUE[GET_POSITION[example_board, from]].to_i
+      expected = $GET_VALUE[$GET_POSITION[example_board, from]].to_i
 
-      expected == GET_VALUE[GET_POSITION[null_move, from]].to_i
+      expected == $GET_VALUE[$GET_POSITION[null_move, from]].to_i
     end
   end
 
-  group 'CHANGE_MOVE' do
+  group '$CHANGE_MOVE' do
     example_board = INITIAL_BOARD
 
     from      = position(0, 0)
     to        = position(2, 2)
-    new_piece = BLACK_PAWN
-    moved     = CHANGE_MOVE[example_board, from, to, new_piece]
+    new_piece = $BLACK_PAWN
+    moved     = $CHANGE_MOVE[example_board, from, to, new_piece]
 
     assert 'puts the "new_piece" in the "to" position' do
-      expected = GET_VALUE[new_piece].to_i
+      expected = $GET_VALUE[new_piece].to_i
 
-      expected == GET_VALUE[GET_POSITION[moved, to]].to_i
+      expected == $GET_VALUE[$GET_POSITION[moved, to]].to_i
     end
 
     assert 'marks the moved piece as moved' do
-      expect_falsy(GET_MOVED[GET_POSITION[moved, from]]) &&
-      expect_truthy(GET_MOVED[GET_POSITION[moved, to]])
+      expect_falsy($GET_MOVED[$GET_POSITION[moved, from]]) &&
+      expect_truthy($GET_MOVED[$GET_POSITION[moved, to]])
     end
 
     assert 'puts an empty piece in the "from" position' do
-      EMPTY_SPACE == GET_POSITION[moved, from]
+      $EMPTY_SPACE == $GET_POSITION[moved, from]
     end
 
     assert 'works when moving to same position' do
-      null_move = CHANGE_MOVE[example_board, from, from, new_piece]
+      null_move = $CHANGE_MOVE[example_board, from, from, new_piece]
 
-      expected = GET_VALUE[new_piece].to_i
+      expected = $GET_VALUE[new_piece].to_i
 
-      expected == GET_VALUE[GET_POSITION[null_move, from]].to_i
+      expected == $GET_VALUE[$GET_POSITION[null_move, from]].to_i
     end
   end
 end

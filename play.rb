@@ -5,270 +5,261 @@
 # terms of the three-clause BSD license. See LICENSE.txt
 
 PLAY =
-->(__if__) {
-->(__five_conditions_met__) {
-->(__not__) {
-->(__or__) {
-->(__and__) {
-->(__second__) {
-->(__first__) {
-->(__four__) {
-->(__three__) {
-->(__two__) {
-->(__one__) {
-->(__zero__) {
-->(__right__) {
-->(__left__) {
-->(__pair__) {
-->(__add__) {
-->(__five__) {
-->(__white_queen__) {
-->(__black_queen__) {
-->(__increment__) {
-->(__decrement__) {
-->(__subtract__) {
-->(__is_zero__) {
-->(__is_greater_or_equal__) {
-->(__is_equal__) {
-->(__multiply__) {
-->(__eight__) {
-->(__seven__) {
-->(__six__) {
-->(_get_moved_) {
-->(__get_occupied__) {
-->(__get_value__) {
-->(__get_color__) {
-->(__nth__) {
-->(__has_value__) {
-->(__color_switch__) {
-->(__is_white__) {
-->(__is_black__) {
-->(__is_empty__) {
-->(__list_map__) {
-->(__list_reduce__) {
-->(__empty_vector__) {
-->(__vector_append__) {
-->(__vector_first__) {
-->(__vector_reduce__) {
-->(__delta__) {
-->(__empty_space__) {
-->(__get_last_to__) {
-->(__get_from__) {
-->(__get_to__) {
-->(__get_board__) {
-->(__get_last_from__) {
-->(__get_promotion__) {
-->(__get_score__) {
-->(__create_state__) {
-->(__with_basic_info__) {
-->(__board_reduce__) {
-->(__same_position__) {
-->(__get_position__) {
-->(__change_func__) {
-->(__free_path__) {
-->(__position_select__) {
-->(__from_to_reduce__) {
-->(__invalid__) {
-->(__valid__) {
-->(__isnt_invalid__) {
-->(__is_not_in_check__) {
-->(__change_move__) {
-->(__normal_move__) {
-->(__update_all_but_from_to_promotion__) {
-->(__basic_checks__){
-->(__straight_line_rule__) {
-->(__pawn_rule__) {
-->(__knight_rule__) {
-->(__king_rule__) {
-->(__bishop_rule__) {
-->(__rook_rule__) {
-->(__queen_rule__) {
-->(__get_rule__) {
-->(__advance_state__) {
-->(__possible_moves__) {
+->(λ) {
+->(b) {
+->(c) {
+->(d) {
+->(e) {
+->(f) {
+->(g) {
+->(h) {
+->(i) {
+->(j) {
+->(k) {
+->(l) {
+->(m) {
+->(n) {
+->(o) {
+->(p) {
+->(q) {
+->(r) {
+->(s) {
+->(t) {
+->(u) {
+->(v) {
+->(w) {
+->(x) {
+->(y) {
+->(z) {
+->(α) {
+->(β) {
+->(γ) {
+->(δ) {
+->(ε) {
+->(ζ) {
+->(η) {
+->(θ) {
+->(ι) {
+->(κ) {
+->(μ) {
+->(ν) {
+->(ξ) {
+->(ο) {
+->(π) {
+->(ρ) {
+->(ς) {
+->(σ) {
+->(τ) {
+->(υ) {
+->(φ) {
+->(χ) {
+->(ψ) {
+->(ω) {
+->(а) {
+->(б) {
+->(в) {
+->(г) {
+->(д) {
+->(е) {
+->(ж) {
+->(з) {
+->(и) {
+->(й) {
+->(к) {
+->(л) {
+->(м) {
+->(н) {
+->(о) {
+->(п) {
+->(р) {
+->(с) {
+->(т) {
+->(у) {
+->(ф){
+->(х) {
+->(♟) {
+->(♞) {
+->(♚) {
+->(♝) {
+->(♜) {
+->(♛) {
+->(ч) {
+->(a) {
+->(ш) {
 
 
-->(state, accept, reject, loss, forfit, seed) {
-  __if__[__is_black__[__get_position__[__get_board__[state]][__get_from__[state]]]][
-    -> { reject[state] }][
+->(h, q, s, t, u, z) {
+  λ[ν[и[а[h]][ψ[h]]]][
+    -> { s[h] }][
     -> {
-      __advance_state__[state][
-        ->(new_state) {
-          ->(response) {
-            __if__[__left__[response]][
+      a[h][
+        ->(p) {
+          ->(l) {
+            λ[n[l]][
               -> {
-                ->(response_state) {
-                  __if__[
-                    ->(board) {
-                      ->(king_position_vector) {
-                        __if__[
-                          __from_to_reduce__[
-                            king_position_vector][
-                            __position_select__[board][->(_) { __first__ }]][
-                            ->(memo) { ->(from) { ->(to) {
-                              __if__[memo][
-                                -> { __first__ }][
+                ->(k) {
+                  λ[
+                    ->(j) {
+                      ->(e) {
+                        λ[
+                          м[
+                            e][
+                            л[j][->(_) { g }]][
+                            ->(b) { ->(c) { ->(d) {
+                              λ[b][
+                                -> { g }][
                                 -> {
-                                  __isnt_invalid__[
-                                    __king_rule__[__get_rule__][
-                                      __create_state__[from][to][from][to][board][__zero__][__white_queen__]
+                                  п[
+                                    ♚[ч][
+                                      д[c][d][c][d][j][l][r]
                                     ]
                                   ]
                                 }
                               ]
                             }}}][
-                            __second__
+                            f
                           ]
                         ][
-                          # King can move
-                          -> { __first__ }][
-                          # King can't move
+                          -> { g }][
                           -> {
-                            __is_not_in_check__[board][__vector_first__[king_position_vector]][__get_rule__]
+                            р[j][σ[e]][ч]
                           }
                         ]
                       }[
-                        # "king_position_vector"
-                        __position_select__[
-                          board][
-                          ->(piece) {
-                            __and__[
-                              __is_white__[piece]][
-                              __has_value__[piece][__six__]
+                        л[
+                          j][
+                          ->(λ) {
+                            e[
+                              μ[λ]][
+                              ι[λ][γ]
                             ]
                           }
                         ]
                       ]
                     }[
-                      __get_board__[response_state]
+                      а[k]
                     ]
                   ][
-                    -> { accept[response_state] }][
-                    -> { loss[response_state] }
+                    -> { q[k] }][
+                    -> { t[k] }
                   ]
                 }[
-                  # "response_state"
-                  ->(older) {
-                    __create_state__[
-                      __get_from__[older]][
-                      __get_to__[older]][
-                      __get_from__[state]][
-                      __get_to__[state]][
-                      __get_board__[older]][
-                      __get_score__[older]][
-                      __get_promotion__[older]
+                  ->(λ) {
+                    д[
+                      ψ[λ]][
+                      ω[λ]][
+                      ψ[h]][
+                      ω[h]][
+                      а[λ]][
+                      г[λ]][
+                      в[λ]
                     ]
-                  }[__right__[response]]
+                  }[m[l]]
                 ]
               }][
-              -> { forfit[new_state] }
+              -> { u[p] }
             ]
           }[
-            # "response"
-            ->(result) {
-              __if__[__left__[result]][
+            ->(b) {
+              λ[n[b]][
                 -> {
-                  __advance_state__[__update_all_but_from_to_promotion__[__right__[result]][new_state]][
-                    ->(new_state) { __pair__[__first__][new_state] }][
-                    -> { __pair__[__second__][ __zero__] }
+                  a[у[m[b]][p]][
+                    ->(λ) { o[g][λ] }][
+                    -> { o[f][ l] }
                   ]
                 }][
-                -> { result }
+                -> { b }
               ]
             }[
-              # "result"
-              ->(states) {
-                __if__[__is_zero__[__right__[states]]][
-                  -> { __pair__[__second__][__zero__] }][
+              ->(e) {
+                λ[w[m[e]]][
+                  -> { o[f][l] }][
                   -> {
-                    ->(best_vector) {
-                      __pair__[
-                        __first__][
-                        __nth__[
-                          __left__[best_vector]][
-                          __right__[
-                            seed[
-                              ->(memo) {
-                                __is_greater_or_equal__[__left__[memo]][__right__[best_vector]][
-                                  __pair__[
-                                    __subtract__[__left__[memo]][__right__[best_vector]]][
-                                    __zero__
+                    ->(b) {
+                      o[
+                        g][
+                        θ[
+                          n[b]][
+                          m[
+                            z[
+                              ->(λ) {
+                                x[n[λ]][m[b]][
+                                  o[
+                                    v[n[λ]][m[b]]][
+                                    l
                                   ]][
-                                  __pair__[
-                                    __left__[memo]][
-                                    __left__[memo]
+                                  o[
+                                    n[λ]][
+                                    n[λ]
                                   ]
                                 ]
                               }][
-                              __pair__[seed][__zero__]
+                              o[z][l]
                             ]
                           ]
                         ]
                       ]
                     }[
-                      # "best_vector"
-                      __vector_reduce__[
-                        states][
-                        ->(memo) { ->(state) {
-                          __if__[__is_zero__[__right__[memo]]][
-                            -> { __vector_append__[memo][state] }][
+                      τ[
+                        e][
+                        ->(b) { ->(c) {
+                          λ[w[m[b]]][
+                            -> { ς[b][c] }][
                             -> {
-                              __is_equal__[__get_score__[state]][__get_score__[__vector_first__[memo]]][
-                                __vector_append__[memo][state]][
-                                __is_greater_or_equal__[
-                                  __get_score__[state]][
-                                  __get_score__[__vector_first__[memo]]
+                              y[г[c]][г[σ[b]]][
+                                ς[b][c]][
+                                x[
+                                  г[c]][
+                                  г[σ[b]]
                                 ][
-                                  __vector_append__[__empty_vector__][state]][
-                                  memo
+                                  ς[ρ][c]][
+                                  b
                                 ]
                               ]
                             }
                           ]
                         }}][
-                        __empty_vector__
+                        ρ
                       ]
                     ]
                   }
                 ]
               }[
-                __vector_reduce__[
-                  __possible_moves__[
-                    new_state][
-                    __first__][
-                    __position_select__[
-                      __get_board__[new_state]][
-                      ->(piece) { __not__[__is_black__[piece]] }
+                τ[
+                  ш[
+                    p][
+                    g][
+                    л[
+                      а[p]][
+                      ->(λ) { c[ν[λ]] }
                     ]
                   ]][
-                  ->(memo) { ->(old_state) {
-                    # Find the highest scoring response
-                    __vector_append__[
-                      memo][
-                      __vector_reduce__[
-                        # Find all possble responses
-                        __possible_moves__[
-                          old_state][
-                          __second__][
-                          __vector_append__[__empty_vector__][__get_to__[old_state]]
+                  ->(c) { ->(d) {
+                    ς[
+                      c][
+                      τ[
+                        ш[
+                          d][
+                          f][
+                          ς[ρ][ω[d]]
                         ]][
-                        ->(memo) { ->(new_state) {
-                          __is_greater_or_equal__[__get_score__[new_state]][__get_score__[memo]][
-                            memo][
-                            __update_all_but_from_to_promotion__[memo][new_state]
+                        ->(λ) { ->(b) {
+                          x[г[b]][г[λ]][
+                            λ][
+                            у[λ][b]
                           ]
                         }}][
-                        old_state
+                        d
                       ]
                     ]
                   }}][
-                  __empty_vector__
+                  ρ
                 ]
               ]
             ]
           ]
         }][
-        -> { reject[state] }
+        -> { s[h] }
       ]
     }
   ]
@@ -283,33 +274,33 @@ PLAY =
 
 
 }[
-  # "__possible_moves__"
-  ->(state) { ->(color) { ->(possible_tos) {
-    ->(board) {
-      __from_to_reduce__[
-        __position_select__[board][color[__is_black__][__is_white__]]][
-        possible_tos][
-        ->(possible_moves) { ->(from) { ->(to) {
-          __advance_state__[
-            __create_state__[
-              from][
-              to][
-              __get_last_from__[state]][
-              __get_last_to__[state]][
-              board][
-              __zero__][
-              color[__black_queen__][__white_queen__]
+  # "possible_moves"
+  # "ш"
+  ->(λ) { ->(b) { ->(c) {
+    ->(d) {
+      м[
+        л[d][b[ν][μ]]][
+        c][
+        ->(e) { ->(f) { ->(g) {
+          a[
+            д[
+              f][
+              g][
+              б[λ]][
+              χ[λ]][
+              d][
+              l][
+              b[s][r]
             ]
           ][
-            ->(new_state) { __vector_append__[possible_moves][new_state] }][
-            -> { possible_moves }
+            ->(λ) { ς[e][λ] }][
+            -> { e }
           ]
         }}}][
-        __empty_vector__
+        ρ
       ]
     }[
-      # "board"
-      __get_board__[state]
+      а[λ]
     ]
   }}}
 ]
@@ -317,112 +308,110 @@ PLAY =
 
 
 }[
-  # "__advance_state__"
-  ->(state) {
-    ->(move_type) {
-      ->(if_valid) {->(if_invalid) {
-        __if__[__isnt_invalid__[move_type]][
+  # "λdvλnce_stλte"
+  # "a"
+  ->(b) {
+    ->(t) {
+      ->(c) {->(d) {
+        λ[п[t]][
           -> {
-            if_valid[
-              ->(board) {
-                __create_state__[
-                  __get_from__[state]][
-                  __get_to__[state]][
-                  __get_from__[state]][
-                  __get_to__[state]][
-                  board][
-                  ->(last_moved) {
-                    __board_reduce__[
-                      board][
-                      ->(memo) { ->(piece) { ->(position) {
-                        __add__[
-                          __is_black__[piece][
-                            __add__][
-                            __subtract__
+            c[
+              ->(d) {
+                д[
+                  ψ[b]][
+                  ω[b]][
+                  ψ[b]][
+                  ω[b]][
+                  d][
+                  ->(e) {
+                    ж[
+                      d][
+                      ->(f) { ->(g) { ->(h) {
+                        p[
+                          ν[g][
+                            p][
+                            v
                           ][
-                            memo][
-                            __get_value__[piece]
+                            f][
+                            ζ[g]
                           ]][
-                          __if__[__is_white__[piece]][
+                          λ[μ[g]][
                             -> {
-                              __if__[__has_value__[piece][__six__]][
+                              λ[ι[g][γ]][
                                 -> {
-                                  __isnt_invalid__[
-                                    __get_rule__[__get_position__[board][last_moved]][
-                                      __create_state__[
-                                        last_moved][
-                                        position][
-                                        last_moved][
-                                        last_moved][
-                                        board][
-                                        __zero__][
-                                        __black_queen__
+                                  п[
+                                    ч[и[d][e]][
+                                      д[
+                                        e][
+                                        h][
+                                        e][
+                                        e][
+                                        d][
+                                        l][
+                                        s
                                       ]
                                     ]
                                   ][
-                                    __multiply__[__eight__][__five__]][
-                                    __zero__
+                                    z[α][q]][
+                                    l
                                   ]
                                 }][
-                                -> { __zero__ }
+                                -> { l }
                               ]
                             }][
-                            -> { __zero__ }
+                            -> { l }
                           ]
                         ]
                       }}}][
-                      __multiply__[__eight__][__five__]
+                      z[α][q]
                     ]
-                  }[__get_to__[state]]][
-                  __get_promotion__[state]
+                  }[ω[b]]][
+                  в[b]
                 ]
               }[
-                move_type[
-                  __normal_move__][
-                  __zero__][
-                  ->(board) { ->(from) { ->(to) { ->(new_piece) {
-                    ->(captured) {
-                      __change_move__[
-                        __normal_move__[board][from][to][new_piece]][
-                        captured][
-                        captured][
-                        __empty_space__
+                t[
+                  т][
+                  l][
+                  ->(λ) { ->(b) { ->(c) { ->(d) {
+                    ->(e) {
+                      с[
+                        т[λ][b][c][d]][
+                        e][
+                        e][
+                        φ
                       ]
                     }[
-                      # "captured"
-                      __pair__[__left__[to]][__right__[from]]
+                      o[n[c]][m[b]]
                     ]
                   }}}}][
-                  ->(board) { ->(from) { ->(to) { ->(new_piece) {
-                    ->(is_moving_left) {
-                      __normal_move__[
-                        __normal_move__[board][ from][ to][ new_piece]][
-                        # Rook positions
-                        __pair__[is_moving_left[__zero__][__seven__]][__right__[from]]][
-                        __pair__[is_moving_left[__three__][__five__]][__right__[from]]][
-                        new_piece
+                  ->(d) { ->(λ) { ->(b) { ->(c) {
+                    ->(e) {
+                      т[
+                        т[d][ λ][ b][ c]][
+                        o[e[l][β]][m[λ]]][
+                        o[e[i][q]][m[λ]]][
+                        c
                       ]
                     }[
-                      # "is_moving_left"
-                      __is_greater_or_equal__[__left__[from]][__left__[to]]
+                      x[n[λ]][n[b]]
                     ]
                   }}}}][
-                  __change_move__
+                  с
                 ][
-                  __get_board__[state]][
-                  __get_from__[state]][
-                  __get_to__[state]][
-                  __get_promotion__[state]
+                  а[b]][
+                  ψ[b]][
+                  ω[b]][
+                  в[b]
                 ]
               ]
             ]
           }][
-          -> { if_invalid[] }
+          -> { d[] }
         ]
       }}
     }[
       # "move_type"
-      __get_rule__[__get_position__[__get_board__[state]][__get_from__[state]]][state]
+      ч[и[а[b]][ψ[b]]][b]
     ]
   }
 ]
@@ -430,43 +419,44 @@ PLAY =
 
 
 }[
-  # "__get_rule__"
-  ->(aaa) { aaa[aaa] }[ ->(xxx) {
-    ->(piece) {
-      __has_value__[piece][__one__][
-        __pawn_rule__][
-      __has_value__[piece][->(succ) { ->(zero) { succ[succ[succ[succ[zero]]]] } }][
-        __rook_rule__][
-      __has_value__[piece][__two__][
-        __knight_rule__][
-      __has_value__[piece][__three__][
-        __bishop_rule__][
-      __has_value__[piece][__five__][
-        __queen_rule__][
-      __has_value__[piece][__six__][
-        __king_rule__][
-        ->(_) { ->(_) { __invalid__ } }
-      ]]]]]][->(vvv) { xxx[xxx][vvv] }]
+  # "get_rule"
+  # "ч"
+  ->(λ) { λ[λ] }[ ->(b) {
+    ->(c) {
+      ι[c][k][
+        ♟][
+      ι[c][->(λ) { ->(b) { λ[λ[λ[λ[b]]]] } }][
+        ♜][
+      ι[c][j][
+        ♞][
+      ι[c][i][
+        ♝][
+      ι[c][q][
+        ♛][
+      ι[c][γ][
+        ♚][
+        ->(_) { ->(_) { н } }
+      ]]]]]][->(c) { b[b][c] }]
     } } ]
 ]
 
 
 
 }[
-  # "__queen_rule__"
-  ->(get_rule) {
-    ->(state) {
-      ->(follows_rule) {
-        __or__[
-          follows_rule[__rook_rule__[get_rule]]][
-          follows_rule[__bishop_rule__[get_rule]]
+  # "queen_rule"
+  # "♛"
+  ->(λ) {
+    ->(b) {
+      ->(c) {
+        d[
+          c[♜[λ]]][
+          c[♝[λ]]
         ][
-          __valid__][
-          __invalid__
+          о][
+          н
         ]
       }[
-        # "follows_rule"
-        ->(rule) { __isnt_invalid__[rule[state]] }
+        ->(λ) { п[λ[b]] }
       ]
     }
   }
@@ -475,12 +465,13 @@ PLAY =
 
 
 }[
-  # "__rook_rule__"
-  __straight_line_rule__[
-    ->(delta_x) { ->(delta_y) {
-      __or__[
-        __is_zero__[delta_x]][
-        __is_zero__[delta_y]
+  # "rook_rule"
+  # "♜"
+  х[
+    ->(λ) { ->(b) {
+      d[
+        w[λ]][
+        w[b]
       ]
     }}
   ]
@@ -489,11 +480,12 @@ PLAY =
 
 
 }[
-  # "__bishop_rule__"
-  __straight_line_rule__[
-    ->(delta_x) {
-      -> (delta_y) {
-      __is_equal__[delta_x][delta_y]
+  # "bishop_rule"
+  # "♝"
+  х[
+    ->(λ) {
+      -> (b) {
+      y[λ][b]
     }}
   ]
 ]
@@ -501,87 +493,75 @@ PLAY =
 
 
 }[
-  # "__king_rule__"
-  __basic_checks__[
-    ->(state) { ->(get_rule) {
-      __if__[
-        __and__[
-          __is_greater_or_equal__[__one__][__delta__[__get_from__[state]][__get_to__[state]][__left__]]][
-          __is_greater_or_equal__[__one__][__delta__[__get_from__[state]][__get_to__[state]][__right__]]
+  # "king_rule"
+  # "♚"
+  ф[
+    ->(d) { ->(i) {
+      λ[
+        e[
+          x[k][υ[ψ[d]][ω[d]][n]]][
+          x[k][υ[ψ[d]][ω[d]][m]]
         ]
       ][
-        -> { __valid__ }][
+        -> { о }][
         -> {
-          __with_basic_info__[
-            state][
-            ->(board) { ->(from) { ->(to) {
-              __if__[
-                __and__[
-                  __is_equal__[__two__][__delta__[from][to][__left__]]][
-                  __is_zero__[__delta__[from][to][__right__]]
+          е[
+            d][
+            ->(k) { ->(p) { ->(q) {
+              λ[
+                e[
+                  y[j][υ[p][q][n]]][
+                  w[υ[p][q][m]]
                 ]
               ][
                 -> {
-                  ->(is_moving_left) {
-                    ->(rook_from) { ->(invalid) { ->(mid_to) {
-                      __if__[
-                        ->(king) { ->(rook) {
-                          __five_conditions_met__[
-                            # Moving a king
-                            __has_value__[king][__six__]][
-                            # King is unmoved
-                            __not__[_get_moved_[king]]][
-                            # Moving a rook
-                            __has_value__[rook][__four__]][
-                            # Rook is unmoved
-                            __not__[_get_moved_[rook]]][
-                            # Path is free
-                            __free_path__[board][from][rook_from][__decrement__]
+                  ->(r) {
+                    ->(s) { ->(t) { ->(v) {
+                      λ[
+                        ->(λ) { ->(d) {
+                          b[
+                            ι[λ][γ]][
+                            c[δ[λ]]][
+                            ι[d][h]][
+                            c[δ[d]]][
+                            к[k][p][s][u]
                           ]
                         } }[
-                          # "king"
-                          __get_position__[board][from]][
-                          # "rook"
-                          __get_position__[board][rook_from]
+                          и[k][p]][
+                          и[k][s]
                         ]
                       ][
                         -> {
-                          __if__[__is_not_in_check__[__normal_move__[board][from][from][__zero__]][from][get_rule]][
+                          λ[р[т[k][p][p][l]][p][i]][
                             -> {
-                              __if__[__is_not_in_check__[__normal_move__[board][from][mid_to][__zero__]][mid_to][get_rule]][
-                                # Don't check __is_not_in_check__[board, from, to] since
-                                # __basic_checks__ does that.
-                                -> { __first__ }][
-                                invalid
+                              λ[р[т[k][p][v][l]][v][i]][
+                                -> { g }][
+                                t
                               ]
                             }][
-                            invalid
+                            t
                           ]
                         }][
-                        invalid
+                        t
                       ]
                     } } }[
-                      # "rook_from"
-                      __pair__[is_moving_left[__zero__][__seven__]][__right__[from]]][
-                      # "invalid"
-                      -> { __second__ }][
-                      # "mid_to"
-                      __pair__[
-                        is_moving_left[__decrement__][__increment__][__left__[from]]][
-                        __right__[from]
+                      o[r[l][β]][m[p]]][
+                      -> { f }][
+                      o[
+                        r[u][t][n[p]]][
+                        m[p]
                       ]
                     ]
                   }[
-                    # "is_moving_left"
-                    __is_greater_or_equal__[__left__[from]][__left__[to]]
+                    x[n[p]][n[q]]
                   ]
                 }][
-                -> { __second__ }
+                -> { f }
               ]
             }}}
           ][
-            ->(_) { ->(_) { ->(_) { ->(castle) { ->(_) { castle }}}}}][
-            __invalid__
+            ->(_) { ->(_) { ->(_) { ->(cλstle) { ->(_) { cλstle }}}}}][
+            н
           ]
         }
       ]
@@ -592,28 +572,27 @@ PLAY =
 
 
 }[
-  # "__knight_rule__"
-  __basic_checks__[
-    ->(state) {->(_) {
-      ->(delta_x) { -> (delta_y) {
-        __or__[
-          __and__[
-            __is_equal__[__two__][delta_x]][
-            __is_equal__[__one__][delta_y]
+  # "knight_rule"
+  # "♞"
+  ф[
+    ->(λ) {->(_) {
+      ->(b) { -> (c) {
+        d[
+          e[
+            y[j][b]][
+            y[k][c]
           ]][
-          __and__[
-            __is_equal__[__one__][delta_x]][
-            __is_equal__[__two__][delta_y]
+          e[
+            y[k][b]][
+            y[j][c]
           ]
         ][
-          __valid__][
-          __invalid__
+          о][
+          н
         ]
      } }[
-        # "delta_x"
-        __delta__[__get_from__[state]][__get_to__[state]][__left__]][
-        # "delta_y"
-        __delta__[__get_from__[state]][__get_to__[state]][__right__]
+        υ[ψ[λ]][ω[λ]][n]][
+        υ[ψ[λ]][ω[λ]][m]
       ]
     }}
   ]
@@ -622,145 +601,118 @@ PLAY =
 
 
 }[
-  # "__pawn_rule__"
-  __basic_checks__[
-    ->(state) {
+  # "pλwn_rule"
+  # "♟"
+  ф[
+    ->(h) {
     ->(_) {
-      __with_basic_info__[
-        state][
-        ->(board) { ->(from) { ->(to) {
-          ->(pawn_is_black) { ->(from_y) { ->(to_y) {
-            __if__[
-               pawn_is_black[
-                __is_zero__[__subtract__[from_y][to_y]]][
-                __is_zero__[__subtract__[to_y][from_y]]
+      е[
+        h][
+        ->(i) { ->(l) { ->(p) {
+          ->(z) { ->(q) { ->(r) {
+            λ[
+               z[
+                w[v[q][r]]][
+                w[v[r][q]]
               ]
             ][
-              # If moving forward
               -> {
-                ->(vertical_movement) {
-                  __if__[__is_equal__[__one__][vertical_movement]][
-                    # If moving vertically one
+                ->(t) {
+                  λ[y[k][t]][
                     -> {
-                      ->(horizontal_movement) { ->(last_to) {
-                        __if__[__is_zero__[horizontal_movement]][
-                          # If not moving horizontally
+                      ->(u) { ->(v) {
+                        λ[w[u]][
                           -> {
-                            # Performing a normal move
-                            __is_empty__[__get_position__[board][to]][
-                              __is_equal__[
-                                to_y][
-                                pawn_is_black[__seven__][__zero__]
+                            ξ[и[i][p]][
+                              y[
+                                r][
+                                z[β][l]
                               ][
-                                ->(_) { ->(_) { ->(_) { ->(_) { ->(promotion) { promotion }}}}}][
-                                __valid__
+                                ->(_) { ->(_) { ->(_) { ->(_) { ->(λ) { λ }}}}}][
+                                о
                               ]][
-                              __invalid__
+                              н
                             ]
                           }][
-                          # If moving horizontally
                           -> {
-                            __if__[__is_equal__[__one__][horizontal_movement]][
-                              # If moving horizontally one
+                            λ[y[k][u]][
                               -> {
-                                __if__[__is_empty__[__get_position__[board][to]]][
-                                  # Not performing a normal capture
+                                λ[ξ[и[i][p]]][
                                   -> {
-                                    ->(last_moved) {
-                                      __five_conditions_met__[
-                                        __first__][
-                                        # Position behind "to" is "last_to"
-                                        __same_position__[
-                                          last_to][
-                                          __pair__[__left__[to]][from_y]
+                                    ->(x) {
+                                      b[
+                                        g][
+                                        з[
+                                          v][
+                                          o[n[p]][q]
                                         ]][
-                                        # "last_moved" is a pawn
-                                        __has_value__[last_moved][__one__]][
-                                        # "last_moved" is the opposite color
-                                        pawn_is_black[__is_white__][__is_black__][last_moved]][
-                                        # "last_moved" moved forward two
-                                        __is_equal__[
-                                          __delta__[__get_last_from__[state]][last_to][__right__]][
-                                          __two__
+                                        ι[x][k]][
+                                        z[μ][ν][x]][
+                                        y[
+                                          υ[б[h]][v][m]][
+                                          j
                                         ]
                                       ][
-                                        ->(_) { ->(_) { ->(en_passant) { ->(_) { ->(_) { en_passant }}}}}][
-                                        __invalid__
+                                        ->(_) { ->(_) { ->(λ) { ->(_) { ->(_) { λ }}}}}][
+                                        н
                                       ]
                                     }[
-                                      # "last_moved"
-                                      __get_position__[board][last_to]
+                                      и[i][v]
                                     ]
                                   }][
-                                  # Performing a normal capture
-                                  -> { __valid__ }
+                                  -> { о }
                                 ]
                               }][
-                              # If moving horizontally more than
-                              -> { __invalid__ }
+                              -> { н }
                             ]
                           }
                         ]
                       } }[
-                        # "horizontal_movement"
-                        __delta__[from][to][__left__]][
-                        # "last_to"
-                        __get_last_to__[state]
+                        υ[l][p][n]][
+                        χ[h]
                       ]
                     }][
-                    # If not moving vertically one
                     -> {
-                      __if__[__is_equal__[__two__][vertical_movement]][
-                        # If moving vertically two
+                      λ[y[j][t]][
                         -> {
-                          __if__[__is_zero__[__delta__[from][to][__left__]]][
-                            # If not moving horizontally
+                          λ[w[υ[l][p][n]]][
                             -> {
-                              __and__[
-                                __is_empty__[__get_position__[board][to]]][
-                                __and__[
-                                  # One space ahead of pawn is free
-                                  __is_empty__[
-                                    __get_position__[
-                                      board][
-                                      __pair__[
-                                        __left__[to]][
-                                        __change_func__[from][ to][ __right__][from_y]
+                              e[
+                                ξ[и[i][p]]][
+                                e[
+                                  ξ[
+                                    и[
+                                      i][
+                                      o[
+                                        n[p]][
+                                        й[l][ p][ m][q]
                                       ]
                                     ]
                                   ]][
-                                  # Pawn has not moved yet
-                                  __not__[_get_moved_[__get_position__[board][from]]]
+                                  c[δ[и[i][l]]]
                                 ]
                               ][
-                                __valid__][
-                                __invalid__
+                                о][
+                                н
                               ]
                             }][
-                            # If moving horizontally
-                            -> { __invalid__ }
+                            -> { н }
                           ]
                         }][
-                        # If not moving vertically two
-                        -> { __invalid__ }
+                        -> { н }
                       ]
                     }
                   ]
                 }[
-                  # "vertical_movement"
-                  __delta__[from][to][__right__]
+                  υ[l][p][m]
                 ]
               }][
-              # If not moving forward
-              -> { __invalid__ }
+              -> { н }
             ]
           }}}[
-            # "pawn_is_black"
-            __is_black__[__get_position__[board][from]]][
-            # "from_y"
-            __right__[from]][
-            # "to_y"
-            __right__[to]
+            ν[и[i][l]]][
+            m[l]][
+            m[p]
           ]
         }}}
       ]
@@ -771,22 +723,23 @@ PLAY =
 
 
 }[
-  # "__straight_line_rule__"
-  ->(rule) {
-    __basic_checks__[
-      ->(state) {
+  # "strλight_line_rule"
+  # "х"
+  ->(b) {
+    ф[
+      ->(c) {
       ->(_) {
-        __with_basic_info__[
-          state][
-          ->(board) { ->(from) { ->(to) {
-            __if__[rule[__delta__[from][to][__left__]][__delta__[from][to][__right__]]][
+        е[
+          c][
+          ->(d) { ->(e) { ->(f) {
+            λ[b[υ[e][f][n]][υ[e][f][m]]][
               -> {
-                __free_path__[board][from][to][__decrement__][
-                  __valid__][
-                  __invalid__
+                к[d][e][f][u][
+                  о][
+                  н
                 ]
               }][
-              -> { __invalid__ }
+              -> { н }
             ]
           }}}
         ]
@@ -798,76 +751,73 @@ PLAY =
 
 
 }[
-  # "__basic_checks__"
-  ->(rule) {
-    ->(get_rule) {
-      ->(state) {
-        __with_basic_info__[
-          state][
-          ->(board){->(from){->(to) {
-            __if__[
-              # Cannot capture own color
-              __color_switch__[__get_position__[board][from]][
-                __is_black__[__get_position__[board][to]]][
-                __is_white__[__get_position__[board][to]]][
-                __second__
+  # "bλsic_checks"
+  # "ф"
+  ->(o) {
+    ->(n) {
+      ->(m) {
+        е[
+          m][
+          ->(l){->(k){->(j) {
+            λ[
+              κ[и[l][k]][
+                ν[и[l][j]]][
+                μ[и[l][j]]][
+                f
               ]
             ][
-              -> { __invalid__ }][
+              -> { н }][
               -> {
-                ->(move_type) {
-                  __if__[__isnt_invalid__[move_type]][
+                ->(i) {
+                  λ[п[i]][
                     -> {
-                      ->(moved_piece) { ->(after_move) {
-                        ->(my_kings_data) {
-                          __vector_reduce__[my_kings_data][
-                            ->(memo) { ->(king_position) {
-                              __if__[memo][
+                      ->(c) { ->(d) {
+                        ->(h) {
+                          τ[h][
+                            ->(c) { ->(b) {
+                              λ[c][
                                 -> {
-                                  __is_not_in_check__[
-                                    after_move][
-                                    king_position][
-                                    get_rule
+                                  р[
+                                    d][
+                                    b][
+                                    n
                                   ][
-                                    __first__][
-                                    __second__
+                                    g][
+                                    f
                                   ]
                                 }][
-                                -> { __second__ }
+                                -> { f }
                               ]
                             }}][
-                            __first__
+                            g
                           ]
                         }[
-                          # "my_kings_data"
-                          __position_select__[
-                            after_move][
-                            ->(possible) {
-                              __and__[
-                                __has_value__[possible][__six__]][
-                                __is_black__[possible][
-                                  __is_black__[moved_piece]][
-                                  __is_white__[moved_piece]
+                          л[
+                            d][
+                            ->(λ) {
+                              e[
+                                ι[λ][γ]][
+                                ν[λ][
+                                  ν[c]][
+                                  μ[c]
                                 ]
                               ]
                             }
                           ]
                         ]
                       } }[
-                        # "moved_piece"
-                        __get_position__[board][from]][
-                        # "after_move"
-                        __normal_move__[board][from][to][__zero__]
+                        и[l][k]][
+                        т[l][k][j][l]
                       ][
-                        move_type][
-                        __invalid__
+                        i][
+                        н
                       ]
                     }][
-                    -> { move_type }
+                    -> { i }
                   ]
                 }[
                   # "move_type"
-                  rule[state][get_rule]
+                  o[m][n]
                 ]
               }
             ]
@@ -881,16 +831,17 @@ PLAY =
 
 
 }[
-  # "__update_all_but_from_to_promotion__"
-  ->(older) { ->(newer) {
-    __create_state__[
-      __get_from__[older]][
-      __get_to__[older]][
-      __get_from__[newer]][
-      __get_to__[newer]][
-      __get_board__[newer]][
-      __get_score__[newer]][
-      __get_promotion__[older]
+  # "updλte_λll_but_from_to_promotion"
+  # "у"
+  ->(λ) { ->(b) {
+    д[
+      ψ[λ]][
+      ω[λ]][
+      ψ[b]][
+      ω[b]][
+      а[b]][
+      г[b]][
+      в[λ]
     ]
   }}
 ]
@@ -898,35 +849,37 @@ PLAY =
 
 
 }[
-  # "__normal_move__"
-  ->(board) { ->(from) { ->(to) { ->(new_piece) {
-    __change_move__[board][from][to][__get_position__[board][from]]
+  # "normλl_move"
+  # "т"
+  ->(λ) { ->(b) { ->(c) { ->(_) {
+    с[λ][b][c][и[λ][b]]
   }}}}
 ]
 
 
 
 }[
-  # "__change_move__"
-  ->(board) { ->(from) { ->(to) { ->(new_piece) {
-    __list_map__[
-      board][
-      __eight__][
-      ->(row) {
-      ->(yyy) {
-        __list_map__[
-          row][
-          __eight__][
-          ->(piece) {
-          ->(xxx) {
-            __if__[__same_position__[__pair__[xxx][yyy]][to]][
+  # "chλnge_move"
+  # "с"
+  ->(b) { ->(c) { ->(d) { ->(e) {
+    ο[
+      b][
+      α][
+      ->(w) {
+      ->(y) {
+        ο[
+          w][
+          α][
+          ->(z) {
+          ->(x) {
+            λ[з[o[x][y]][d]][
               -> {
-                __pair__[
-                  __pair__[__get_color__[new_piece]][__get_value__[new_piece]]][
-                  __pair__[__get_occupied__[new_piece]][__first__]
+                o[
+                  o[η[e]][ζ[e]]][
+                  o[ε[e]][g]
                 ]
               }][
-              -> { __same_position__[__pair__[xxx][yyy]][from][__empty_space__][piece] }
+              -> { з[o[x][y]][c][φ][z] }
             ]
           }}
         ]
@@ -938,34 +891,35 @@ PLAY =
 
 
 }[
-  # "__is_not_in_check__"
-  ->(board) { ->(to) { ->(get_rule) {
-    __from_to_reduce__[
-      __position_select__[
-        board][
-        ->(piece) {
-          __is_black__[__get_position__[board][to]][
-            __is_white__[piece]][
-            __is_black__[piece]
+  # "is_not_in_check"
+  # "р"
+  ->(b) { ->(d) { ->(e) {
+    м[
+      л[
+        b][
+        ->(λ) {
+          ν[и[b][d]][
+            μ[λ]][
+            ν[λ]
           ]
         }
       ]][
-      __vector_append__[__empty_vector__][ to]][
-      ->(memo) { ->(from) { ->(to) {
-        __if__[memo][
+      ς[ρ][ d]][
+      ->(g) { ->(h) { ->(d) {
+        λ[g][
           -> {
-            __not__[
-              __isnt_invalid__[
-                get_rule[__get_position__[board][from]][
-                  __create_state__[from][to][from][to][board][__zero__][__zero__]
+            c[
+              п[
+                e[и[b][h]][
+                  д[h][d][h][d][b][l][l]
                 ]
               ]
             ]
           }][
-          -> { __second__ }
+          -> { f }
         ]
       }}}][
-      __first__
+      g
     ]
   }}}
 ]
@@ -973,42 +927,46 @@ PLAY =
 
 
 }[
-  # "__isnt_invalid__"
-  ->(move_result) { move_result[__first__][__second__][__first__][__first__][__first__] }
+  # "isnt_invλlid"
+  # "п"
+  ->(λ) { λ[g][f][g][g][g] }
 ]
 
 
 
 }[
-  # "__valid__"
-  ->(valid){->(_) { ->(_) { ->(_) { ->(_) { valid } }}}}
+  # "vλlid"
+  # "о"
+  ->(λ){->(_) { ->(_) { ->(_) { ->(_) { λ } }}}}
 ]
 
 
 
 }[
-  # "__invalid__"
-  ->(_) { ->(invalid) { ->(_) { ->(_) { ->(_) { invalid } }}}}
+  # "invλlid"
+  # "н"
+  ->(_) { ->(λ) { ->(_) { ->(_) { ->(_) { λ } }}}}
 ]
 
 
 
 }[
-  # "__from_to_reduce__"
-  ->(possible_froms) { ->(possible_tos) { ->(func) { ->(initial) {
-    __vector_reduce__[
-      possible_froms][
-      ->(memo) { ->(from_position) {
-        __vector_reduce__[
-          possible_tos][
-            ->(inner_memo) { ->(to_position) {
-              func[inner_memo][from_position][to_position]
+  # "from_to_reduce"
+  # "м"
+  ->(λ) { ->(b) { ->(c) { ->(d) {
+    τ[
+      λ][
+      ->(e) { ->(f) {
+        τ[
+          b][
+            ->(g) { ->(h) {
+              c[g][f][h]
             }}
           ][
-          memo
+          e
         ]
       }}][
-      initial
+      d
     ]
   }}}}
 ]
@@ -1016,73 +974,69 @@ PLAY =
 
 
 }[
-  # "__position_select__"
-  ->(board) { ->(condition) {
-    __board_reduce__[
-      board][
-      ->(memo) { ->(piece) { ->(position) {
-        condition[piece][
-          __vector_append__[memo][position]][
-          memo
+  # "position_select"
+  # "л"
+  ->(λ) { ->(b) {
+    ж[
+      λ][
+      ->(c) { ->(d) { ->(e) {
+        b[d][
+          ς[c][e]][
+          c
         ]
       }}}][
-      __empty_vector__
+      ρ
     ]
   }}
 ]
 
 }[
-  # "__free_path__"
-  ->(board) { ->(from) { ->(to) { ->(alter_length) {
-    ->(delta_x) { -> (delta_y) {
-      __if__[
-        __or__[
-          __or__[
-            __is_zero__[delta_x]][
-            __is_zero__[delta_y]
+  # "free_pλth"
+  # "к"
+  ->(b) { ->(c) { ->(e) { ->(h) {
+    ->(i) { -> (j) {
+      λ[
+        d[
+          d[
+            w[i]][
+            w[j]
           ]][
-          __is_equal__[delta_x][delta_y]
+          y[i][j]
         ]
       ][
         -> {
-          __right__[
-            # Get the number of positions that have to be checked
-            alter_length[
-              __is_zero__[delta_x][
-                __delta__[from][to][__right__]][
-                delta_x
+          m[
+            h[
+              w[i][
+                υ[c][e][m]][
+                i
               ]
             ][
-              # For each position inbetween....
-              ->(memo) {
-                ->(new_postion) {
-                  __pair__[
-                    new_postion][
-                    # If a filled position hasn't been found, check for a piece
-                    __right__[memo][
-                      __is_empty__[__get_position__[board][new_postion]]][
-                      __second__
+              ->(λ) {
+                ->(c) {
+                  o[
+                    c][
+                    m[λ][
+                      ξ[и[b][c]]][
+                      f
                     ]
                   ]
                 }[
-                  # Calculate next postion to check
-                  __pair__[
-                    __change_func__[from][to][__left__][__left__[__left__[memo]]]][
-                    __change_func__[from][to][__right__][__right__[__left__[memo]]]
+                  o[
+                    й[c][e][n][n[n[λ]]]][
+                    й[c][e][m][m[n[λ]]]
                   ]
                 ]
               }][
-              __pair__[from][__first__]
+              o[c][g]
             ]
           ]
         }][
-        -> { __second__ }
+        -> { f }
       ]
     } }[
-      # "delta_x"
-      __delta__[from][to][__left__]][
-      # "delta_y"
-      __delta__[from][to][__right__]
+      υ[c][e][n]][
+      υ[c][e][m]
     ]
   }}}}
 ]
@@ -1090,19 +1044,20 @@ PLAY =
 
 
 }[
-  # "__change_func__"
-  ->(from) { ->(to) { ->(coordinate) {
-    ->(aaa) { ->(bbb) {
-      __is_greater_or_equal__[aaa][bbb][
-        __is_equal__[aaa][bbb][
-          ->(xxxx) { xxxx }][
-          __decrement__
+  # "chλnge_func"
+  # "й"
+  ->(λ) { ->(b) { ->(c) {
+    ->(d) { ->(e) {
+      x[d][e][
+        y[d][e][
+          ->(f) { f }][
+          u
         ]][
-        __increment__
+        t
       ]
     } }[
-      coordinate[from]][
-      coordinate[to]
+      c[λ]][
+      c[b]
     ]
   }}}
 ]
@@ -1110,196 +1065,213 @@ PLAY =
 
 
 }[
-  # "__get_position__"
-  ->(board) { ->(position) {
-    __nth__[__nth__[board][__right__[position]]][__left__[position]]
+  # "get_position"
+  # "и"
+  ->(λ) { ->(b) {
+    θ[θ[λ][m[b]]][n[b]]
   }}
 ]
 
 }[
-  # "__same_position__"
-  ->(aaa) {
-    ->(bbb) {
-      __and__[
-        __is_equal__[__left__[aaa]][__left__[bbb]]][
-        __is_equal__[__right__[aaa]][__right__[bbb]]
+  # "sλme_position"
+  # "з"
+  ->(λ) {
+    ->(b) {
+      e[
+        y[n[λ]][n[b]]][
+        y[m[λ]][m[b]]
       ]
     }}
 ]
 
 }[
-  # "__board_reduce__"
-  ->(board) { ->(func) { ->(initial) {
-    __list_reduce__[
-      board][
-      __eight__][
-      ->(memo) { ->(row) { ->(yyy) {
-        __list_reduce__[
-          row][
-          __eight__][
-          ->(memo) { ->(piece) { ->(xxx) {
-            func[memo][piece][__pair__[xxx][yyy]]
+  # "boλrd_reduce"
+  # "ж"
+  ->(λ) { ->(b) { ->(c) {
+    π[
+      λ][
+      α][
+      ->(d) { ->(e) { ->(f) {
+        π[
+          e][
+          α][
+          ->(d) { ->(g) { ->(h) {
+            b[d][g][o[h][f]]
           }}}][
-          memo
+          d
         ]
       }}}][
-      initial
+      c
     ]
   }}}
 ]
 
 }[
-  # "__with_basic_info__"
-  ->(state) { ->(func) { func[__get_board__[state]][__get_from__[state]][__get_to__[state]] } }
+  # "with_bλsic_info"
+  # "е"
+  ->(λ) { ->(b) { b[а[λ]][ψ[λ]][ω[λ]] } }
 ]
 
 }[
-  # "__create_state__"
-  ->(from) { ->(to) { ->(last_from) { ->(last_to) { ->(board) { ->(score) { ->(promotion) {
-    __pair__[
-      __pair__[
-        __pair__[from][to]][
-        __pair__[board][score]
+  # "creλte_stλte"
+  # "д"
+  ->(λ) { ->(b) { ->(c) { ->(d) { ->(e) { ->(f) { ->(g) {
+    o[
+      o[
+        o[λ][b]][
+        o[e][f]
       ]][
-      __pair__[
-        promotion][
-        __pair__[last_from][last_to]
+      o[
+        g][
+        o[c][d]
       ]
     ]
   }}}}}}}
 ]
 
 }[
-  # "__get_score__"
-  ->(state) { _get_moved_[__left__[state]] }
+  # "get_score"
+  # "г"
+  ->(λ) { δ[n[λ]] }
 ]
 
 
 }[
-  # "__get_promotion__"
-  ->(state) { __left__[__right__[state]] }
+  # "get_promotion"
+  # "в"
+  ->(λ) { n[m[λ]] }
 ]
 
 }[
-  # "__get_last_from__"
-  ->(state) { __left__[_get_moved_[state]] }
+  # "get_lλst_from"
+  # "б"
+  ->(λ) { n[δ[λ]] }
 ]
 
 }[
-  # "__get_board__"
-  ->(state) { __get_occupied__[__left__[state]] }
+  # "get_boλrd"
+  # "а"
+  ->(λ) { ε[n[λ]] }
 ]
 
 }[
-  # "__get_to__"
-  ->(state) { __right__[__get_color__[state]] }
+  # "get_to"
+  # "ω"
+  ->(λ) { m[η[λ]] }
 ]
 
 }[
-  # "__get_from__"
-  ->(state) { __left__[__get_color__[state]] }
+  # "get_from"
+  # "ψ"
+  ->(λ) { n[η[λ]] }
 ]
 
 }[
-  # "__get_last_to__"
-  ->(state) { __right__[_get_moved_[state]] }
+  # "get_lλst_to"
+  # "χ"
+  ->(λ) { m[δ[λ]] }
 ]
 
 }[
-  # "__empty_space__"
-  __pair__[__pair__[__first__][__zero__]][__pair__[__second__][__second__]]
+  # "empty_spλce"
+  # "φ"
+  o[o[g][l]][o[f][f]]
 ]
 
 }[
-  # "__delta__"
-  ->(position_1) { ->(position_2) { ->(coordinate) {
-    ->(aaa) {
-    ->(bbb) {
-      __is_greater_or_equal__[aaa][bbb][
-        __subtract__[aaa][bbb]][
-        __subtract__[bbb][aaa]
+  # "deltλ"
+  # "υ"
+  ->(λ) { ->(b) { ->(c) {
+    ->(λ) {
+    ->(b) {
+      x[λ][b][
+        v[λ][b]][
+        v[b][λ]
       ]
     }}[
-      coordinate[position_1]][
-      coordinate[position_2]
+      c[λ]][
+      c[b]
     ]
   }}}
 ]
 
 }[
-  # "__vector_reduce__"
-  ->(vector) { ->(func) { ->(initial) {
-    __list_reduce__[
-      __left__[vector]][
-      __right__[vector]][
-      ->(memo) { ->(item) { ->(index) { func[memo][item] }}}][
-      initial
+  # "vector_reduce"
+  # "τ"
+  ->(λ) { ->(b) { ->(c) {
+    π[
+      n[λ]][
+      m[λ]][
+      ->(d) { ->(e) { ->(_) { b[d][e] }}}][
+      c
     ]
   }}}
 ]
 
 }[
-  # "__vector_first__"
-  ->(vector) { __nth__[__left__[vector]][__zero__] }
+  # "vector_first"
+  # "σ"
+  ->(λ) { θ[n[λ]][l] }
 ]
 
 }[
-  # "__vector_append__"
-  ->(vector) { ->(item) {
-    __pair__[
-      __pair__[item][__left__[vector]]][
-      __increment__[__right__[vector]]
+  # "vector_λppend"
+  # "ς"
+  ->(λ) { ->(b) {
+    o[
+      o[b][n[λ]]][
+      t[m[λ]]
     ]
   }}
 ]
 
 }[
-  # "__empty_vector__"
-  __pair__[__zero__][__zero__]
+  # "empty_vector"
+  # "ρ"
+  o[l][l]
 ]
 
 }[
-  # "__list_reduce__"
-  ->(list) { ->(size) { ->(func) { ->(initial) {
-    __left__[
-      size[
-        ->(memo) {
-          __pair__[
-            func[
-              # previous
-              __left__[memo]][
-              # next
-              __nth__[list][__right__[memo]]][
-              # index
-              __right__[memo]
+  # "list_reduce"
+  # "π"
+  ->(λ) { ->(b) { ->(c) { ->(d) {
+    n[
+      b[
+        ->(e) {
+          o[
+            c[
+              n[e]][
+              θ[λ][m[e]]][
+              m[e]
             ]][
-            __increment__[__right__[memo]]
+            t[m[e]]
           ]
         }][
-        __pair__[initial][__zero__]
+        o[d][l]
       ]
     ]
   }}}}
 ]
 
 }[
-  # "__list_map__"
-  ->(list) { ->(size) { ->(func) {
-    __left__[
-      size[
-        ->(memo) {
-          __pair__[
-           __pair__[
-             func[
-               __nth__[list][__right__[memo]]][
-               __right__[memo]
+  # "list_mλp"
+  # "ο"
+  ->(λ) { ->(b) { ->(c) {
+    n[
+      b[
+        ->(d) {
+          o[
+           o[
+             c[
+               θ[λ][m[d]]][
+               m[d]
              ]][
-             __left__[memo]
+             n[d]
             ]][
-            __decrement__[__right__[memo]]
+            u[m[d]]
           ]
         }][
-        __pair__[__zero__][__decrement__[size]]
+        o[l][u[b]]
       ]
     ]
   }}}
@@ -1309,46 +1281,51 @@ PLAY =
 
 
 }[
-  # "__is_empty__"
-  ->(piece) {
-    __not__[__get_occupied__[piece]]
+  # "is_empty"
+  # "ξ"
+  ->(λ) {
+    c[ε[λ]]
   }
 ]
 
 }[
-  # "__is_black__"
-  ->(piece) {
-    __color_switch__[piece][__first__][__second__][__second__]
+  # "is_blλck"
+  # "ν"
+  ->(λ) {
+    κ[λ][g][f][f]
   }
 ]
 
 }[
-  # "__is_white__"
-  ->(piece) {
-    __color_switch__[piece][__second__][__first__][__second__]
+  # "is_white"
+  # "μ"
+  ->(λ) {
+    κ[λ][f][g][f]
   }
 ]
 
 }[
-  # "__color_switch__"
-  ->(piece) {
-    ->(black) { ->(white) { ->(empty) {
-      __get_occupied__[piece][
-        __get_color__[piece][
-          black][
-          white
+  # "color_switch"
+  # "κ"
+  ->(λ) {
+    ->(b) { ->(c) { ->(d) {
+      ε[λ][
+        η[λ][
+          b][
+          c
         ]][
-        empty
+        d
       ]
     }}}
   }
 ]
 
 }[
-  # "__has_value__"
-  ->(piece) {
-  ->(value) {
-    __is_equal__[value][ __get_value__[piece]]
+  # "hλs_vλlue"
+  # "ι"
+  ->(λ) {
+  ->(b) {
+    y[b][ ζ[λ]]
   }}
 ]
 
@@ -1356,55 +1333,63 @@ PLAY =
 
 
 }[
-  # "__nth__"
-  ->(list) { ->(index) { __left__[index[__right__][list]] } }
+  # "nth"
+  # "θ"
+  ->(λ) { ->(b) { n[b[m][λ]] } }
 ]
 
 }[
-  # "__get_color__"
-  ->(piece) { __left__[__left__[piece]] }
-]
-
-
-}[
-  # "__get_value__"
-  ->(piece) { __right__[__left__[piece]] }
+  # "get_color"
+  # "η"
+  ->(λ) { n[n[λ]] }
 ]
 
 
 }[
-  # "__get_occupied__"
-  ->(piece) { __left__[__right__[piece]] }
+  # "get_vλlue"
+  # "ζ"
+  ->(λ) { m[n[λ]] }
 ]
 
 
 }[
-  # "_get_moved_"
-  ->(piece) { __right__[__right__[piece]] }
+  # "get_occupied"
+  # "ε"
+  ->(λ) { n[m[λ]] }
+]
+
+
+}[
+  # "δ"
+  ->(λ) { m[m[λ]] }
 ]
 
 }[
-  # "__six__"
-  __multiply__[__two__][__three__]
+  # "six"
+  # "γ"
+  z[j][i]
 ]
 
 }[
-  # "__seven__"
-  __add__[__three__][__four__]
+  # "seven"
+  # "β"
+  p[i][h]
 ]
 
 }[
-  # "__eight__"
-  __multiply__[__two__][__four__]
+  # "eight"
+  # "α"
+  z[j][h]
 ]
 
 }[
-  # "__multiply__"
-  ->(aaa) {->(bbb) {
-    ->(func) { ->(zero) {
-      aaa[
-        ->(value) { bbb[func][value] }][
-        zero
+  # "multiply"
+  # "z"
+  ->(λ) {->(b) {
+    ->(c) { ->(d) {
+      λ[
+        ->(w) { b[c][w] }][
+        d
       ]
     }}
   }}
@@ -1412,12 +1397,13 @@ PLAY =
 
 
 }[
-  # "__is_equal__"
-  ->(aaa) {
-  ->(bbb) {
-    __if__[__is_greater_or_equal__[aaa][bbb]][
-      -> { __is_greater_or_equal__[bbb][aaa] }][
-      -> { __second__ }
+  # "is_equλl"
+  # "y"
+  ->(b) {
+  ->(c) {
+    λ[x[b][c]][
+      -> { x[c][b] }][
+      -> { f }
     ]
   }
   }
@@ -1425,140 +1411,160 @@ PLAY =
 
 
 }[
-  # "__is_greater_or_equal__"
-  ->(aaa) {
-  ->(bbb) {
-    __is_zero__[__subtract__[bbb][aaa]]
+  # "is_greλter_or_equλl"
+  # "x"
+  ->(λ) {
+  ->(b) {
+    w[v[b][λ]]
   }
   }
 ]
 
 
 }[
-  # "__is_zero__"
-  ->(number) {
-    number[->(_) { __second__ }][__first__]
+  # "is_zero"
+  # "w"
+  ->(λ) {
+    λ[->(_) { f }][g]
   }
 ]
 
 
 }[
-  # "__subtract__"
-  ->(aaa) { ->(bbb) {
-    ->(func) { ->(zero) {
-      bbb[__decrement__][aaa][func][zero]
+  # "subtrλct"
+  # "v"
+  ->(λ) { ->(b) {
+    ->(c) { ->(d) {
+      b[u][λ][c][d]
     }}
   }}
 ]
 
 }[
-  # "__decrement__"
-  ->(aaa) {
-    __right__[
-      aaa[
-        ->(memo) {
-          __pair__[
-            __increment__[__left__[memo]]][
-            __left__[memo]
+  # "decrement"
+  # "u"
+  ->(λ) {
+    m[
+      λ[
+        ->(b) {
+          o[
+            t[n[b]]][
+            n[b]
           ]
         }][
-        __pair__[__zero__][__zero__]
+        o[l][l]
       ]
     ]
   }
 ]
 
 }[
-  # "__increment__"
-  ->(aaa) { __add__[__one__][aaa] }
+  # "increment"
+  # "t"
+  ->(λ) { p[k][λ] }
 ]
 
 }[
-  # "__black_queen__"
-  __pair__[__pair__[__first__][__five__]][__pair__[__first__][__first__]]
+  # "blλck_queen"
+  # "s"
+  o[o[g][q]][o[g][g]]
 ]
 
 }[
-  # "__white_queen__"
-  __pair__[__pair__[__second__][__five__]][__pair__[__first__][__first__]]
+  # "white_queen"
+  # "r"
+  o[o[f][q]][o[g][g]]
 ]
 
 }[
-  # "__five__"
-  __add__[__two__][__three__]
+  # "five"
+  # "q"
+  p[j][i]
 ]
 
 }[
-  # "__add__"
-  ->(aaa) { ->(bbb) {
-    ->(func) { ->(zero) {
-      bbb[func][aaa[func][zero]]
+  # "λdd"
+  # "p"
+  ->(λ) { ->(b) {
+    ->(c) { ->(d) {
+      b[c][λ[c][d]]
     }
   } } }
 ]
 
 }[
-  # "__pair__"
-  ->(left) {
-    ->(right) {
-      ->(select) { select[left][right] }
+  # "pλir"
+  # "o"
+  ->(λ) {
+    ->(b) {
+      ->(c) { c[λ][b] }
     }}
 ]
 
 }[
-  # "__left__"
-  ->(pair) { pair[__first__]  }
+  # "left"
+  # "n"
+  ->(λ) { λ[g]  }
 ]
 
 }[
-  # "__right__"
-  ->(pair) { pair[__second__] }
+  # "right"
+  # "m"
+  ->(λ) { λ[f] }
 ]
 
 }[
-  # "__zero__"
-  ->(succ) { ->(zero) { zero } }
+  # "zero"
+  # "l"
+  ->(λ) { ->(b) { b } }
 ]
 
 }[
-  # "__one__"
-  ->(succ) { ->(zero) { succ[zero] } }
+  # "one"
+  # "k"
+  ->(λ) { ->(b) { λ[b] } }
 ]
 
 }[
-  # "__two__"
-  ->(succ) { ->(zero) { succ[succ[zero]] } }
+  # "two"
+  # "j"
+  ->(λ) { ->(b) { λ[λ[b]] } }
 ]
 
 }[
-  # "__three__"
-  ->(succ) { ->(zero) { succ[succ[succ[zero]]] } }
+  # "three"
+  # "i"
+  ->(λ) { ->(b) { λ[λ[λ[b]]] } }
 ]
 
 }[
-  # "__four__"
-  ->(succ) { ->(zero) { succ[succ[succ[succ[zero]]]] } }
+  # "four"
+  # "h"
+  ->(λ) { ->(b) { λ[λ[λ[λ[b]]]] } }
 ]
 
 }[
-  # "__first__"
-  ->(first) {
-  ->(second) { first } }
+  # "first"
+  # "g"
+  ->(λ) {
+  ->(_) { λ } }
 ]
 
 }[
-  # "__second__"
-  ->(first) {
-  ->(second) { second } }
+  # "second"
+  # "f"
+  ->(_) {
+  ->(λ) { λ } }
 ]
 
 }[
-  # "__and__"
-  ->(aaa) {
-  ->(bbb) {
-    ->(first) {
-    ->(second) {
-      aaa[bbb[first][second]][second]
+  # "λnd"
+  # "e"
+  ->(λ) {
+  ->(b) {
+    ->(c) {
+    ->(d) {
+      λ[b[c][d]][d]
     }
   }
   }
@@ -1566,12 +1572,13 @@ PLAY =
 ]
 
 }[
-  # "__or__"
-  ->(aaa) {
-  ->(bbb) {
-    ->(first) {
-    ->(second) {
-      aaa[first][bbb[first][second]]
+  # "or"
+  # "d"
+  ->(λ) {
+  ->(b) {
+    ->(c) {
+    ->(d) {
+      λ[c][b[c][d]]
     }
   }
   }
@@ -1579,41 +1586,44 @@ PLAY =
 ]
 
 }[
-  # "__not__"
-  ->(choice) {
-    ->(first){
-        ->(second) {
-          choice[second][first]
+  # "not"
+  # "c"
+  ->(λ) {
+    ->(b){
+        ->(c) {
+          λ[c][b]
         }
       }}
 ]
 
 }[
-  # "__five_conditions_met__"
-  ->(cond_1) {
-  ->(cond_2) {
-  ->(cond_3) {
-  ->(cond_4) {
-  ->(cond_5) {
-    ->(first) {
-    ->(second) {
-      cond_1[cond_2[cond_3[cond_4[cond_5[
-        first][
-        second]][
-        second]][
-        second]][
-        second]][
-        second]
+  # "five_conditions_met"
+  # "b"
+  ->(λ) {
+  ->(b) {
+  ->(c) {
+  ->(d) {
+  ->(e) {
+    ->(f) {
+    ->(g) {
+      λ[b[c[d[e[
+        f][
+        g]][
+        g]][
+        g]][
+        g]][
+        g]
     }
   }}}}}}
 ]
 
 }[
-  # "__if__"
-  ->(condition) {
-    ->(first) {
-    ->(second) {
-      condition[first][second][]
+  # "if"
+  # "λ"
+  ->(λ) {
+    ->(b) {
+    ->(c) {
+      λ[b][c][]
     }
   }}
 ]

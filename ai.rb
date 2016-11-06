@@ -25,7 +25,7 @@ $FROM_TO_REDUCE = ->(possible_froms, possible_tos, func, initial) {
 $POSSIBLE_MOVES = ->(state, color, possible_tos) {
   ->(board) {
     $FROM_TO_REDUCE[
-      $POSITION_SELECT[board, color[$IS_BLACK, $IS_WHITE]],
+      $POSITION_SELECT[board, color[$IS_BLACK][$IS_WHITE]],
       possible_tos,
       ->(possible_moves, from, to) {
         $ADVANCE_STATE[
@@ -36,7 +36,7 @@ $POSSIBLE_MOVES = ->(state, color, possible_tos) {
             $GET_LAST_TO[state],
             board,
             ZERO,
-            color[$BLACK_QUEEN, $WHITE_QUEEN]
+            color[$BLACK_QUEEN][$WHITE_QUEEN]
           ]
         ][
           ->(new_state) { $VECTOR_APPEND[possible_moves, new_state] },
@@ -56,8 +56,8 @@ $BLACK_AI = ->(state, seed) {
     IF[LEFT[result]][
       -> {
         $ADVANCE_STATE[$UPDATE_ALL_BUT_FROM_TO_PROMOTION[RIGHT[result], state]][
-          ->(new_state) { PAIR[FIRST, new_state] },
-          -> { PAIR[SECOND, ZERO] }
+          ->(new_state) { PAIR[FIRST][new_state] },
+          -> { PAIR[SECOND][ZERO] }
         ]
       },
       -> { result }
@@ -66,11 +66,11 @@ $BLACK_AI = ->(state, seed) {
     # "result"
     ->(states) {
       IF[IS_ZERO[$VECTOR_SIZE[states]]][
-        -> { PAIR[SECOND, ZERO] },
+        -> { PAIR[SECOND][ZERO] },
         -> {
           ->(best_vector) {
             PAIR[
-              FIRST,
+              FIRST][
               $NTH[
                 $VECTOR_LIST[best_vector],
                 $MODULUS[seed, $VECTOR_SIZE[best_vector]]
@@ -85,12 +85,12 @@ $BLACK_AI = ->(state, seed) {
                   -> { $VECTOR_APPEND[memo, state] },
                   -> {
                     IS_EQUAL[$GET_SCORE[state], $GET_SCORE[$VECTOR_FIRST[memo]]][
-                      $VECTOR_APPEND[memo, state],
+                      $VECTOR_APPEND[memo, state]][
                       IS_GREATER_OR_EQUAL[
-                        $GET_SCORE[state],
+                        $GET_SCORE[state]][
                         $GET_SCORE[$VECTOR_FIRST[memo]]
                       ][
-                        $VECTOR_APPEND[$EMPTY_VECTOR, state],
+                        $VECTOR_APPEND[$EMPTY_VECTOR, state]][
                         memo
                       ]
                     ]

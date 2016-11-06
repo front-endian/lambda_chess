@@ -13,7 +13,7 @@ require_relative './../play'
 
 class Proc
   def to_i
-    call proc { |x| x + 1 }, 0
+    call(proc { |x| x + 1 }).call(0)
   end
 
   def list_to_a length
@@ -36,7 +36,7 @@ class Proc
     self.list_to_a(8)
         .map { |row|
           row.list_to_a(8).map { |piece|
-            $GET_VALUE[piece].to_i + $IS_BLACK[piece][$KING_VALUE.to_i, 0]
+            $GET_VALUE[piece].to_i + $IS_BLACK[piece][$KING_VALUE.to_i][0]
           }
         }.flatten
   end
@@ -48,9 +48,11 @@ end
 
 class Fixnum
   def to_peano
-    proc do |func, result|
-      times { result = func.call(result) }
-      result
+    proc do |func|
+      proc do |result|
+        times { result = func.call(result) }
+        result
+      end
     end
   end
 end
@@ -58,7 +60,7 @@ end
 class Array
   def to_linked_list
     reverse.inject(ZERO) do |previous, element|
-      PAIR[element, previous]
+      PAIR[element][previous]
     end
   end
 
@@ -71,19 +73,19 @@ class Array
   def to_board
     map do |row|
       row.map do |piece|
-        piece.is_a?(Proc) ? piece : PAIR[PAIR[FIRST, ZERO], PAIR[SECOND, SECOND]]
+        piece.is_a?(Proc) ? piece : PAIR[PAIR[FIRST][ZERO]][PAIR[SECOND][SECOND]]
       end.to_linked_list
     end.to_linked_list
   end
 end
 
 def position x, y
-  PAIR[x.to_peano, y.to_peano]
+  PAIR[x.to_peano][y.to_peano]
 end
 
 def shift_position position, delta_x, delta_y
   PAIR[
-     (LEFT[position].to_i + delta_x).to_peano,
+    (LEFT[position].to_i + delta_x).to_peano][
     (RIGHT[position].to_i + delta_y).to_peano
   ]
 end
@@ -97,20 +99,20 @@ def test_castling_to_one_side board:,
                               perform:,
                               expect:
 
-  king_from     = PAIR[FOUR, home_row]
-  king_to       = PAIR[king_to_column, home_row]
+  king_from     = PAIR[FOUR][home_row]
+  king_to       = PAIR[king_to_column][home_row]
   rook_from     = PAIR[
-                    (rook_to_column == THREE) ? ZERO : $SEVEN,
+                    (rook_to_column == THREE) ? ZERO : $SEVEN][
                     home_row
                   ]
-  rook_to       = PAIR[rook_to_column, home_row]
+  rook_to       = PAIR[rook_to_column][home_row]
   result        = perform.call(board, king_from, king_to)
 
   expect.call(result, king_to, rook_to, rook_from)
 end
 
 def test_castling black_board, white_board, perform:, expect:
-  null_pos = PAIR[ZERO, ZERO]
+  null_pos = PAIR[ZERO][ZERO]
 
   group 'with a white king' do
     assert 'castling to the left' do
@@ -185,7 +187,7 @@ def expect_castle result
   result[false, false, false, true, false]
 end
 
-NULL_POS = PAIR[ZERO, ZERO]
+NULL_POS = PAIR[ZERO][ZERO]
 
 INDEX_ARRAY = [0,  1,  2,  3,  4,  5,  6,  7,
                8,  9,  10, 11, 12, 13, 14, 15,

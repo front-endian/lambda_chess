@@ -32,7 +32,7 @@ $ADVANCE_STATE = ->(state) {
                     ]
                   }[
                     # "captured"
-                    PAIR[LEFT[to], RIGHT[from]]
+                    PAIR[LEFT[to]][RIGHT[from]]
                   ]
                 },
                 ->(board, from, to, new_piece) {
@@ -40,8 +40,8 @@ $ADVANCE_STATE = ->(state) {
                     $NORMAL_MOVE[
                       $NORMAL_MOVE[board, from, to, new_piece],
                       # Rook positions
-                      PAIR[is_moving_left[ZERO, $SEVEN], RIGHT[from]],
-                      PAIR[is_moving_left[THREE, $FIVE], RIGHT[from]],
+                      PAIR[is_moving_left[ZERO][$SEVEN]][RIGHT[from]],
+                      PAIR[is_moving_left[THREE][$FIVE]][RIGHT[from]],
                       new_piece
                     ]
                   }[
@@ -99,7 +99,7 @@ $BASIC_CHECKS = ->(rule) {
                                   king_position,
                                   get_rule
                                 ][
-                                  FIRST,
+                                  FIRST][
                                   SECOND
                                 ]
                               },
@@ -114,9 +114,9 @@ $BASIC_CHECKS = ->(rule) {
                           after_move,
                           ->(possible) {
                             AND[
-                              $HAS_VALUE[possible, $KING_VALUE],
+                              $HAS_VALUE[possible, $KING_VALUE]][
                               $IS_BLACK[possible][
-                                $IS_BLACK[moved_piece],
+                                $IS_BLACK[moved_piece]][
                                 $IS_WHITE[moved_piece]
                               ]
                             ]
@@ -129,7 +129,7 @@ $BASIC_CHECKS = ->(rule) {
                       # "after_move"
                       $NORMAL_MOVE[board, from, to, ZERO]
                     ][
-                      move_type,
+                      move_type][
                       $INVALID
                     ]
                   },
@@ -156,7 +156,7 @@ $STRAIGHT_LINE_RULE = ->(rule) {
           IF[rule[$DELTA[from, to, LEFT], $DELTA[from, to, RIGHT]]][
             -> {
               $FREE_PATH[board, from, to, $DECREMENT][
-                $VALID,
+                $VALID][
                 $INVALID
               ]
             },
@@ -173,7 +173,7 @@ $STRAIGHT_LINE_RULE = ->(rule) {
 $ROOK_RULE = $STRAIGHT_LINE_RULE[
   ->(delta_x, delta_y) {
     OR[
-      IS_ZERO[delta_x],
+      IS_ZERO[delta_x]][
       IS_ZERO[delta_y]
     ]
   }
@@ -189,10 +189,10 @@ $QUEEN_RULE = ->(get_rule) {
   ->(state) {
     ->(follows_rule) {
       OR[
-        follows_rule[$ROOK_RULE[get_rule]],
+        follows_rule[$ROOK_RULE[get_rule]]][
         follows_rule[$BISHOP_RULE[get_rule]]
       ][
-        $VALID,
+        $VALID][
         $INVALID
       ]
     }[
@@ -208,7 +208,7 @@ $IS_NOT_IN_CHECK = ->(board, to, get_rule) {
       board,
       ->(piece) {
         $IS_BLACK[$GET_POSITION[board, to]][
-          $IS_WHITE[piece],
+          $IS_WHITE[piece]][
           $IS_BLACK[piece]
         ]
       }
@@ -236,8 +236,8 @@ $KING_RULE = $BASIC_CHECKS[
   ->(state, get_rule) {
     IF[
       AND[
-        IS_GREATER_OR_EQUAL[ONE, $DELTA[$GET_FROM[state], $GET_TO[state], LEFT]],
-        IS_GREATER_OR_EQUAL[ONE, $DELTA[$GET_FROM[state], $GET_TO[state], RIGHT]]
+        IS_GREATER_OR_EQUAL[ONE][$DELTA[$GET_FROM[state], $GET_TO[state], LEFT]]][
+        IS_GREATER_OR_EQUAL[ONE][$DELTA[$GET_FROM[state], $GET_TO[state], RIGHT]]
       ]
     ][
       -> { $VALID },
@@ -247,7 +247,7 @@ $KING_RULE = $BASIC_CHECKS[
           ->(board, from, to) {
             IF[
               AND[
-                IS_EQUAL[TWO, $DELTA[from, to, LEFT]],
+                IS_EQUAL[TWO, $DELTA[from, to, LEFT]]][
                 IS_ZERO[$DELTA[from, to, RIGHT]]
               ]
             ][
@@ -292,12 +292,12 @@ $KING_RULE = $BASIC_CHECKS[
                     ]
                   }[
                     # "rook_from"
-                    PAIR[is_moving_left[ZERO, $SEVEN], RIGHT[from]],
+                    PAIR[is_moving_left[ZERO][$SEVEN]][RIGHT[from]],
                     # "invalid"
                     -> { SECOND },
                     # "mid_to"
                     PAIR[
-                      is_moving_left[$DECREMENT, $INCREMENT][LEFT[from]],
+                      is_moving_left[$DECREMENT][$INCREMENT][LEFT[from]]][
                       RIGHT[from]
                     ]
                   ]
@@ -310,7 +310,7 @@ $KING_RULE = $BASIC_CHECKS[
             ]
           }
         ][
-          ->(valid, invalid, en_passant, castle, promotion) { castle },
+          ->(valid, invalid, en_passant, castle, promotion) { castle }][
           $INVALID
         ]
       }
@@ -323,15 +323,15 @@ $KNIGHT_RULE = $BASIC_CHECKS[
     ->(delta_x, delta_y) {
       OR[
         AND[
-          IS_EQUAL[TWO, delta_x],
+          IS_EQUAL[TWO, delta_x]][
           IS_EQUAL[ONE, delta_y]
-        ],
+        ]][
         AND[
-          IS_EQUAL[ONE, delta_x],
+          IS_EQUAL[ONE, delta_x]][
           IS_EQUAL[TWO, delta_y]
         ]
       ][
-        $VALID,
+        $VALID][
         $INVALID
       ]
     }[
@@ -351,7 +351,7 @@ $PAWN_RULE = $BASIC_CHECKS[
         ->(pawn_is_black, from_y, to_y) {
           IF[
              pawn_is_black[
-              IS_ZERO[$SUBTRACT[from_y, to_y]],
+              IS_ZERO[$SUBTRACT[from_y, to_y]]][
               IS_ZERO[$SUBTRACT[to_y, from_y]]
             ]
           ][
@@ -369,11 +369,11 @@ $PAWN_RULE = $BASIC_CHECKS[
                           $IS_EMPTY[$GET_POSITION[board, to]][
                             IS_EQUAL[
                               to_y,
-                              pawn_is_black[$SEVEN, ZERO]
+                              pawn_is_black[$SEVEN][ZERO]
                             ][
-                              ->(valid, invalid, en_passant, castle, promotion) { promotion },
+                              ->(valid, invalid, en_passant, castle, promotion) { promotion }][
                               $VALID
-                            ],
+                            ]][
                             $INVALID
                           ]
                         },
@@ -391,12 +391,12 @@ $PAWN_RULE = $BASIC_CHECKS[
                                       # Position behind "to" is "last_to"
                                       $SAME_POSITION[
                                         last_to,
-                                        PAIR[LEFT[to], from_y]
+                                        PAIR[LEFT[to]][from_y]
                                       ],
                                       # "last_moved" is a pawn
                                       $HAS_VALUE[last_moved, $PAWN_VALUE],
                                       # "last_moved" is the opposite color
-                                      pawn_is_black[$IS_WHITE, $IS_BLACK][last_moved],
+                                      pawn_is_black[$IS_WHITE][$IS_BLACK][last_moved],
                                       # "last_moved" moved forward two
                                       IS_EQUAL[
                                         $DELTA[$GET_LAST_FROM[state], last_to, RIGHT],
@@ -436,23 +436,26 @@ $PAWN_RULE = $BASIC_CHECKS[
                           # If not moving horizontally
                           -> {
                             AND[
-                              $IS_EMPTY[$GET_POSITION[board, to]],
+                              $IS_EMPTY[$GET_POSITION[board, to]]
+                            ][
                               AND[
                                 # One space ahead of pawn is free
                                 $IS_EMPTY[
                                   $GET_POSITION[
                                     board,
                                     PAIR[
-                                      LEFT[to],
+                                      LEFT[to]][
                                       $CHANGE_FUNC[from, to, RIGHT][from_y]
                                     ]
                                   ]
-                                ],
+                                ]
+                              ][
                                 # Pawn has not moved yet
                                 NOT[$GET_MOVED[$GET_POSITION[board, from]]]
                               ]
                             ][
-                              $VALID,
+                              $VALID
+                            ][
                               $INVALID
                             ]
                           },
@@ -489,17 +492,17 @@ $PAWN_RULE = $BASIC_CHECKS[
 $GET_RULE = $Z[->(get_rule) {
   ->(piece) {
     $HAS_VALUE[piece, $PAWN_VALUE][
-      $PAWN_RULE,
+      $PAWN_RULE][
     $HAS_VALUE[piece, $ROOK_VALUE][
-      $ROOK_RULE,
+      $ROOK_RULE][
     $HAS_VALUE[piece, $KNIGHT_VALUE][
-      $KNIGHT_RULE,
+      $KNIGHT_RULE][
     $HAS_VALUE[piece, $BISHOP_VALUE][
-      $BISHOP_RULE,
+      $BISHOP_RULE][
     $HAS_VALUE[piece, $QUEEN_VALUE][
-      $QUEEN_RULE,
+      $QUEEN_RULE][
     $HAS_VALUE[piece, $KING_VALUE][
-      $KING_RULE,
+      $KING_RULE][
       ->(_) { ->(_) { $INVALID } }
     ]]]]]][get_rule]
   }

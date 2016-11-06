@@ -6,42 +6,49 @@
 
 # Choice Functions
 
-FIRST  = ->(first, second) { first  }
-SECOND = ->(first, second) { second }
+FIRST  = ->(first) { ->(second) { first  } }
+SECOND = ->(first) { ->(second) { second } }
 
-AND = ->(a, b) {
-  ->(first, second) {
-    a[b[first, second], second]
-  }
+AND = ->(a) {
+  ->(b) {
+  ->(first) {
+    ->(second) {
+      a[b[first][second]][second]
+    }}
+}
 }
 
-OR = ->(a, b) {
-  ->(first, second) {
-    a[first, b[first, second]]
-  }
+OR = ->(a) {
+  ->(b) {
+  ->(first) {
+  ->(second) {
+    a[first][b[first][second]]
+  }}
+}
 }
 
 NOT = ->(choice) {
-  ->(first, second) {
-    choice[second, first]
-  }
+  ->(first){
+    ->(second) {
+      choice[second][first]
+    }}
 }
 
 FIVE_CONDITIONS_MET = ->(cond_1, cond_2, cond_3, cond_4, cond_5) {
   ->(first, second) {
     cond_1[cond_2[cond_3[cond_4[cond_5[
-      first,
-      second],
-      second],
-      second],
-      second],
+      first][
+      second]][
+      second]][
+      second]][
+      second]][
       second]
   }
 }
 
 IF = ->(condition) {
   ->(first, second) {
-    condition[first, second][]
+    condition[first][second][]
   }
 }
 
@@ -52,9 +59,9 @@ $IDENTITY = ->(x) { x }
 $INCREMENT = ->(a) { $ADD[ONE, a] }
 
 $ADD = ->(a, b) {
-  ->(func, zero) {
-    b[func, a[func, zero]]
-  }
+  ->(func) { ->(zero) {
+    b[func][a[func][zero]]
+  }}
 }
 
 $DECREMENT = ->(a) {
@@ -62,34 +69,34 @@ $DECREMENT = ->(a) {
     a[
       ->(memo) {
         PAIR[
-          $INCREMENT[LEFT[memo]],
+          $INCREMENT[LEFT[memo]]][
           LEFT[memo]
         ]
-      },
-      PAIR[ZERO, ZERO]
+      }][
+      PAIR[ZERO][ZERO]
     ]
   ]
 }
 
 $SUBTRACT = ->(a, b) {
-  ->(func, zero) {
-    b[$DECREMENT, a][func, zero]
-  }
+  ->(func) { ->(zero) {
+    b[$DECREMENT][a][func][zero]
+  }}
 }
 
 $MULTIPLY = ->(a, b) {
-  ->(func, zero) {
+  ->(func) { ->(zero) {
     a[
-      ->(value) { b[func, value] },
+      ->(value) { b[func][value] }][
       zero
     ]
-  }
+  }}
 }
 
 $DELTA = ->(position_1, position_2, coordinate) {
   ->(a, b) {
-    IS_GREATER_OR_EQUAL[a, b][
-      $SUBTRACT[a, b],
+    IS_GREATER_OR_EQUAL[a][b][
+      $SUBTRACT[a, b]][
       $SUBTRACT[b, a]
     ]
   }[
@@ -102,29 +109,29 @@ $MODULUS = ->(a, b) {
   RIGHT[
     a[
       ->(memo) {
-        IS_GREATER_OR_EQUAL[LEFT[memo], b][
+        IS_GREATER_OR_EQUAL[LEFT[memo]][b][
           PAIR[
-            $SUBTRACT[LEFT[memo], b],
+            $SUBTRACT[LEFT[memo], b]][
             ZERO
-          ],
+          ]][
           PAIR[
-            LEFT[memo],
+            LEFT[memo]][
             LEFT[memo]
           ]
         ]
       },
-      PAIR[a, ZERO]
+      PAIR[a][ZERO]
     ]
   ]
 }
 
 # Numbers
 
-ZERO       = ->(succ, zero) { zero }
-ONE        = ->(succ, zero) { succ[zero] }
-TWO        = ->(succ, zero) { succ[succ[zero]] }
-THREE      = ->(succ, zero) { succ[succ[succ[zero]]] }
-FOUR       = ->(succ, zero) { succ[succ[succ[succ[zero]]]] }
+ZERO       = ->(succ) { ->(zero) { zero } }
+ONE        = ->(succ) { ->(zero) { succ[zero] } }
+TWO        = ->(succ) { ->(zero) { succ[succ[zero]] } }
+THREE      = ->(succ) { ->(zero) { succ[succ[succ[zero]]] } }
+FOUR       = ->(succ) { ->(zero) { succ[succ[succ[succ[zero]]]] } }
 $FIVE       = $ADD[TWO, THREE]
 $SIX        = $MULTIPLY[TWO, THREE]
 $SEVEN      = $ADD[THREE, FOUR]
@@ -132,8 +139,10 @@ $EIGHT      = $MULTIPLY[TWO, FOUR]
 
 # Pair Functions
 
-PAIR = ->(left, right) {
-  ->(select) { select[left, right] }
+PAIR = ->(left) {
+  ->(right) {
+    ->(select) { select[left][right] }
+  }
 }
 
 LEFT  = ->(pair) { pair[FIRST]  }
@@ -141,7 +150,7 @@ RIGHT = ->(pair) { pair[SECOND] }
 
 # Lists Functions
 
-$NTH = ->(list, index) { LEFT[index[RIGHT, list]] }
+$NTH = ->(list, index) { LEFT[index[RIGHT][list]] }
 
 $LIST_MAP = ->(list, size, func) {
   LEFT[
@@ -152,13 +161,13 @@ $LIST_MAP = ->(list, size, func) {
            func[
              $NTH[list, RIGHT[memo]],
              RIGHT[memo]
-           ],
+           ]][
            LEFT[memo]
-          ],
+          ]][
           $DECREMENT[RIGHT[memo]]
         ]
-      },
-      PAIR[ZERO, $DECREMENT[size]]
+      }][
+      PAIR[ZERO][$DECREMENT[size]]
     ]
   ]
 }
@@ -175,25 +184,25 @@ $LIST_REDUCE = ->(list, size, func, initial) {
             $NTH[list, RIGHT[memo]],
             # index
             RIGHT[memo],
-          ],
+          ]][
           $INCREMENT[RIGHT[memo]]
         ]
-      },
-      PAIR[initial, ZERO]
+      }][
+      PAIR[initial][ZERO]
     ]
   ]
 }
 
 # Vector Functions
 
-$EMPTY_VECTOR = PAIR[ZERO, ZERO]
+$EMPTY_VECTOR = PAIR[ZERO][ZERO]
 
 $VECTOR_SIZE = RIGHT
 $VECTOR_LIST = LEFT
 
 $VECTOR_APPEND = ->(vector, item) {
   PAIR[
-    PAIR[item, $VECTOR_LIST[vector]],
+    PAIR[item][$VECTOR_LIST[vector]]][
     $INCREMENT[$VECTOR_SIZE[vector]]
   ]
 }
@@ -237,7 +246,7 @@ $BLACK = FIRST
 $WHITE = SECOND
 
 $MAKE_PIECE = ->(color, value, occupied, moved) {
-  PAIR[PAIR[color, value], PAIR[occupied, moved]]
+  PAIR[PAIR[color][value]][PAIR[occupied][moved]]
 }
 
 $INITIAL_PIECE = ->(color, value) {
@@ -276,9 +285,9 @@ $COLOR_SWITCH = ->(piece) {
   ->(black, white, empty) {
     $GET_OCCUPIED[piece][
       $GET_COLOR[piece][
-        black,
+        black][
         white
-      ],
+      ]][
       empty
     ]
   }
@@ -291,16 +300,17 @@ $HAS_VALUE = ->(piece, value) {
 # Comparisons
 
 IS_ZERO = ->(number) {
-  number[->(_) { SECOND }, FIRST]
+  number[->(_) { SECOND }][FIRST]
 }
 
-IS_GREATER_OR_EQUAL = ->(a, b) {
+IS_GREATER_OR_EQUAL = ->(a){
+->(b) {
   IS_ZERO[$SUBTRACT[b, a]]
-}
+}}
 
 IS_EQUAL = ->(a, b) {
-  IF[IS_GREATER_OR_EQUAL[a, b]][
-    -> { IS_GREATER_OR_EQUAL[b, a] },
+  IF[IS_GREATER_OR_EQUAL[a][b]][
+    -> { IS_GREATER_OR_EQUAL[b][a] },
     -> { SECOND }
   ]
 }
@@ -310,12 +320,12 @@ IS_EQUAL = ->(a, b) {
 $CREATE_STATE = ->(from, to, last_from, last_to, board, score, promotion) {
   PAIR[
     PAIR[
-      PAIR[from, to],
-      PAIR[board, score]
-    ],
+      PAIR[from][to]][
+      PAIR[board][score]
+    ]][
     PAIR[
-      promotion,
-      PAIR[last_from, last_to]
+      promotion][
+      PAIR[last_from][last_to]
     ]
   ]
 }
@@ -373,7 +383,7 @@ $UPDATE_AFTER_MOVE = ->(older, board) {
         ->(memo, piece, position) {
           $ADD[
             $IS_BLACK[piece][
-              $ADD,
+              $ADD][
               $SUBTRACT
             ][
               memo,
@@ -396,7 +406,7 @@ $UPDATE_AFTER_MOVE = ->(older, board) {
                         ]
                       ]
                     ][
-                      $MULTIPLY[$EIGHT, $FIVE],
+                      $MULTIPLY[$EIGHT, $FIVE]][
                       ZERO
                     ]
                   },

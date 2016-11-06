@@ -45,14 +45,14 @@ group 'Play' do
             row,
             $EIGHT,
             ->(piece, x) {
-              IF[$SAME_POSITION[PAIR[x, y], to]][
+              IF[$SAME_POSITION[PAIR[x][y], to]][
                 -> {
                   PAIR[
-                    PAIR[$GET_COLOR[new_piece], $GET_VALUE[new_piece]],
-                    PAIR[$GET_OCCUPIED[new_piece], $MOVED]
+                    PAIR[$GET_COLOR[new_piece]][$GET_VALUE[new_piece] ] ][
+                    PAIR[$GET_OCCUPIED[new_piece]][$MOVED]
                   ]
                 },
-                -> { $SAME_POSITION[PAIR[x, y], from][$EMPTY_SPACE, piece] }
+                -> { $SAME_POSITION[PAIR[x][y], from][$EMPTY_SPACE][piece] }
               ]
             }
           ]
@@ -149,13 +149,29 @@ group 'Play' do
   end
 
   group 'valid move' do
-    from = [2, 6]
-    to   = [2, 5]
+    from  = [2, 6]
+    to    = [2, 5]
+    board = [[BR,BN,BB,BQ,BK,BB,BN,BR],
+             [BP,BP,BP,BP,BP,BP,BP,BP],
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             [WP,WP,WP,WP,WP,WP,WP,WP],
+             [WR,WN,WB,WQ,WK,WB,WN,WR]]
+            .to_board
 
-    expect_accept(
-      make_state(INITIAL_BOARD, [from, to]),
-      black_response(INITIAL_BOARD, from, to)
-    )
+    result = [[BR,0, BB,BQ,BK,BB,BN,BR],
+              [BP,BP,BP,BP,BP,BP,BP,BP],
+              [0, 0, BN,0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, WP,0, 0, 0, 0, 0],
+              [WP,WP,0, WP,WP,WP,WP,WP],
+              [WR,WN,WB,WQ,WK,WB,WN,WR]]
+             .to_board
+
+    expect_accept make_state(board, [from, to]), result
   end
 
   group 'both can castle' do

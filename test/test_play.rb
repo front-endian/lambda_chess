@@ -83,11 +83,11 @@ group 'Play' do
 
   def perform_play type, state, seed
     PLAY[
-      state,
-      return_type(:accept),
-      return_type(:reject),
-      return_type(:loss),
-      return_type(:forfit),
+      state][
+      return_type(:accept)][
+      return_type(:reject)][
+      return_type(:loss)][
+      return_type(:forfit)][
       seed.to_peano
     ].tap { |result|
       assert "#{type} proc is called" do

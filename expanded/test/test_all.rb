@@ -4,7 +4,8 @@
 # This software may be modified and distributed under the
 # terms of the three-clause BSD license. See LICENSE.txt
 
-require_relative './setup'
-
-
-end
+require_relative './test_data'
+require_relative './test_board'
+require_relative './test_pieces'
+require_relative './test_ai'
+require_relative './test_play'

@@ -23,8 +23,8 @@ group 'Play' do
     proc { |new_state| { state: new_state, type: type } }
   end
 
-  def make_state board, move, last_move = [[0, 0], [0, 0]], promotion: $WHITE_QUEEN
-    $CREATE_STATE[
+  def make_state board, move, last_move = [[0, 0], [0, 0]], promotion: WHITE_QUEEN
+    CREATE_STATE[
       position(*move.first),
       position(*move.last),
       position(*last_move.first),
@@ -36,40 +36,13 @@ group 'Play' do
   end
 
   def perform_move board, from, to
-    ->(board, from, to, new_piece) {
-      $LIST_MAP[
-        board,
-        $EIGHT,
-        ->(row, y) {
-          $LIST_MAP[
-            row,
-            $EIGHT,
-            ->(piece, x) {
-              IF[$SAME_POSITION[PAIR[x][y], to]][
-                -> {
-                  PAIR[
-                    PAIR[$GET_COLOR[new_piece]][$GET_VALUE[new_piece] ] ][
-                    PAIR[$GET_OCCUPIED[new_piece]][$MOVED]
-                  ]
-                },
-                -> { $SAME_POSITION[PAIR[x][y], from][$EMPTY_SPACE][piece] }
-              ]
-            }
-          ]
-        }
-      ]
-    }[
-      board,
-      position(*from),
-      position(*to),
-      $GET_POSITION[board, position(*from)]
-    ]
+    NORMAL_MOVE[board, position(*from), position(*to), nil]
   end
 
   def black_response board, from, to, seed: 1
-    $GET_BOARD[
+    GET_BOARD[
       RIGHT[
-        $BLACK_AI[
+        BLACK_AI[
           make_state(
             perform_move(board, from, to),
             [from, to],
@@ -83,13 +56,15 @@ group 'Play' do
 
   def perform_play type, state, seed
     PLAY[
-      state][
-      return_type(:accept)][
-      return_type(:reject)][
-      return_type(:loss)][
-      return_type(:forfit)][
+      state,
+      return_type(:accept),
+      return_type(:reject),
+      return_type(:loss),
+      return_type(:forfit),
       seed.to_peano
     ].tap { |result|
+      # p result[:type]
+      # GET_BOARD[result[:state]].board_to_a.each_slice(8) { |row| p row }
       assert "#{type} proc is called" do
         result[:type] == type
       end
@@ -100,15 +75,15 @@ group 'Play' do
     result = perform_play(:accept, initial_state, seed)
 
     assert 'board updated correctly' do
-      same_board(result_board, $GET_BOARD[result])
+      same_board(result_board, GET_BOARD[result])
     end
 
     assert '"last_from" is set to "from"' do
-      same_position($GET_FROM[initial_state], $GET_LAST_FROM[result])
+      same_position(GET_FROM[initial_state], GET_LAST_FROM[result])
     end
 
     assert '"last_to" is set to "to"' do
-      same_position($GET_TO[initial_state], $GET_LAST_TO[result])
+      same_position(GET_TO[initial_state], GET_LAST_TO[result])
     end
   end
 
@@ -116,15 +91,15 @@ group 'Play' do
     result = perform_play(:reject, initial_state, seed)
 
     assert 'board is unchanged' do
-      same_board($GET_BOARD[initial_state], $GET_BOARD[result])
+      same_board(GET_BOARD[initial_state], GET_BOARD[result])
     end
 
     assert '"last_from" is unchanged' do
-      same_position($GET_LAST_FROM[initial_state], $GET_LAST_FROM[result])
+      same_position(GET_LAST_FROM[initial_state], GET_LAST_FROM[result])
     end
 
     assert '"last_to" is unchanged' do
-      same_position($GET_LAST_TO[initial_state], $GET_LAST_TO[result])
+      same_position(GET_LAST_TO[initial_state], GET_LAST_TO[result])
     end
   end
 
@@ -132,7 +107,7 @@ group 'Play' do
     result = perform_play(type, initial_state, seed)
 
     assert 'board is updated' do
-      same_board(result_board, $GET_BOARD[result])
+      same_board(result_board, GET_BOARD[result])
     end
   end
 
@@ -149,29 +124,13 @@ group 'Play' do
   end
 
   group 'valid move' do
-    from  = [2, 6]
-    to    = [2, 5]
-    board = [[BR,BN,BB,BQ,BK,BB,BN,BR],
-             [BP,BP,BP,BP,BP,BP,BP,BP],
-             [0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0],
-             [WP,WP,WP,WP,WP,WP,WP,WP],
-             [WR,WN,WB,WQ,WK,WB,WN,WR]]
-            .to_board
+    from = [2, 6]
+    to   = [2, 5]
 
-    result = [[BR,0, BB,BQ,BK,BB,BN,BR],
-              [BP,BP,BP,BP,BP,BP,BP,BP],
-              [0, 0, BN,0, 0, 0, 0, 0],
-              [0, 0, 0, 0, 0, 0, 0, 0],
-              [0, 0, 0, 0, 0, 0, 0, 0],
-              [0, 0, WP,0, 0, 0, 0, 0],
-              [WP,WP,0, WP,WP,WP,WP,WP],
-              [WR,WN,WB,WQ,WK,WB,WN,WR]]
-             .to_board
-
-    expect_accept make_state(board, [from, to]), result
+    expect_accept(
+      make_state(INITIAL_BOARD, [from, to]),
+      black_response(INITIAL_BOARD, from, to)
+    )
   end
 
   group 'both can castle' do
@@ -366,7 +325,7 @@ group 'Play' do
               [0, 0, 0, 0, 0, 0, BK,0]]
              .to_board
 
-    expect_accept make_state(board, [from, to], promotion: $WHITE_KNIGHT), result
+    expect_accept make_state(board, [from, to], promotion: WHITE_KNIGHT), result
   end
 
   group 'black promotion' do
@@ -393,6 +352,6 @@ group 'Play' do
              .to_board
 
     # Add promotion argument to make sure it isn't accepted
-    expect_accept make_state(board, [from, to], promotion: $WHITE_KNIGHT), result
+    expect_accept make_state(board, [from, to], promotion: WHITE_KNIGHT), result
   end
 end

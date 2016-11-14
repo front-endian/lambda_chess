@@ -1,5 +1,5 @@
 
-                    eval(q=%q~c=->(λ){->(b){->(c){->(d){->(
+                    eval( q = %q~c = ->( λ ) { ->( b ) { ->( c ) { ->( d ) { ->(
                      e){->(f){->(g){->(h){->(i){->(j){->(k){->(l){->(m){->(n){->(
                       o){->(p){->(q){->(r){->(s){->(t){->(u){->(v){->(w){->(x){->(
                        y){->(z){->(α){->(β){->(γ){->(δ){->(ε){->(ζ){->(η){->(θ){->(
@@ -55,7 +55,7 @@
                                                         ]}}}][->(λ){->(λ){->(λ){->(b){->(λ){b}}}}}][н]}]}}]]}[((ф))[->(λ){->(ю){->(b){
                                                        ->(c){d[(e)[y[j][b]][y[k][(c)]]][e[(y)[k][(b)]][y[j][(c)]]][о][н]}}[(υ)[ψ[λ]][ω[
                                                       λ]][(n)]][υ[(ψ)[(λ)]][ω[λ]][m]]}}]]}[((ф))[->(h){->(ю){е[((h))][->(i){->(f){->(p){
-                                                     ->(z){->(q){->(r){λ[(z)[w[(v)[q][r]]][(w)[v[r][((q))]]]][->(ю){->(t){λ[(y)[k][(t)]][
+                                                     ->(z){->(q){ ->(r){λ[(z)[w[(v)[q][r]]][(w)[v[r][((q))]]]][->(ю){->(t){λ[(y)[k][(t)]][
                                                     ->(ю){->(u){->(v){λ[(w)[(u)]][->(ю){ξ[(и)[i][(p)]][y[r][(z)[β][(l)]][->(ю){->(ю){->(ю){
                                                    ->(ю){->(λ){λ}}}}}][о]][((н))]}][->(ю){λ[(y)[k][(u)]][->(ю){λ[(ξ)[и[i][(p)]]][->(ю){->(x){
                                                   b[((g))][з[v][(o)[n[p]][((q))]]][ι[((x))][(k)]][z[μ][ν][x]][y[(υ)[б[h]][v][(m)]][(j)]][->(ю
@@ -95,42 +95,42 @@
                 λ[((g))]}]}[->(λ){λ[((f))]}]}[->(λ){->(b){b}}]}[->(λ){->(b){                                         λ[b]}}]}[->(λ){->(b){λ[(λ)[((b))]]}}]}[->(λ){->(b){λ[(λ)[λ[(
                (b))]]]}}]}[->(λ){->(b){λ[(λ)[λ[(λ)[(b)]]]]}}]}[->(λ){->(ю){                                           λ}}]}[->(ю){->(λ){λ}}]}[->(λ){->(b){->(c){->(d){λ[(b)[c][(d)
               ]][d]}}}}]}[->(λ){->(b){->(c){->(d){λ[c][(b)[(c)][(((d)))]]}                                             }}}]}[->(λ){->(b){->(c){λ[c][(b)]}}}]}[->(λ){->(b){->(c){->(
-             d){ ->(e){-> (f){->(g){ λ[(b )[c[(d)[ e[f][g ]][(g)] ][( g)]                                               ][(g)]][g]}}}}}}}]}[->(λ){->(b){->(c){λ[b][((c))][(λ)]}}}];
+             d){->(e){-> (f){->(g){λ[(b )[c[(d)[ e[f][g ]][(g)]][(g)]][(g                                               )]][ g]}}}}}}}] }[ ->(λ){->(b){ ->(c){λ[b][((c))][( λ)]}}}];
 
              l=[-10,-8,-9,-11,-12,-9,-8,-10,-7,-7,-7,-7,-7,-7,-7,-7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,-1,-1,-1,-1,-1,-4,-2,-3,-5,-6,-3,-2,-4];
                                                copyright="© 2016 Colin Fulton. Licensed under BSD 3-clause. See LICENSE.txt included with file.";
                                                                                    t=[];b=[0,0,0,0];s=rand(100);;
 
 
-          require('zlib');require(             "base64");k=        l;m='';a="}}#{    }];";cd,rs=q.split(a);cd=         (cd+a).gsub(/[\n #]+/,'');rs              .slice!(/\A.+?;;\s+(?>\n)/m)
-    g=eval(Zlib.inflate Base64.decode64        "eNrFVslu4z"+       "AM/RUjuuYQWf"    +"KSAsmPtD3NaYCiKObSQ9F/"        +"ryJK5aLFTiJnAseRKJnvkXyi8/X"            +"0eTrvXt67xh+lxET5T1xQqj0kx"+
-   "QzDCKa2goyhIXiEhGsLSJ9KuAlIv7QJZPS"        +"OBHgtX953"+       "++7pbRMpdSTQ"    +"GHUc+N8NITG1aHkIXFTtVi"      +"XNIXabR0mrlqsjyOhvExkRtLSGaQoS"+        "ei0SgCXkRwiDF41L9K2mHMLFcsFHD+DA"+
-  "dI0SUKy/bMAho4a8ErC3CTWANv+k2mSvOo"+        "6nKkRWmcsLV"       +"Xu5AJx7yUU2"    +"LFWwl/YXMlO0q8L2PHd6n"+      "pfzrupUSo669flV2WxGcTPuqkjyP+a95J"       +"7nXfbMR+q9crBrmoFz++90ft65QfJFJ3"+
-"EW0nHl4povSV"+            "TJn5zRyXVAkjc"     +"n0DieJRgZy"       +"w0wwnsGrIh"+    "2f/IqRbo7gwIsh1bUBAl8P"+     "VynKoKrzALW"+         "qztOH6fzl3ZH"+     "6rnXbpq5T/tu"         +"3HfzZeh+Tbz"+
-"Gi2H2a1NYOwb"              +"r4K293zasNm"+    "g3tQHW/Uxt"+       "OPG1ARAZ7rJ"+    "BMOsls9mHbgOiuzSEdzFYWP"     +"P+4BESOjHrA"          +"MMsxrsycTtc"+   "3q2J5jFuMZi"+           "XHg2Q6AEfdAB"+
-"6CGMIZ66HAz"+              "RJOBdSBxYP5jh"    +"hb6TFkvySS"       +"DQxG0QeWSRu"    +"ONciMRjJH"+                 "HiiK0DIS4Zol"         +"6hn8laiV3iC1z"+  "nKJDEkjxjga5"           +"Dv8Q6+C5q3U"+
-"tEj4853LD+Sc"                                 +"rf540l12bN"       +"amXgstFQnyV"    +"ELgyWSN0Gh"                  +"eo5q9eT1oR"+                            "H7386QZOwGg"+
-"yUKLxAfJG9D"+                                 "2gNtFRoRet"+       "pBgq5/1ZO0O"+    "OhXPTuIC0pP"                   +"DImPTAXSV04"                            +"hElIBuoWkk"+
-"DbKAXdPTL7Gc"                                 +"+LN5Kr3QOI"       +"jDWrEmGDfUT"    +"SXvBXSpaW"+                   "ke3lA+Xts4Y"+                            "UKp8DWjrDur"+
-"+PLKSRJTjJ2w"                                 +"9s3VznB+l"+       "D7X3DD/fX7+"+    "wdFf7Sb");n=                      ->λ{λ[->x{x+1                             }][0]};e=->λ{
-->y{->x{λ                                      .times{x=y[x]};x}}};r=->λ{->r{r}};    f=->f{->d{f}};d=->f{->d{             d}};h=->p{p[f                             ]};j=->p{p[d]
-};p=->h{->j{->                                 λ{λ[h][j]}}};i=->λ{(((λ))).reverse   .inject(r){|λ,a|p[a][λ]}               };u=->λ{as=λ.                             abs;p[p[as>6?
-f:d][e[as>6?as-                                6:as]]][p[as==0?d:f][as>0?d:f]]};;    ll=/^[a-h]/;nn=/^[1-8]/;                 ln=->λ{λ.ord-                             97};lm=->λ{(λ
-.to_i-8).abs};                                 lu=->λ{{q:5,k:2,r:4,b:3}[λ.to_sym]    };ms=->λ,fx,fy,tx,ty,pr{                   p[p[p[p[e[fx]                             ][e[fy]]][p[e[
-tx]][e[ty]]]][                                 p[i[[*λ.each_slice(8)].map{|r|i[r     .map{|p|u[p]}]}]][r]]][                      p[u[lu[pr]]][                             p[p[e[b[0]]][e[
-b[1]]]][p[e[b                                  [2]]][e[b[3]]       ]]]]};gt=->λ{     j[j[(λ)]]};mv=                                 ARGV.join;mv=                             mv.downcase.gsub(
-/\W+/,'');mv+=                                 ?q if mv.size       ==4;fx,fy,tx,     ty,pr=mv.chars                                    ;ud=->λ{k=[λ]                             .flatten;a=->k,
-a{b=[];a.times                                 {b<<h[k];k=j[       k]};b};k=a[h[     j[h[λ]]],(8)]                                      .map{|λ|a[λ,8                             ].map{|λ|h[j[λ
-]][(n[j[h[λ]]                                  ]+h[h[λ]][6][       0])*j[j[λ]][(     1)][(-1)]][0]}                                       }.flatten;z,w                             =[l,k].map{|b|b
-.sort.reject(                                  &:zero?)};;;w       .each{|e|t<<      (((z))).shift                                         until z.empty?                           ||z[0]==e;z.shift
-}if(z.size>w                                   .size); if ty       ==?8&&(l)[ln[     fx]+lm[fy]*8]                                        ==1;then;t.sort!                          .shift;t<<lu[pr]
-end;b=[h[h[gt[               λ]]],j[h[gt[λ]    ]],h[j[gt[λ]]       ],j[j[gt[λ]]]     ].map{|λ|n[(λ            )]};};(mv.size==           5&&fx[ll]&&tx[ll    ]&&fy[nn]&&ty[         nn]&&pr[/^[qkrb]/
-])?c[ms[k,ln[                fx],lm[fy],ln[    tx],lm[ty],pr]      ][->λ{ud[λ]}][    ->λ{m=g[(:i)]             }][->λ{ud[λ];m=           g[:l]}][->λ{ud[     λ];m=g[:w]}][           e[s]]:mv.size==
-0?nil:m=g[:i];              ct=->s{s.center(   195)};re=->bo,      λ,vf{vf=[[vf]]    *13;λ=[λ];((((((bo))))))   .each_slice(8)          .inject([]){|m,r      |m+[λ]+r.inject(       vf){|m,p|m.zip(
- g[:p][p.abs]).zip(vf).map(&:flatten)}}.+([    λ]).inject([]       ){|m,r|m<<ct[r    .each_slice((2)).inject(    ''){|m,(chars,spaces)|m+?4*chars+" "*         (spaces||(0))}]}.reject(&:empty?)}
-  ba=re[k,195,3];cr=re[t,0,0];tr=(?4*(cd       .size+10-(ba+       cr).join.count(    ?4))).gsub((/.{195}/)){       |l|l+((?\n))}.split;mb=[(tr.pop)             .center(195)];bb,tb=([[],[]]+[*tr
-  .each_slice([1,(tr.size/2.0).ceil].max       )]) .compact[       -2..-1];ba=(tb+    ba.zip(g[((:r))]).map(&          :join)+bb+mb+cr);ba.first                     .slice!(185,195);ba=ba
-      .join(?\n).gsub(/[^ \n#]+/){|λ|          cd.slice!( 0,       λ.size)}.split(    ?\n);st=->(obj){((obj))           .inspect.gsub(/\s+/                             ,'')};puts(m+g[
+       require(('zlib'+''));;require(           "base64");k=        l;m='';a="}}#{    }];";cd,rs=q.split(a);cd=        (cd+a).gsub(/[\n #]+/,'');rs               .slice!(/\A.+?;;\s+(?>\n)/m)
+     g=eval(Zlib.inflate Base64.decode64        "eNrFVslu4z"+       "AM/RUjuuYQWf"    +"KSAsmPtD3NaYCiKObSQ9F/"      +"ryJK5aLFTiJnA"+"seRKJnvkXyi8/X"          +"0eTrvX"+"t67xh+lxET5T1xQqj0kx"+
+   "QzDCKa2goyhIXi"+"EhGsLSJ9KuAlIv7QJZPS"      +"OBHgtX953"+       "++7pbRMpdSTQ"    +"GHUc+N8NITG1aHkIXFTtVi"    +"XNIXa"+"bR0mrlqsjyOhvExkRtLSGaQoS"+      "ei0SgCXkRwiDF41L9K2mHMLFc"+"sFHD+DA"+
+ "dI0SUKy"+"/bMAho4a8Er"+"C3CTWANv+k2mSvOo"+    "6nKkRWmcsLV"       +"Xu5AJx7yUU2"    +"LFWwl/YXMlO0q8L2PHd6n"+    "pfzrupUSo669flV2WxGcTPuq"+"kjyP+a95J"    +"7nXfb"+"MR+q9crBrmoFz++90ft65QfJFJ3"+
+"EW"+"0nHl4pov"+"SV"+"TJ"+"n5"+"zRyX"+"VAkjc"   +"n0DieJRgZy"       +"w0wwnsGrIh"+    "2f/IqRbo7gwIsh1bUBAl8P"+   "Vyn"+"KoKrzALW"+     "qztOH"+"6fzl3ZH"+   "6rnXbp"+"q5T/tu"     +"3Hfz"+"Zeh+Tbz"+
+"Gi2H2a1"+"NYOwb"             +"r4K293zasNm"+   "g3tQHW/Uxt"+       "OPG1ARAZ7rJ"+    "BMOsls9mHbgOiuzSEdzFYWP"   +"P+4BESOjHrAM"           +"MsxrsycTtc"+   "3q2J5jFuMZi"+           "XHg2Q6AEfdAB"+
+"6CGMIZ66HAz"+                "RJOBdSBxYP5jh"   +"hb6TFkvySS"       +"DQxG0QeWSRu"    +"ONciMRjJH"+               "HiiK0DIS4Zol6"           +"hn8laiV3iC1"+  "znKJDEkjxjga5"           +"Dv8Q6+C5q3U"+
+"tEj4853LD+Sc"                                  +"rf540l12bN"       +"amXgstFQnyV"    +"ELgyWSN0Gh"                +"eo5q9eT1oR"+                             "H7386QZOwGg"+
+"yUKLxAfJG9D"+                                  "2gNtFRoRet"+       "pBgq5/1ZO0O"+    "OhXPTuIC0pP"                 +"DImPTAXSV04"+                            "hEl"+"IBuoWkk"+
+"DbKAXdPTL7Gc"                                  +"+LN5Kr3QOI"       +"jDWrEmGDfUT"    +"SXvBXSpaW"+                 "ke3lA"+"+Xts4Y"                             +"UKp8DWjrDur"+
+"+PLKSRJTjJ2w"                                  +"9s3VznB+l"+       "D7X3DD/fX7+"+    "wdFf7Sb");n=                    ->(λ){λ[->x{x+1                            }][0]};e=->(λ){
+->(y){->(x){λ                                   .times{x=y[x]};x}}};r=->λ{->r{r}};    f=->f{->d{f}};d=->f{->d{           d}};h=->(p){p[f                            ]};j=->(p){p[d]
+};p=->h{->j{->                                  λ{λ[h][j]}}};i=->λ{(((λ))).reverse    .inject(r){|λ,a|p[a][λ]}            };;u=->(λ){as=λ.                           abs;p[p[as>(6)?
+f:d][e[as>6?as-                                 6:as]]][p[as==0?d:f][as>0?d:f]]};;    ll=/^[a-h]/;nn=/^[1-8]/;               ;ln=->(λ){λ.ord-                           97};lm=->(λ){(λ
+.to_i-8).abs};                                  lu=->λ{{q:5,k:2,r:4,b:3}[λ.to_sym]    };ms=->λ,fx,fy,tx,ty,pr{                 p[p[p[p[e[(fx)]                            ][e[(fy)]]][p[e[
+tx]][e[ty]]]][                                  p[i[[*λ.each_slice(8)].map{|r|i[(r    ).map{|p|u[p]}]}]][r]]][                    p[u[lu[(pr)]]][                           p[p[e[b[(0)]]][e[
+b[1]]]][p[e[b[                                  (2)]]][e[b[3]]      ]]]]};;gt=->λ{    j[j[(λ)]]};mv=                               (ARGV).join;mv=                            mv.downcase.gsub(
+/\W+/,'');mv+=                                  ?q if(mv).size      ==4;;fx,fy,tx,    ty,pr=mv.chars                                  ;ud=->λ{k=[λ]                             .flatten;;;a=->k,
+a{b=[];a.times                                  {b<<h[k];;k=j[      k]};b};;k=a[h[    j[h[λ]]],((8))                                  ].map{|λ|a[λ,(8)                            ].map{|λ|h[j[(λ)
+]][(n[j[h[λ]]]                                  +h[h[(λ)]][6][      0])*j[j[(λ)]][    (1)][-1]][(0)]                                    }}.flatten;;;z,w                           =[l,k].map{|b|(b)
+.sort.reject(&(                                 (:zero?)))};;w      .each{|e|(t)<<    z.shift until(                                      (((z)).empty?))                           ||z[0]==e;z.shift
+}if(z.size>(w)                                  .size);;if(ty)      ==?8&&l[ln[(fx    )]+lm[(fy)]*8]                                      ==1;then;t.sort!                          .shift;;t<<lu[pr]
+end;;b=[h[h[gt[               λ]]],j[h[gt[λ]]   ],h[j[gt[(λ)]]       ],j[j[gt[λ]]]     ].map{|λ|n[(λ            )]}};(mv.size==           5&&fx[ll]&&tx[ll   ]&&fy[nn]&&ty[          nn]&&pr[/^[qkrb]/
+])?c[ms[((k)),ln[            (fx)],lm[fy],ln[   tx],lm[ty],pr]      ][->λ{ud[λ]}][    ->λ{m=g[:i]}][            ->(λ){ud[(λ)];m=        g[:l]}][->(λ){ud[    λ];m=g[(:w)]}][       e[(s)]]:mv.size==
+0?nil:m=(g[(:i)]);         ct=->s{(s).center(   195)};re=->bo,      λ,vf{vf=[[vf]]    *13;λ=[λ];((((((bo))))))  .each_slice((((8)))).inject((([]))){|m,r      |m+[λ]+r.inject(((vf))){|m,p|(m).zip(
+ g[:p][p.abs]).zip(vf).map(&:flatten)}}.+([(    λ)]).inject([]      ){|m,r|m<<ct[r    .each_slice((2)).inject(   ''){|m,(chars,spaces)|m+?4*chars+" "*         (spaces||(0))}]}.reject(&:empty?)}
+  ba=re[k,195,3];ф=re[t,0,0];tr=(?4*(((cd)      ).size+10-(ba+      ф).join.count(    ?4))).gsub((/.{195}/)){|      l|l+((?\n))}.split;mb=[(tr.pop)             .center(195)];bb,tb=([[],[]]+[*tr
+   .each_slice([1,(tr.size/2.0).ceil].max       )]).compact[-2      ..-1];ba=((tb)    +ba.zip(g[((:r))]).map(&         :join)+bb+mb+ф);ba.first                   .slice!((185),195);ba=ba
+      .join(?\n).gsub(/[^ \n#]+/){|λ|cd.        slice!((0),(λ)      .size)}.split(    ?\n);st=->(obj){((obj)).            inspect.gsub(/\s+/                           ,'')};puts(m+g[
 
    :c]+"eval(q=%q#{126.chr+ba.join(?\n)}\n"+[ct["l=#{st[k]}"],ct["copyright=#{copyright.inspect}"],ct["t=#{st[t]};b=#{st[b]};s=Random.new(#{s}).rand(100);;"]].join(?\n)+"\n\n\n"+rs+126.chr+?))~)
 

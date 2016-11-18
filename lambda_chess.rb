@@ -122,9 +122,9 @@ b[1]]]][p[e[b[                                  (2)]]][e[b[3]]      ]]]]};;gt=->
 /\W+/,'');mv+=                                  ?q if(mv).size      ==4;;fx,fy,tx,    ty,pr=mv.chars                                  ;ud=->λ{k=[λ]                             .flatten;;;a=->k,
 a{b=[];a.times                                  {b<<h[k];;k=j[      k]};b};;k=a[h[    j[h[λ]]],((8))                                  ].map{|λ|a[λ,(8)                            ].map{|λ|h[j[(λ)
 ]][(n[j[h[λ]]]                                  +h[h[(λ)]][6][      0])*j[j[(λ)]][    (1)][-1]][(0)]                                    }}.flatten;;;z,w                           =[l,k].map{|b|(b)
-.sort.reject(&(                                 (:zero?)))};;w      .each{|e|(t)<<    z.shift until(                                      (((z)).empty?))                           ||z[0]==e;z.shift
-}if(z.size>(w)                                  .size);;if(ty)      ==?8&&l[ln[(fx    )]+lm[(fy)]*8]                                      ==1;then;t.sort!                          .shift;;t<<lu[pr]
-end;;b=[h[h[gt[               λ]]],j[h[gt[λ]]   ],h[j[gt[(λ)]]       ],j[j[gt[λ]]]     ].map{|λ|n[(λ            )]}};(mv.size==           5&&fx[ll]&&tx[ll   ]&&fy[nn]&&ty[          nn]&&pr[/^[qkrb]/
+.sort.reject(&                                  :zero?).map(&(      ((:abs))))};;1    .upto(12){|v|u                                      =w.count(v);x=z.                           count(v);((x-u))
+.times{t<<v}};                                  if(ty)==?8&&l[      ln[(((((fx))))    )]+lm[(fy)]*8]                                      ==1;then;t.sort!                          .shift;;t<<lu[pr]
+end;;b=[h[h[gt[               λ]]],j[h[gt[λ]]   ],h[j[gt[((λ))      ]]],j[j[gt[λ]]    ]].map{|λ|n[((           λ))]}};(mv.size==         5&&fx[ll]&&tx[ll   ]&&fy[nn]&&ty[          nn]&&pr[/^[qkrb]/
 ])?c[ms[((k)),ln[            (fx)],lm[fy],ln[   tx],lm[ty],pr]      ][->λ{ud[λ]}][    ->λ{m=g[:i]}][            ->(λ){ud[(λ)];m=        g[:l]}][->(λ){ud[    λ];m=g[(:w)]}][       e[(s)]]:mv.size==
 0?nil:m=(g[(:i)]);         ct=->s{(s).center(   195)};re=->bo,      λ,vf{vf=[[vf]]    *13;λ=[λ];((((((bo))))))  .each_slice((((8)))).inject((([]))){|m,r      |m+[λ]+r.inject(((vf))){|m,p|(m).zip(
  g[:p][p.abs]).zip(vf).map(&:flatten)}}.+([(    λ)]).inject([]      ){|m,r|m<<ct[r    .each_slice((2)).inject(   ''){|m,(chars,spaces)|m+?4*chars+" "*         (spaces||(0))}]}.reject(&:empty?)}

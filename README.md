@@ -1,6 +1,8 @@
 # Lambda Chess!
 A playable game of chess and an AI opponent written in untyped lambda calculus... and it's a quine.
 
+[Here is a demo](https://youtu.be/DC-bjR6WeaM?t=39m7s) of it in action from a talk about how to write quines and other useless programs.
+
 **Note:** the bottom part of the code—which is written in "normal" `Ruby`—just handles re-rendering the program and IO. The actual rules of chess and the AI are entirely done in untyped lambda syntax using `->` lambdas. Also, the expanded version in this repo is a little out of date and contains some bugs which were fixed later.
 
 1. First look at the program:
